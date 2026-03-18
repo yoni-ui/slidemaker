@@ -2,4 +2,6 @@ fastapi
 uvicorn[standard]
 python-dotenv
 python-pptx
+google-genai
+groq
 

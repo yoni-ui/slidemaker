@@ -11,11 +11,12 @@ export default {
       colors: {
         primary: "#ec5b13",
         "background-light": "#f8f6f6",
-        "background-dark": "#0B0F19",
+        "background-dark": "#221610",
         "surface-dark": "#161B28",
         "border-dark": "#232936",
         "card-dark": "#1e1e1e",
         "sidebar-dark": "#181818",
+        canvas: "#1a110c",
       },
       fontFamily: {
         display: ["var(--font-public-sans)", "Public Sans", "sans-serif"],

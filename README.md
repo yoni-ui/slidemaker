@@ -11,11 +11,11 @@ cd backend
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --reload-dir app --port 8001
 ```
 
-- API: http://localhost:8000  
-- Docs: http://localhost:8000/docs  
+- API: http://localhost:8001  
+- Docs: http://localhost:8001/docs  
 
 ### 2. Frontend (Next.js)
 
