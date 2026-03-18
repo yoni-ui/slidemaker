@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>SWOT Analysis Presentation</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center p-8">
+<div class="aspect-video w-full max-w-6xl bg-white dark:bg-slate-900 shadow-2xl rounded-xl overflow-hidden flex flex-col border border-slate-200 dark:border-slate-800">
+<!-- Header Section -->
+<header class="flex items-center justify-between px-10 py-6 border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-symbols-outlined text-3xl font-bold">tactic</span>
+</div>
+<div>
+<h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white uppercase">Strategic SWOT Analysis</h1>
+<p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Project Performance &amp; Market Positioning Overview</p>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-primary hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white font-bold text-sm gap-2">
+<span class="material-symbols-outlined text-xl">play_arrow</span>
+<span>PRESENT</span>
+</button>
+</div>
+</header>
+<!-- Main Content: 2x2 Grid -->
+<main class="flex-1 p-8 grid grid-cols-2 grid-rows-2 gap-6">
+<!-- Strengths -->
+<div class="relative group bg-emerald-50 dark:bg-emerald-950/20 border-2 border-emerald-100 dark:border-emerald-900/50 rounded-xl p-6 transition-all hover:shadow-lg">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Internal / Helpful</span>
+<h2 class="text-2xl font-bold text-emerald-800 dark:text-emerald-300 mt-1">Strengths</h2>
+</div>
+<span class="material-symbols-outlined text-4xl text-emerald-500/50 group-hover:scale-110 transition-transform">star</span>
+</div>
+<ul class="space-y-3">
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500 text-sm mt-1">check_circle</span>
+<span>Market leadership in core technology sector</span>
+</li>
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500 text-sm mt-1">check_circle</span>
+<span>Highly skilled R&amp;D and engineering team</span>
+</li>
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-emerald-500 text-sm mt-1">check_circle</span>
+<span>Strong brand recognition and customer loyalty</span>
+</li>
+</ul>
+</div>
+<!-- Weaknesses -->
+<div class="relative group bg-rose-50 dark:bg-rose-950/20 border-2 border-rose-100 dark:border-rose-900/50 rounded-xl p-6 transition-all hover:shadow-lg">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-widest">Internal / Harmful</span>
+<h2 class="text-2xl font-bold text-rose-800 dark:text-rose-300 mt-1">Weaknesses</h2>
+</div>
+<span class="material-symbols-outlined text-4xl text-rose-500/50 group-hover:scale-110 transition-transform">gpp_maybe</span>
+</div>
+<ul class="space-y-3">
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-rose-500 text-sm mt-1">cancel</span>
+<span>Limited budget for global marketing campaigns</span>
+</li>
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-rose-500 text-sm mt-1">cancel</span>
+<span>High dependency on a single supply chain partner</span>
+</li>
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-rose-500 text-sm mt-1">cancel</span>
+<span>Slow adoption of agile internal processes</span>
+</li>
+</ul>
+</div>
+<!-- Opportunities -->
+<div class="relative group bg-blue-50 dark:bg-blue-950/20 border-2 border-blue-100 dark:border-blue-900/50 rounded-xl p-6 transition-all hover:shadow-lg">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">External / Helpful</span>
+<h2 class="text-2xl font-bold text-blue-800 dark:text-blue-300 mt-1">Opportunities</h2>
+</div>
+<span class="material-symbols-outlined text-4xl text-blue-500/50 group-hover:scale-110 transition-transform">lightbulb</span>
+</div>
+<ul class="space-y-3">
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-blue-500 text-sm mt-1">trending_up</span>
+<span>Expansion into emerging APAC markets</span>
+</li>
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-blue-500 text-sm mt-1">trending_up</span>
+<span>Growing demand for sustainable products</span>
+</li>
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-blue-500 text-sm mt-1">trending_up</span>
+<span>Strategic partnerships with software vendors</span>
+</li>
+</ul>
+</div>
+<!-- Threats -->
+<div class="relative group bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-100 dark:border-amber-900/50 rounded-xl p-6 transition-all hover:shadow-lg">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="text-xs font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest">External / Harmful</span>
+<h2 class="text-2xl font-bold text-amber-800 dark:text-amber-300 mt-1">Threats</h2>
+</div>
+<span class="material-symbols-outlined text-4xl text-amber-500/50 group-hover:scale-110 transition-transform">warning</span>
+</div>
+<ul class="space-y-3">
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-amber-500 text-sm mt-1">priority_high</span>
+<span>Aggressive pricing from new market entrants</span>
+</li>
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-amber-500 text-sm mt-1">priority_high</span>
+<span>Changes in international trade regulations</span>
+</li>
+<li class="flex items-start gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-amber-500 text-sm mt-1">priority_high</span>
+<span>Rapidly evolving technology landscape</span>
+</li>
+</ul>
+</div>
+</main>
+<!-- Footer / Status Bar -->
+<footer class="px-10 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400 font-medium">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">calendar_today</span>
+<span>Q4 2023 REVISION</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">person</span>
+<span>STRATEGY TEAM</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-base">edit</span>
+<span>EDIT SLIDE</span>
+</button>
+<div class="w-px h-4 bg-slate-200 dark:bg-slate-700"></div>
+<span>SLIDE 12 OF 24</span>
+</div>
+</footer>
+</div>
+</body></html>

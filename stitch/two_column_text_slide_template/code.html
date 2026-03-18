@@ -1,0 +1,153 @@
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .aspect-16-9 {
+            aspect-ratio: 16 / 9;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-slate-200 dark:bg-slate-900 flex items-center justify-center min-h-screen p-8">
+<!-- Presentation Slide Container (16:9 Aspect Ratio) -->
+<div class="aspect-16-9 w-full max-w-6xl bg-background-light dark:bg-background-dark shadow-2xl rounded-xl overflow-hidden flex flex-col border border-slate-200 dark:border-slate-800">
+<!-- Top Navigation / Header -->
+<header class="flex items-center justify-between px-10 py-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark">
+<div class="flex items-center gap-4">
+<div class="size-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">analytics</span>
+</div>
+<div class="flex flex-col">
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">Quarterly Strategic Review</h2>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-widest">Global Operations • Q3 2024</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="flex items-center gap-8">
+<a class="text-primary text-sm font-semibold border-b-2 border-primary pb-1" href="#">Overview</a>
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Performance</a>
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Roadmap</a>
+</nav>
+<div class="flex gap-2">
+<button class="flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-all">
+<span class="material-symbols-outlined">present_to_all</span>
+</button>
+<button class="flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-all">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Slide Content Area -->
+<main class="flex-1 flex flex-col px-16 py-12 justify-center">
+<!-- Main Heading Section -->
+<div class="max-w-4xl mb-12">
+<h1 class="text-slate-900 dark:text-slate-100 text-5xl font-black leading-[1.1] tracking-tight mb-4">
+                    Optimizing Infrastructure for <span class="text-primary">Scalable Growth</span> &amp; Reliability
+                </h1>
+<div class="h-1.5 w-24 bg-primary rounded-full"></div>
+</div>
+<!-- Two-Column Content Section -->
+<div class="grid grid-cols-2 gap-16">
+<!-- Column 1 -->
+<div class="flex flex-col gap-6">
+<div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">lan</span>
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Primary Objectives</h3>
+</div>
+<ul class="space-y-4">
+<li class="flex gap-3">
+<span class="text-primary mt-1 font-bold text-lg">•</span>
+<p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+<strong class="text-slate-900 dark:text-slate-100">Efficiency Scaling:</strong> Implementation of automated resource allocation protocols to reduce overhead by 24% across cloud clusters.
+                                </p>
+</li>
+<li class="flex gap-3">
+<span class="text-primary mt-1 font-bold text-lg">•</span>
+<p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+<strong class="text-slate-900 dark:text-slate-100">Network Resilience:</strong> Deployment of multi-region failover nodes to ensure 99.99% uptime during peak traffic periods.
+                                </p>
+</li>
+<li class="flex gap-3">
+<span class="text-primary mt-1 font-bold text-lg">•</span>
+<p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+<strong class="text-slate-900 dark:text-slate-100">Security Hardening:</strong> Migration to zero-trust architecture for all internal service-to-service communication.
+                                </p>
+</li>
+</ul>
+</div>
+</div>
+<!-- Column 2 -->
+<div class="flex flex-col gap-6">
+<div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Key Performance Indicators</h3>
+</div>
+<ul class="space-y-4">
+<li class="flex gap-3">
+<span class="text-primary mt-1 font-bold text-lg">•</span>
+<p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+<strong class="text-slate-900 dark:text-slate-100">Latency Reduction:</strong> Target a 150ms reduction in edge-to-core communication through global CDN optimization.
+                                </p>
+</li>
+<li class="flex gap-3">
+<span class="text-primary mt-1 font-bold text-lg">•</span>
+<p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+<strong class="text-slate-900 dark:text-slate-100">Resource Utilization:</strong> Achieve a 85% CPU utilization average by refactoring legacy microservices.
+                                </p>
+</li>
+<li class="flex gap-3">
+<span class="text-primary mt-1 font-bold text-lg">•</span>
+<p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+<strong class="text-slate-900 dark:text-slate-100">Cost Containment:</strong> Forecasted savings of $1.2M annually by sunsetting underutilized staging environments.
+                                </p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer / Page Info -->
+<footer class="px-10 py-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-widest">
+<div class="flex items-center gap-4">
+<span>Enterprise Solutions Group</span>
+<span class="h-1 w-1 bg-slate-400 rounded-full"></span>
+<span>Confidential Information</span>
+</div>
+<div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">
+<span>Slide 04</span>
+<span class="text-slate-300 dark:text-slate-600">|</span>
+<span>12</span>
+</div>
+</footer>
+</div>
+</body></html>

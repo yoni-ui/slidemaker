@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .slide-aspect-ratio {
+            aspect-ratio: 16 / 9;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark flex items-center justify-center min-h-screen p-4 md:p-8">
+<!-- 16:9 Presentation Slide Container -->
+<div class="slide-aspect-ratio w-full max-w-6xl bg-white dark:bg-slate-900 shadow-2xl rounded-xl overflow-hidden flex flex-col border border-slate-200 dark:border-slate-800">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between px-10 py-6 border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl font-bold">account_tree</span>
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-extrabold tracking-tight">Project Implementation</h2>
+</div>
+<div class="flex items-center gap-8">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary text-sm font-semibold border-b-2 border-primary pb-1" href="#">Process Flow</a>
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Timeline</a>
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Deliverables</a>
+</nav>
+<div class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-wider">
+                    Phase 1.0
+                </div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col justify-center px-10 py-8">
+<div class="mb-12">
+<h1 class="text-slate-900 dark:text-white text-4xl font-black tracking-tight mb-3">Strategic Workflow Overview</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl">A high-level view of our sequential operational model designed for maximum efficiency and quality assurance.</p>
+</div>
+<!-- Steps Container -->
+<div class="relative flex items-start justify-between gap-4">
+<!-- Connector Line Background -->
+<div class="absolute top-10 left-0 w-full h-0.5 bg-slate-100 dark:bg-slate-800 z-0 hidden lg:block"></div>
+<!-- Step 1 -->
+<div class="flex-1 flex flex-col items-center text-center group z-10">
+<div class="size-20 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20 mb-6 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-3xl">search</span>
+</div>
+<div class="space-y-2 px-2">
+<span class="text-primary text-[10px] font-bold uppercase tracking-widest">Step 01</span>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">Discovery</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Analyzing requirements and setting project scope.</p>
+</div>
+</div>
+<!-- Arrow 1 (Mobile Hidden, Desktop Visible) -->
+<div class="hidden lg:flex items-center pt-8 text-slate-300 dark:text-slate-700">
+<span class="material-symbols-outlined">trending_flat</span>
+</div>
+<!-- Step 2 -->
+<div class="flex-1 flex flex-col items-center text-center group z-10">
+<div class="size-20 rounded-2xl bg-white dark:bg-slate-800 text-primary border-2 border-primary/20 flex items-center justify-center shadow-sm mb-6 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-3xl">strategy</span>
+</div>
+<div class="space-y-2 px-2">
+<span class="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest">Step 02</span>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">Strategy</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Defining the roadmap and resource allocation.</p>
+</div>
+</div>
+<!-- Arrow 2 -->
+<div class="hidden lg:flex items-center pt-8 text-slate-300 dark:text-slate-700">
+<span class="material-symbols-outlined">trending_flat</span>
+</div>
+<!-- Step 3 -->
+<div class="flex-1 flex flex-col items-center text-center group z-10">
+<div class="size-20 rounded-2xl bg-white dark:bg-slate-800 text-primary border-2 border-primary/20 flex items-center justify-center shadow-sm mb-6 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-3xl">terminal</span>
+</div>
+<div class="space-y-2 px-2">
+<span class="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest">Step 03</span>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">Execution</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Core development and system implementation.</p>
+</div>
+</div>
+<!-- Arrow 3 -->
+<div class="hidden lg:flex items-center pt-8 text-slate-300 dark:text-slate-700">
+<span class="material-symbols-outlined">trending_flat</span>
+</div>
+<!-- Step 4 -->
+<div class="flex-1 flex flex-col items-center text-center group z-10">
+<div class="size-20 rounded-2xl bg-white dark:bg-slate-800 text-primary border-2 border-primary/20 flex items-center justify-center shadow-sm mb-6 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-3xl">verified_user</span>
+</div>
+<div class="space-y-2 px-2">
+<span class="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest">Step 04</span>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">Validation</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Rigorous testing and stakeholder feedback.</p>
+</div>
+</div>
+<!-- Arrow 4 -->
+<div class="hidden lg:flex items-center pt-8 text-slate-300 dark:text-slate-700">
+<span class="material-symbols-outlined">trending_flat</span>
+</div>
+<!-- Step 5 -->
+<div class="flex-1 flex flex-col items-center text-center group z-10">
+<div class="size-20 rounded-2xl bg-white dark:bg-slate-800 text-primary border-2 border-primary/20 flex items-center justify-center shadow-sm mb-6 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-3xl">rocket_launch</span>
+</div>
+<div class="space-y-2 px-2">
+<span class="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest">Step 05</span>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">Launch</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Production release and monitoring.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Actions -->
+<footer class="px-10 py-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex -space-x-2">
+<div class="size-8 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 overflow-hidden">
+<img alt="Team member" data-alt="Portrait of a smiling professional team member" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgTsIl3hj6eFMLnAvlLTIW4qfjbq7XFDAOFuimc9odg30T-lEHKkfF5__XavL41p9-Oci9EqJ4jIi-id75hh5-ILPIffZxFQTC8BfPhu73LqqdFuvBbnvC_ZbwuMaidxVt27WswATYrKF8z3o5Egjz9dRjmhSUuLzQ3aRdY42tEFciCGBd_WE3UNE4khg6MOaXVssf02-uFtz9DkZl3fdMhheZ0ko9jJfZKsDAFDP4kJvcK-ela7eZk4aOyx0hOMmYfm9qqojsgdU"/>
+</div>
+<div class="size-8 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 overflow-hidden">
+<img alt="Team member" data-alt="Portrait of a female business lead" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdYfe_NvoCo6pt-5TS5GhuU-KG3MdKawVYySzdLzu87hfuF2G15RtuXEcD-qpfvlz872b5l-L2P8_JEEpg7qEN1qJ-Q-_DEEr91t4StfLYaUMjdUJOT5sxLY0CwDQJM8yAoXhr4eNiZlr__9kCjYUupsIEj3-scYvvwSv_sHvzNilQC_Gcf_4doLSvTCUAe_iuZHvSite9ghLzOSIAZ5YsEkBF9U4c8G6K7XqraVW30JvgmWAuk6qTB6jSRP_PYzIUnLFCHeZVTpk"/>
+</div>
+<div class="size-8 rounded-full border-2 border-white dark:border-slate-900 bg-primary flex items-center justify-center text-[10px] text-white font-bold">
+                        +4
+                    </div>
+</div>
+<span class="text-slate-400 text-xs font-medium">Assigned to Core Infrastructure Team</span>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-lg">download</span>
+                    Export PDF
+                </button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity">
+                    Next Section
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</footer>
+</div>
+</body></html>

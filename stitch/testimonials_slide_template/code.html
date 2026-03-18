@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<title>Client Testimonials Presentation</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center p-8">
+<!-- 16:9 Presentation Container -->
+<div class="relative w-full aspect-[16/9] max-w-[1280px] bg-white dark:bg-slate-900 shadow-2xl rounded-xl overflow-hidden flex flex-col border border-slate-200 dark:border-slate-800">
+<!-- Header Section -->
+<header class="w-full px-12 pt-12 pb-6 flex justify-between items-end">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined font-bold text-3xl">format_quote</span>
+<span class="uppercase tracking-widest text-xs font-bold">Success Stories</span>
+</div>
+<h1 class="text-5xl font-black tracking-tight text-slate-900 dark:text-white">Client Testimonials</h1>
+</div>
+<div class="flex items-center gap-4 border-l-4 border-primary pl-6">
+<p class="text-slate-500 dark:text-slate-400 max-w-[300px] text-sm leading-relaxed">
+                    Trusted by over 500+ industry leaders to deliver exceptional results and architectural excellence.
+                </p>
+</div>
+</header>
+<!-- Main Content: Side-by-Side Quote Cards -->
+<main class="flex-1 px-12 py-8 grid grid-cols-3 gap-8 items-stretch">
+<!-- Card 1 -->
+<div class="flex flex-col bg-slate-50 dark:bg-slate-800/50 p-8 rounded-xl border border-slate-200 dark:border-slate-700 relative">
+<div class="absolute -top-4 left-8 bg-primary text-white p-2 rounded-lg shadow-lg">
+<span class="material-symbols-outlined text-2xl">star</span>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<p class="text-xl italic font-medium leading-relaxed text-slate-700 dark:text-slate-200 mb-8">
+                        "The implementation was seamless and the results exceeded our expectations within the first quarter. Truly a game-changer for our scale."
+                    </p>
+</div>
+<div class="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-slate-700">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/20 shrink-0">
+<img alt="Professional portrait of Sarah Jenkins" class="w-full h-full object-cover" data-alt="Portrait of a female executive smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5crpYqNyy_Z8OgsRBg0Gxm2j6sscBxqCLoaBZmMsKFT9veBuPfvF_Mw4IoJMOgM3VGRWmwL8K3Z9fh6Vqe5c3HmPnx_CglCROEnsK_gl7HWsXkdChvbdrpQNIeBlPjWpEsxHHIBm-u1vtbQdFOosP9s1tXr_AfYA0fK3OmZVD3une-CIMAEWQCx4OddLYsB-pOCIh5hl8DNT6gGtMduVv-ezFstEYZa4IsNONblgUY1FgMwoTQJLSuYdeUtJczXxFwmjN2vjbHe8"/>
+</div>
+<div class="overflow-hidden">
+<p class="font-bold text-slate-900 dark:text-white truncate">Sarah Jenkins</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate uppercase tracking-tighter">CEO at TechFlow</p>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex flex-col bg-slate-50 dark:bg-slate-800/50 p-8 rounded-xl border border-slate-200 dark:border-slate-700 relative scale-105 z-10 shadow-xl ring-2 ring-primary/10">
+<div class="absolute -top-4 left-8 bg-primary text-white p-2 rounded-lg shadow-lg">
+<span class="material-symbols-outlined text-2xl">verified</span>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<p class="text-xl italic font-medium leading-relaxed text-slate-700 dark:text-slate-200 mb-8">
+                        "A truly professional team that understands the nuances of modern enterprise architecture. Their insight is unparalleled in the field."
+                    </p>
+</div>
+<div class="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-slate-700">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/20 shrink-0">
+<img alt="Professional portrait of Michael Chen" class="w-full h-full object-cover" data-alt="Portrait of a male executive in a suit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVaqPTubenmSLBO0qyjBl2r-Ed3Za0gGH20rnq-w5q-jI49Fk8dojDKQFqi4dXIjBpKWpalwyuxKy-jz-ynFQ8Y6AohSeJibMgejQ2GyOunD6_OgNuivj-volNAw4oOq_UQy928v9Fbq7E6pW1Scbsii1dwIvPJw3HWzlQVfb1pDv6u-p-lFmnbs32u15PQhvpU-1ygiUt-t57Q64v3mghROgrlYkH7q_WqpjSiYc9noF9ngaEux8tFVdFDfqRGjFtGIORtB6nfhY"/>
+</div>
+<div class="overflow-hidden">
+<p class="font-bold text-slate-900 dark:text-white truncate">Michael Chen</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate uppercase tracking-tighter">Director at Innovate Inc</p>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex flex-col bg-slate-50 dark:bg-slate-800/50 p-8 rounded-xl border border-slate-200 dark:border-slate-700 relative">
+<div class="absolute -top-4 left-8 bg-primary text-white p-2 rounded-lg shadow-lg">
+<span class="material-symbols-outlined text-2xl">thumb_up</span>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<p class="text-xl italic font-medium leading-relaxed text-slate-700 dark:text-slate-200 mb-8">
+                        "Their attention to detail and commitment to client success is what sets them apart. We've seen a 40% increase in efficiency."
+                    </p>
+</div>
+<div class="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-slate-700">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/20 shrink-0">
+<img alt="Professional portrait of Elena Rodriguez" class="w-full h-full object-cover" data-alt="Portrait of a female professional with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQsYG6Hr3hqxHZojQEu30IOv5tjBcFZRFAtesIxGVi4oo56sUPRcVrBKaU9fPq2MYGjHRdQu9_m1vC033VN27jyaBXW_3BqFQy2U8rdOUqemWVoz-ro-QHYYW_50DpSBrjpvkAPAYo1UdN4ljwx04iF9g7RXAgdDYM1M9xHW3qKro9AHJlJeQH_VuHhD2TibXUcLBIrN6Yk5B7hUf8pBDSDYKECj7LfazW-QrxTxhGn1tVRRGNEBLIxhMx-h8BIffEX57TNXXfylI"/>
+</div>
+<div class="overflow-hidden">
+<p class="font-bold text-slate-900 dark:text-white truncate">Elena Rodriguez</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate uppercase tracking-tighter text-wrap">Ops Manager, Global Logistics</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full px-12 py-8 bg-slate-50/50 dark:bg-slate-800/30 flex justify-between items-center">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="flex text-amber-500">
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="material-symbols-outlined text-sm">star_half</span>
+</div>
+<span class="text-sm font-bold">4.9/5 Rating</span>
+</div>
+<div class="h-4 w-px bg-slate-300 dark:bg-slate-700"></div>
+<div class="text-sm text-slate-500 dark:text-slate-400">
+                    Based on <span class="text-slate-900 dark:text-white font-bold">120+</span> Independent Reviews
+                </div>
+</div>
+<div class="flex gap-2">
+<div class="w-2 h-2 rounded-full bg-primary/20"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary/20"></div>
+</div>
+</footer>
+<!-- Background Decor -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full -ml-48 -mb-48 blur-3xl pointer-events-none"></div>
+</div>
+</body></html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pricing Comparison Slide</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .aspect-16-9 {
+            aspect-ratio: 16 / 9;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-8">
+<!-- Slide Container (16:9 Aspect Ratio) -->
+<div class="aspect-16-9 w-full max-w-6xl bg-white dark:bg-slate-900 shadow-2xl rounded-xl overflow-hidden flex flex-col border border-slate-200 dark:border-slate-800">
+<!-- Header Section -->
+<div class="pt-12 px-12 pb-8">
+<div class="flex flex-col gap-2 max-w-2xl">
+<h2 class="text-primary font-bold tracking-wider uppercase text-sm">Pricing Plans</h2>
+<h1 class="text-slate-900 dark:text-slate-100 text-4xl font-black leading-tight tracking-tight">
+                    Scale your business with the right tools
+                </h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">
+                    Choose a plan that fits your current needs and scale as you grow.
+                </p>
+</div>
+</div>
+<!-- Pricing Columns Container -->
+<div class="flex-1 px-12 pb-12">
+<div class="grid grid-cols-3 gap-6 h-full">
+<!-- Basic Plan -->
+<div class="flex flex-col p-8 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+<div class="mb-6">
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Starter</h3>
+<div class="mt-4 flex items-baseline gap-1">
+<span class="text-slate-900 dark:text-slate-100 text-5xl font-black tracking-tighter">$0</span>
+<span class="text-slate-500 dark:text-slate-400 font-medium">/mo</span>
+</div>
+<p class="mt-2 text-slate-500 dark:text-slate-400 text-sm">Perfect for individuals getting started.</p>
+</div>
+<div class="flex-1 space-y-4">
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm">Up to 3 projects</span>
+</div>
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm">Basic analytics dashboard</span>
+</div>
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm">Community forum access</span>
+</div>
+</div>
+<button class="mt-8 w-full py-3 px-4 rounded-lg font-bold text-sm transition-colors bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-600">
+                        Get Started
+                    </button>
+</div>
+<!-- Pro Plan (Featured) -->
+<div class="relative flex flex-col p-8 rounded-xl border-2 border-primary bg-white dark:bg-slate-900 shadow-xl scale-105 z-10">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
+                        Most Popular
+                    </div>
+<div class="mb-6">
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Professional</h3>
+<div class="mt-4 flex items-baseline gap-1">
+<span class="text-primary text-5xl font-black tracking-tighter">$49</span>
+<span class="text-slate-500 dark:text-slate-400 font-medium">/mo</span>
+</div>
+<p class="mt-2 text-slate-500 dark:text-slate-400 text-sm">Everything you need for growing teams.</p>
+</div>
+<div class="flex-1 space-y-4">
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm font-semibold">Unlimited projects</span>
+</div>
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm">Advanced real-time analytics</span>
+</div>
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm">Priority email support</span>
+</div>
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm">Custom domain integration</span>
+</div>
+</div>
+<button class="mt-8 w-full py-3 px-4 rounded-lg font-bold text-sm transition-colors bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20">
+                        Start 14-day Trial
+                    </button>
+</div>
+<!-- Enterprise Plan -->
+<div class="flex flex-col p-8 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+<div class="mb-6">
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Enterprise</h3>
+<div class="mt-4 flex items-baseline gap-1">
+<span class="text-slate-900 dark:text-slate-100 text-5xl font-black tracking-tighter">$99</span>
+<span class="text-slate-500 dark:text-slate-400 font-medium">/mo</span>
+</div>
+<p class="mt-2 text-slate-500 dark:text-slate-400 text-sm">Advanced security and support for scale.</p>
+</div>
+<div class="flex-1 space-y-4">
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm">Dedicated account manager</span>
+</div>
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm">SSO &amp; SAML authentication</span>
+</div>
+<div class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm">Custom SLA agreements</span>
+</div>
+</div>
+<button class="mt-8 w-full py-3 px-4 rounded-lg font-bold text-sm transition-colors bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200">
+                        Contact Sales
+                    </button>
+</div>
+</div>
+</div>
+<!-- Slide Footer Decor -->
+<div class="h-2 w-full bg-gradient-to-r from-primary/10 via-primary to-primary/10"></div>
+</div>
+</body></html>

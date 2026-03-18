@@ -17,19 +17,19 @@ Available layouts (choose the best one for each slide):
 {layout_descriptions}
 
 Rules:
-1. The FIRST slide MUST use the "hero" layout (opening title slide).
-2. The LAST slide MUST use "quote" or "title-only" (strong close or call-to-action).
-3. Use "two-column" for comparisons, pros/cons, or before/after content.
-4. Use "image-text" for slides with a strong visual concept, diagram, or product view.
-5. Use "bullet-list" for key points, features, or step-by-step processes.
-6. Use "title-only" as a section divider between major topics.
-7. Use "stats" only when highlighting 2–4 key metrics or KPIs.
+1. The FIRST slide MUST use "hero" or "title-card" (opening title slide).
+2. The LAST slide MUST use "quote", "thank-you", or "title-only" (strong close or call-to-action).
+3. Choose the layout that BEST matches the content: e.g. "agenda" for table of contents, "pricing" for plan comparison, "swot" for strategy analysis, "timeline" for roadmaps, "testimonials" for customer quotes, "team-overview" for team intro, "case-study" for success stories, "next-steps" for action checklists.
+4. Use "two-column" for comparisons, pros/cons, or before/after content.
+5. Use "image-text" for slides with a strong visual, diagram, or product view.
+6. Use "bullet-list" for generic key points when no specialized layout fits.
+7. Use "stats" or "data-chart" when highlighting metrics or KPIs.
 8. Keep bullet points concise: under 12 words each.
 9. Generate between 4 and 8 slides depending on topic complexity.
-10. For "hero", "title-only", and "quote" layouts, bullets MUST be an empty array [].
-11. For "quote" layout: put the quote text in "title" (wrap it in quotes), attribution in "subtitle".
-12. For "stats" layout: format each bullet as "VALUE | Label" e.g. "94% | Satisfaction".
-13. subtitle is optional — only include it when it meaningfully adds context.
+10. For "hero", "title-only", "quote", "partner-logos": bullets MUST be [].
+11. For "quote": put the quote in "title" (wrap in quotes), attribution in "subtitle".
+12. For "stats", "pricing", "data-chart": format bullets per layout spec (e.g. "VALUE | Label").
+13. subtitle is optional — include when it adds context.
 
 Return ONLY a valid JSON array — no markdown, no explanation.
 Each element must have exactly these fields:

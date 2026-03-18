@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>body {
+    font-family: "Inter", sans-serif
+    }
+.map-bg {
+    background-image: linear-gradient(rgba(246, 246, 248, 0.9), rgba(246, 246, 248, 0.9)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuCTCMAgS3m1pmiNi-z0yc8m1lMPdfRNr1h6_h5UHTBSzJlu9xhQGY_KcTfSmcn6ade6ex_wQ_UNo1JeTYAAxDwyt9hUxdXukrvCAHDSlcTUdT81HEjXu4sC842J3ozB5esGbffBx9N7jSeNSezWDUERViZyfwuf2msEHBxa6D9-_Xg2bHzwX75O41FqgOWt_w7dV29XDl5Njw7xv7aEkejrVIAe9fa1dZMN_VoZ-hkUhmgibqmXSh8MnyCk2yuIEL7eD1tffPyoHNg);
+    background-size: cover;
+    background-position: center
+    }</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-8">
+<div class="aspect-[16/9] w-full max-w-7xl bg-white dark:bg-slate-900 rounded-xl shadow-2xl overflow-hidden flex flex-col relative border border-slate-200 dark:border-slate-800">
+<header class="flex items-center justify-between px-12 py-8 bg-white dark:bg-slate-900 z-10">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl font-bold">public</span>
+<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Global Presence</h1>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-lg ml-11">Strategic Market Reach &amp; Operational Hubs • FY2024</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="px-4 py-2 bg-primary/10 rounded-lg">
+<span class="text-primary font-semibold">Confidential</span>
+</div>
+</div>
+</header>
+<main class="flex-1 relative map-bg overflow-hidden" data-alt="Stylized world map with connecting lines" data-location="World">
+<div class="absolute top-[25%] left-[18%] group">
+<div class="relative">
+<div class="flex flex-col items-center">
+<div class="w-4 h-4 bg-primary rounded-full ring-4 ring-primary/30 animate-pulse"></div>
+<div class="w-0.5 h-8 bg-primary/40"></div>
+<div class="bg-white dark:bg-slate-800 p-3 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 min-w-[140px]">
+<p class="text-xs font-semibold text-primary uppercase tracking-wider">North America</p>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">15 Offices</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">500+ Employees</p>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute top-[20%] left-[48%] group">
+<div class="relative">
+<div class="flex flex-col items-center">
+<div class="w-4 h-4 bg-primary rounded-full ring-4 ring-primary/30 animate-pulse"></div>
+<div class="w-0.5 h-8 bg-primary/40"></div>
+<div class="bg-white dark:bg-slate-800 p-3 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 min-w-[140px]">
+<p class="text-xs font-semibold text-primary uppercase tracking-wider">Europe</p>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">8 Hubs</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">200+ Staff</p>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute top-[45%] left-[65%] group">
+<div class="relative">
+<div class="flex flex-col items-center">
+<div class="w-4 h-4 bg-primary rounded-full ring-4 ring-primary/30 animate-pulse"></div>
+<div class="w-0.5 h-8 bg-primary/40"></div>
+<div class="bg-white dark:bg-slate-800 p-3 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 min-w-[140px]">
+<p class="text-xs font-semibold text-primary uppercase tracking-wider">Middle East</p>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">5 Branches</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">100+ Team Members</p>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute top-[35%] left-[80%] group">
+<div class="relative">
+<div class="flex flex-col items-center">
+<div class="w-4 h-4 bg-primary rounded-full ring-4 ring-primary/30 animate-pulse"></div>
+<div class="w-0.5 h-8 bg-primary/40"></div>
+<div class="bg-white dark:bg-slate-800 p-3 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 min-w-[140px]">
+<p class="text-xs font-semibold text-primary uppercase tracking-wider">Asia Pacific</p>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">12 Centers</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">350+ Experts</p>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute bottom-[25%] left-[28%] group">
+<div class="relative">
+<div class="flex flex-col items-center">
+<div class="w-4 h-4 bg-primary rounded-full ring-4 ring-primary/30 animate-pulse"></div>
+<div class="w-0.5 h-8 bg-primary/40"></div>
+<div class="bg-white dark:bg-slate-800 p-3 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 min-w-[140px]">
+<p class="text-xs font-semibold text-primary uppercase tracking-wider">Latin America</p>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">4 HQ</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">150+ Support Staff</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-slate-50 dark:bg-slate-800/50 px-12 py-6 border-t border-slate-200 dark:border-slate-700">
+<div class="grid grid-cols-4 gap-8">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">language</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 dark:text-slate-400">Total Countries</p>
+<p class="text-xl font-bold text-slate-900 dark:text-slate-100">42+</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 dark:text-slate-400">Total Workforce</p>
+<p class="text-xl font-bold text-slate-900 dark:text-slate-100">1,300+</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 dark:text-slate-400">Annual Growth</p>
+<p class="text-xl font-bold text-slate-900 dark:text-slate-100">24%</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">hub</span>
+</div>
+<div>
+<p class="text-sm text-slate-500 dark:text-slate-400">Regional Hubs</p>
+<p class="text-xl font-bold text-slate-900 dark:text-slate-100">44 Units</p>
+</div>
+</div>
+</div>
+</footer>
+<div class="absolute bottom-4 right-12 text-slate-400 text-xs italic">
+            *Data accurate as of Q3 FY2024. All rights reserved.
+        </div>
+</div>
+</body></html>
