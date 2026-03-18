@@ -4,8 +4,9 @@
 
 1. **Import the repo** at [vercel.com/new](https://vercel.com/new) and select this GitHub repository.
 
-2. **Set Root Directory** to `frontend-next`:
+2. **Set Root Directory** to `frontend-next` (required):
    - Project Settings → General → Root Directory → Edit → `frontend-next`
+   - This silences the "multiple lockfiles" warning and ensures correct build context.
 
 3. **Environment variables** (optional): Add `NEXT_PUBLIC_API_URL` if using an external API.
 

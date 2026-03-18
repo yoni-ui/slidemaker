@@ -3,8 +3,9 @@ import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   turbopack: {
-    root: path.join(__dirname),
+    root: path.resolve(__dirname),
   },
+  outputFileTracingRoot: path.resolve(__dirname),
   // GROQ_API_KEY is server-side only — never expose it to the browser.
   // NEXT_PUBLIC_API_URL is opt-in for pointing at an external backend.
   env: {
