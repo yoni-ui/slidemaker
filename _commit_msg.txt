@@ -1,0 +1,13 @@
+fix(deploy): fix Vercel 404 — replace invalid rootDirectory with build commands
+
+rootDirectory is a dashboard-only Vercel setting; specifying it in vercel.json
+is silently ignored, causing Vercel to build from the repo root (no Next.js app
+there) and serve 404 NOT_FOUND.
+
+- Replace rootDirectory with explicit installCommand/buildCommand/outputDirectory
+  pointing at frontend-next/ so Vercel builds the correct project from root
+- Remove stray root package-lock.json (created with no root package.json;
+  was triggering Next.js multi-lockfile warning and confusing Vercel detection)
+- Add /package-lock.json to .gitignore so it cannot reappear
+- Simplify next.config.ts: remove turbopack.root workaround (no longer needed
+  now that the extra lockfile is gone)

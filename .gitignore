@@ -20,6 +20,11 @@ out/
 dist/
 .turbo/
 
+## Stray root-level lockfile (no root package.json — must not exist)
+/package-lock.json
+/yarn.lock
+/pnpm-lock.yaml
+
 ## Env / secrets
 .env
 .env.*
