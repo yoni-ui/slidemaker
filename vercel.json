@@ -1,8 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "installCommand": "cd frontend-next && npm install",
-  "buildCommand": "cd frontend-next && npm run build",
-  "outputDirectory": "frontend-next/.next",
-  "devCommand": "cd frontend-next && npm run dev -- --port $PORT"
+  "comment": "Root Directory must be set to 'frontend-next' in Vercel Project Settings → General."
 }
