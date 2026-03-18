@@ -1,0 +1,13 @@
+{
+  "name": "slidemaker",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "build": "cd frontend-next && npm install && npm run build",
+    "dev": "cd frontend-next && npm run dev",
+    "start": "cd frontend-next && npm run start"
+  },
+  "dependencies": {
+    "next": "16.1.7"
+  }
+}

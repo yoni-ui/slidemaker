@@ -1,4 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "comment": "Root Directory must be set to 'frontend-next' in Vercel Project Settings → General."
+  "framework": "nextjs",
+  "outputDirectory": "frontend-next/.next"
 }
