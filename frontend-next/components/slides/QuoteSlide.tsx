@@ -1,44 +1,34 @@
 import type { SlideProps } from "./types"
 
+/** Full-bleed primary bg, oversized quote marks, white text (Stitch upgrade) */
 export const QuoteSlide = ({ slide }: SlideProps) => (
-  <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-canvas px-16 text-center">
-    {/* Subtle gradient bg */}
-    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
-
-    {/* Top accent */}
-    <div className="absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-
-    {/* Opening quote mark */}
+  <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-xl bg-primary px-12 py-16 text-center lg:px-24">
     <div
-      className="pointer-events-none absolute left-10 top-8 select-none font-serif leading-none text-primary/20"
-      style={{ fontSize: 160, lineHeight: 1 }}
-    >
-      &ldquo;
-    </div>
+      className="pointer-events-none absolute inset-0 opacity-10"
+      style={{
+        backgroundImage:
+          "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
+        backgroundSize: "40px 40px",
+      }}
+    />
 
-    <div className="relative z-10 flex max-w-[760px] flex-col items-center gap-7">
-      {/* Quote text */}
-      <blockquote className="text-[32px] font-medium italic leading-[1.4] text-slate-100">
+    <div className="absolute top-12 left-1/2 h-1 w-12 -translate-x-1/2 rounded-full bg-white/40" />
+
+    <div className="relative z-10 flex flex-col items-center gap-8">
+      <span className="material-symbols-outlined text-6xl text-white/40 lg:text-8xl">
+        format_quote
+      </span>
+      <h1 className="max-w-5xl text-4xl font-extrabold italic leading-[1.1] tracking-tight text-white md:text-5xl lg:text-7xl">
         {slide.title}
-      </blockquote>
-
-      {/* Divider */}
-      <div className="h-px w-16 bg-primary/50" />
-
-      {/* Attribution */}
-      {slide.subtitle && (
-        <cite className="not-italic text-base font-semibold uppercase tracking-widest text-primary">
-          — {slide.subtitle}
-        </cite>
-      )}
-    </div>
-
-    {/* Closing quote mark */}
-    <div
-      className="pointer-events-none absolute bottom-4 right-10 select-none font-serif leading-none text-primary/10"
-      style={{ fontSize: 120, lineHeight: 1 }}
-    >
-      &rdquo;
+      </h1>
+      <div className="flex flex-col items-center gap-2">
+        <div className="mb-4 h-px w-24 bg-white/60" />
+        {slide.subtitle && (
+          <h2 className="text-xl font-semibold tracking-wide text-white/90 md:text-2xl">
+            — {slide.subtitle}
+          </h2>
+        )}
+      </div>
     </div>
   </div>
 )

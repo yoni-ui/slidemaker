@@ -6,11 +6,11 @@ export const TwoColumnSlide = ({ slide }: SlideProps) => {
   const right = slide.bullets.slice(mid)
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden bg-canvas">
+    <div className="flex h-full w-full flex-col overflow-hidden bg-white">
       {/* Title */}
-      <div className="flex-shrink-0 border-b border-primary/20 bg-background-dark px-12 py-7">
+      <div className="flex-shrink-0 border-b border-primary/20 bg-slate-50 px-12 py-7">
         <div className="mb-2 h-0.5 w-10 rounded-full bg-primary" />
-        <h1 className="text-[38px] font-bold leading-tight tracking-tight text-slate-100">
+        <h1 className="text-[38px] font-bold leading-tight tracking-tight text-slate-900">
           {slide.title}
         </h1>
       </div>
@@ -22,7 +22,7 @@ export const TwoColumnSlide = ({ slide }: SlideProps) => {
           {left.map((bullet, i) => (
             <div key={i} className="flex items-start gap-3">
               <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
-              <p className="text-[18px] leading-snug text-slate-200">{bullet}</p>
+              <p className="text-[18px] leading-snug text-slate-800">{bullet}</p>
             </div>
           ))}
         </div>
@@ -32,7 +32,7 @@ export const TwoColumnSlide = ({ slide }: SlideProps) => {
           {right.map((bullet, i) => (
             <div key={i} className="flex items-start gap-3">
               <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary/60" />
-              <p className="text-[18px] leading-snug text-slate-300">{bullet}</p>
+              <p className="text-[18px] leading-snug text-slate-600">{bullet}</p>
             </div>
           ))}
         </div>

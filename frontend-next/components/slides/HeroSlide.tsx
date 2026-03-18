@@ -1,7 +1,7 @@
 import type { SlideProps } from "./types"
 
 export const HeroSlide = ({ slide }: SlideProps) => (
-  <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-canvas px-20 text-center">
+  <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-white px-20 text-center">
     {/* Ambient glow */}
     <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
       <div className="h-96 w-96 rounded-full bg-primary/10 blur-[80px]" />
@@ -20,7 +20,7 @@ export const HeroSlide = ({ slide }: SlideProps) => (
       </div>
 
       {/* Title */}
-      <h1 className="max-w-[820px] text-[64px] font-black leading-[1.1] tracking-tight text-slate-100">
+      <h1 className="max-w-[820px] text-[64px] font-black leading-[1.1] tracking-tight text-slate-900">
         {slide.title}
       </h1>
 
@@ -29,7 +29,7 @@ export const HeroSlide = ({ slide }: SlideProps) => (
 
       {/* Subtitle */}
       {slide.subtitle && (
-        <p className="max-w-xl text-2xl font-light leading-relaxed text-slate-400">
+        <p className="max-w-xl text-2xl font-light leading-relaxed text-slate-500">
           {slide.subtitle}
         </p>
       )}

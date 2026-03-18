@@ -9,7 +9,7 @@ export default function AppLayout({
   return (
     <div className="flex h-screen overflow-hidden">
       <AppSidebar />
-      <main className="flex flex-1 flex-col overflow-hidden bg-background-light dark:bg-background-dark">
+      <main className="flex flex-1 flex-col overflow-hidden bg-[#f6f6f8]">
         <AppHeader />
         <div className="flex-1 overflow-y-auto p-10">{children}</div>
       </main>

@@ -1,7 +1,7 @@
 import type { SlideProps } from "./types"
 
 export const TitleOnlySlide = ({ slide }: SlideProps) => (
-  <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-canvas text-center">
+  <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-white text-center">
     {/* Decorative ring */}
     <div className="pointer-events-none absolute h-[420px] w-[420px] rounded-full border border-primary/10" />
     <div className="pointer-events-none absolute h-[280px] w-[280px] rounded-full border border-primary/15" />
@@ -20,11 +20,11 @@ export const TitleOnlySlide = ({ slide }: SlideProps) => (
     </div>
 
     <div className="relative z-10 flex flex-col items-center gap-5 px-20">
-      <h1 className="text-[58px] font-black leading-[1.1] tracking-tight text-slate-100">
+      <h1 className="text-[58px] font-black leading-[1.1] tracking-tight text-slate-900">
         {slide.title}
       </h1>
       {slide.subtitle && (
-        <p className="text-xl font-light text-slate-400">{slide.subtitle}</p>
+        <p className="text-xl font-light text-slate-500">{slide.subtitle}</p>
       )}
     </div>
 

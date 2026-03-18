@@ -9,14 +9,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#ec5b13",
+        primary: "#1152d4",
         "background-light": "#f8f6f6",
-        "background-dark": "#221610",
-        "surface-dark": "#161B28",
-        "border-dark": "#232936",
-        "card-dark": "#1e1e1e",
-        "sidebar-dark": "#181818",
-        canvas: "#1a110c",
+        "background-dark": "#f6f6f8",
+        "surface-dark": "#f1f5f9",
+        "border-dark": "#e2e8f0",
+        "card-dark": "#ffffff",
+        "sidebar-dark": "#ffffff",
+        canvas: "#e2e8f0",
       },
       fontFamily: {
         display: ["var(--font-public-sans)", "Public Sans", "sans-serif"],

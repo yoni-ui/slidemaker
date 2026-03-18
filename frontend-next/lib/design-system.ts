@@ -1,12 +1,12 @@
 export const DS = {
   colors: {
-    primary: "#ec5b13",
-    backgroundDark: "#221610",
+    primary: "#1152d4",
+    backgroundDark: "#f6f6f8",
     backgroundLight: "#f8f6f6",
-    canvas: "#1a110c",
-    sidebarDark: "#181818",
-    scrollThumb: "#4a372d",
-    cardDark: "#1e1e1e",
+    canvas: "#e2e8f0",
+    sidebarDark: "#ffffff",
+    scrollThumb: "#1152d4",
+    cardDark: "#ffffff",
   },
   font: "'Public Sans', sans-serif",
   radius: {

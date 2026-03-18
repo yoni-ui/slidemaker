@@ -1,12 +1,14 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { Suspense, useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { generateSlides, type SlideContent } from "@/lib/api"
 import { LAYOUTS, LAYOUT_MAP, SLIDE_W, SLIDE_H, type LayoutKey } from "@/lib/design-system"
 import { SlideRenderer } from "@/components/slides/SlideRenderer"
 import { SlideThumbnail } from "@/components/slides/SlideThumbnail"
 import type { EditableSlide } from "@/components/slides/types"
+import { getTemplateById } from "@/lib/templates"
 
 const toEditable = (s: SlideContent): EditableSlide => ({
   title: s.title,
@@ -14,6 +16,8 @@ const toEditable = (s: SlideContent): EditableSlide => ({
   bullets: s.bullets ?? [],
   layout: (s.layout as LayoutKey) ?? "bullet-list",
   theme: s.theme ?? "default",
+  imagePrompt: (s as EditableSlide).imagePrompt,
+  backgroundPrompt: (s as EditableSlide).backgroundPrompt,
 })
 
 const BLANK_SLIDE: EditableSlide = {
@@ -24,7 +28,8 @@ const BLANK_SLIDE: EditableSlide = {
   theme: "default",
 }
 
-export default function EditorPage() {
+function EditorContent() {
+  const searchParams = useSearchParams()
   const [deckTitle, setDeckTitle] = useState("Untitled Deck")
   const [slides, setSlides] = useState<EditableSlide[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -91,6 +96,35 @@ export default function EditorPage() {
     updateSlide({ bullets: (current?.bullets ?? []).filter((_, i) => i !== bulletIdx) })
   }
 
+  const IMAGE_LAYOUTS = ["image-text", "case-study"]
+  const showImagePrompt = current && IMAGE_LAYOUTS.includes(current.layout)
+
+  const debounceRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
+  const updateSlideRef = useRef(updateSlide)
+  updateSlideRef.current = updateSlide
+  const handleDebouncedPrompt = useCallback(
+    (key: "imagePrompt" | "backgroundPrompt", value: string) => {
+      if (debounceRef.current[key]) clearTimeout(debounceRef.current[key])
+      debounceRef.current[key] = setTimeout(() => {
+        updateSlideRef.current({ [key]: value.trim() || undefined })
+      }, 800)
+    },
+    []
+  )
+
+  // Pre-load template when ?template=id is present
+  useEffect(() => {
+    const templateId = searchParams.get("template")
+    if (templateId) {
+      const t = getTemplateById(templateId)
+      if (t) {
+        setSlides(t.slides)
+        setDeckTitle(t.name)
+        setCurrentIndex(0)
+      }
+    }
+  }, [searchParams])
+
   // Auto-focus prompt on mount
   useEffect(() => {
     promptRef.current?.focus()
@@ -106,7 +140,7 @@ export default function EditorPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-primary/10 hover:text-primary"
+            className="flex items-center gap-1.5 rounded-lg p-1.5 text-slate-600 transition-colors hover:bg-primary/10 hover:text-primary"
             title="Back to dashboard"
           >
             <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
@@ -120,7 +154,7 @@ export default function EditorPage() {
           <input
             value={deckTitle}
             onChange={(e) => setDeckTitle(e.target.value)}
-            className="min-w-0 max-w-[200px] bg-transparent text-sm font-semibold text-slate-100 focus:outline-none focus:ring-0"
+            className="min-w-0 max-w-[200px] bg-transparent text-sm font-semibold text-slate-900 focus:outline-none focus:ring-0"
             aria-label="Deck title"
           />
           <div className="h-5 w-px bg-primary/20" />
@@ -128,7 +162,7 @@ export default function EditorPage() {
           <div className="flex gap-0.5">
             <button
               type="button"
-              className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-primary/10 hover:text-slate-300"
+              className="rounded-lg p-1.5 text-slate-600 transition-colors hover:bg-primary/10 hover:text-slate-900"
               title="Undo (Ctrl+Z)"
               aria-label="Undo"
             >
@@ -136,7 +170,7 @@ export default function EditorPage() {
             </button>
             <button
               type="button"
-              className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-primary/10 hover:text-slate-300"
+              className="rounded-lg p-1.5 text-slate-600 transition-colors hover:bg-primary/10 hover:text-slate-900"
               title="Redo (Ctrl+Y)"
               aria-label="Redo"
             >
@@ -150,7 +184,7 @@ export default function EditorPage() {
           <button
             type="button"
             onClick={() => setPromptOpen((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-400 transition-colors hover:bg-primary/10 hover:text-primary"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-primary/10 hover:text-primary"
           >
             <span className="material-symbols-outlined" style={{ fontSize: 16 }}>auto_awesome</span>
             {promptOpen ? "Hide prompt" : "AI Generate"}
@@ -210,7 +244,7 @@ export default function EditorPage() {
               >
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-[10px] font-bold text-slate-600">{n + 1}</span>
-                  <div className={`h-px flex-1 ${n === currentIndex ? "bg-primary/40" : "bg-slate-800"}`} />
+                  <div className={`h-px flex-1 ${n === currentIndex ? "bg-primary/40" : "bg-slate-300"}`} />
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); deleteSlide(n) }}
@@ -241,7 +275,7 @@ export default function EditorPage() {
         <main className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-canvas">
           {/* Canvas stage */}
           <div
-            className="relative overflow-hidden rounded-xl border border-primary/10 shadow-[0_24px_60px_rgba(0,0,0,0.7)]"
+            className="relative overflow-hidden rounded-xl border border-slate-200 shadow-[0_24px_60px_rgba(0,0,0,0.15)]"
             style={{
               width: "min(calc(100% - 96px), 960px)",
               aspectRatio: `${SLIDE_W} / ${SLIDE_H}`,
@@ -250,7 +284,7 @@ export default function EditorPage() {
             {current ? (
               <SlideRenderer slide={current} />
             ) : (
-              <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-background-dark">
+              <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-slate-50">
                 <span className="material-symbols-outlined text-primary/30" style={{ fontSize: 64 }}>
                   auto_awesome
                 </span>
@@ -270,7 +304,7 @@ export default function EditorPage() {
                   type="button"
                   onClick={() => setCurrentIndex(n)}
                   className={`h-1.5 rounded-full transition-all ${
-                    n === currentIndex ? "w-5 bg-primary" : "w-1.5 bg-slate-700 hover:bg-slate-500"
+                    n === currentIndex ? "w-5 bg-primary" : "w-1.5 bg-slate-400 hover:bg-slate-600"
                   }`}
                   aria-label={`Go to slide ${n + 1}`}
                 />
@@ -285,7 +319,7 @@ export default function EditorPage() {
             }`}
           >
             {promptOpen ? (
-              <div className="flex flex-col gap-2 rounded-2xl border border-primary/25 bg-background-dark/95 p-3 shadow-xl shadow-black/50 backdrop-blur-md">
+              <div className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-xl shadow-slate-800/10 backdrop-blur-md">
                 <textarea
                   ref={promptRef}
                   value={prompt}
@@ -294,7 +328,7 @@ export default function EditorPage() {
                   placeholder='Describe your deck… e.g. "5 slides on AI in healthcare for investors"'
                   rows={2}
                   disabled={loading}
-                  className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20 disabled:opacity-50"
+                  className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20 disabled:opacity-50"
                 />
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-[11px] text-slate-600">⌘ Enter to generate</p>
@@ -302,7 +336,7 @@ export default function EditorPage() {
                     <button
                       type="button"
                       onClick={() => setPromptOpen(false)}
-                      className="rounded-xl px-3 py-1.5 text-xs font-medium text-slate-500 hover:bg-white/5 hover:text-slate-300"
+                      className="rounded-xl px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                     >
                       Dismiss
                     </button>
@@ -329,14 +363,14 @@ export default function EditorPage() {
                   </div>
                 </div>
                 {error && (
-                  <p className="rounded-lg bg-red-900/20 px-3 py-2 text-xs text-red-400">{error}</p>
+                  <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">{error}</p>
                 )}
               </div>
             ) : (
               <button
                 type="button"
                 onClick={() => setPromptOpen(true)}
-                className="flex items-center gap-2 rounded-full border border-primary/20 bg-background-dark/90 px-4 py-2 text-xs font-semibold text-primary shadow-lg shadow-black/40 backdrop-blur-md transition-all hover:border-primary/40 hover:bg-primary/10"
+                className="flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-xs font-semibold text-primary shadow-lg shadow-slate-800/10 backdrop-blur-md transition-all hover:border-primary/40 hover:bg-primary/10"
               >
                 <span className="material-symbols-outlined" style={{ fontSize: 16 }}>auto_awesome</span>
                 AI Generate
@@ -357,7 +391,7 @@ export default function EditorPage() {
                 className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-colors ${
                   rightTab === tab
                     ? "border-b-2 border-primary text-primary"
-                    : "text-slate-500 hover:text-slate-300"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 {tab}
@@ -391,7 +425,7 @@ export default function EditorPage() {
                       className={`flex flex-col items-center gap-2 rounded-xl border p-3 text-center transition-all ${
                         current.layout === layout.key
                           ? "border-primary bg-primary/10 text-primary"
-                          : "border-primary/10 text-slate-400 hover:border-primary/30 hover:bg-primary/5 hover:text-slate-200"
+                          : "border-slate-200 text-slate-600 hover:border-primary/30 hover:bg-primary/5 hover:text-slate-900"
                       }`}
                     >
                       <span
@@ -409,7 +443,7 @@ export default function EditorPage() {
 
                 {currentMeta && (
                   <div className="mt-4 rounded-xl border border-primary/10 bg-primary/5 p-3">
-                    <p className="text-[11px] leading-relaxed text-slate-400">
+                    <p className="text-[11px] leading-relaxed text-slate-600">
                       {currentMeta.description}
                     </p>
                   </div>
@@ -427,7 +461,7 @@ export default function EditorPage() {
                     value={current.title}
                     onChange={(e) => updateSlide({ title: e.target.value })}
                     rows={2}
-                    className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                    className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                   />
                 </div>
 
@@ -444,7 +478,7 @@ export default function EditorPage() {
                       }
                       placeholder="Optional subtitle…"
                       rows={2}
-                      className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-600 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                      className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                     />
                   </div>
                 )}
@@ -473,7 +507,7 @@ export default function EditorPage() {
                             value={b}
                             onChange={(e) => updateBullet(i, e.target.value)}
                             rows={1}
-                            className="flex-1 resize-none rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-slate-200 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                            className="flex-1 resize-none rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs text-slate-900 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
                           />
                           <button
                             type="button"
@@ -493,6 +527,44 @@ export default function EditorPage() {
                     )}
                   </div>
                 )}
+
+                {/* Image prompt (image-text, case-study) */}
+                {showImagePrompt && (
+                  <div>
+                    <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                      Image prompt
+                    </label>
+                    <input
+                      key={`${currentIndex}-img`}
+                      type="text"
+                      defaultValue={current.imagePrompt ?? ""}
+                      onChange={(e) => handleDebouncedPrompt("imagePrompt", e.target.value)}
+                      placeholder="e.g. modern office team collaborating"
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                    />
+                    <p className="mt-1 text-[10px] text-slate-600">
+                      AI-generated image via Pollinations (updates after typing)
+                    </p>
+                  </div>
+                )}
+
+                {/* Background prompt (any layout) */}
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    Background image prompt
+                  </label>
+                  <input
+                    key={`${currentIndex}-bg`}
+                    type="text"
+                    defaultValue={current.backgroundPrompt ?? ""}
+                    onChange={(e) => handleDebouncedPrompt("backgroundPrompt", e.target.value)}
+                    placeholder="e.g. abstract blue gradient"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                  />
+                  <p className="mt-1 text-[10px] text-slate-600">
+                    Full-slide background at low opacity (debounced)
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -519,5 +591,21 @@ export default function EditorPage() {
         </span>
       </footer>
     </div>
+  )
+}
+
+export default function EditorPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-background-dark">
+          <span className="material-symbols-outlined animate-spin text-4xl text-primary">
+            progress_activity
+          </span>
+        </div>
+      }
+    >
+      <EditorContent />
+    </Suspense>
   )
 }

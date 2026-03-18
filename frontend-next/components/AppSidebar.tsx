@@ -15,7 +15,7 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-64 flex-shrink-0 flex-col justify-between border-r border-slate-200 bg-white dark:border-white/5 dark:bg-sidebar-dark">
+    <aside className="flex w-64 flex-shrink-0 flex-col justify-between border-r border-slate-200 bg-white">
       <div className="flex flex-col gap-8 p-6">
         <div className="flex items-center gap-3">
           <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
@@ -23,7 +23,7 @@ export function AppSidebar() {
           </div>
           <div>
             <h1 className="text-lg font-bold leading-none">DeckShare</h1>
-            <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
               Presentation Platform
             </p>
           </div>
@@ -38,7 +38,7 @@ export function AppSidebar() {
                 className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-all ${
                   isActive
                     ? "bg-primary font-semibold text-white shadow-md shadow-primary/10"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-white"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
                 <span className="material-symbols-outlined text-[22px]">
@@ -53,11 +53,11 @@ export function AppSidebar() {
       <div className="flex flex-col gap-6 p-6">
         <div className="flex flex-col gap-2.5">
           <div className="flex items-center justify-between text-xs font-semibold">
-            <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-1.5 text-slate-500">
               <span className="material-symbols-outlined text-sm">cloud</span>
               Storage
             </div>
-            <span className="text-slate-900 dark:text-white">6.5GB / 10GB</span>
+            <span className="text-slate-900">6.5GB / 10GB</span>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
             <div
@@ -73,7 +73,7 @@ export function AppSidebar() {
           <p className="text-[11px] font-bold uppercase tracking-widest text-primary">
             Upgrade to Pro
           </p>
-          <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+          <p className="text-xs leading-relaxed text-slate-600">
             Get unlimited storage and premium templates.
           </p>
           <button

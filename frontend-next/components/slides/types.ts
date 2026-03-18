@@ -6,6 +6,10 @@ export type EditableSlide = {
   bullets: string[]
   layout: LayoutKey
   theme: string
+  /** Fills the image-text layout left panel. Pollinations URL. */
+  imagePrompt?: string
+  /** Full-slide background image at low opacity. Pollinations URL. */
+  backgroundPrompt?: string
 }
 
 export type SlideProps = {
