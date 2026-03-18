@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Templates Library - Presentation App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-primary/20 px-6 md:px-10 py-4 bg-white dark:bg-background-dark sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-10 rounded-xl bg-primary text-white">
+<span class="material-symbols-outlined">auto_awesome_motion</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">Templates Library</h2>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-100 dark:bg-primary/10 hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-slate-700 dark:text-primary">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-100 dark:bg-primary/10 hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-slate-700 dark:text-primary">account_circle</span>
+</button>
+<button class="hidden md:flex items-center justify-center rounded-xl h-10 px-4 bg-primary text-white font-bold text-sm gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                Create New
+            </button>
+</div>
+</header>
+<div class="flex flex-1 flex-col lg:flex-row">
+<!-- Sidebar -->
+<aside class="w-full lg:w-64 border-r border-slate-200 dark:border-primary/10 p-6 flex flex-col gap-8">
+<div class="flex flex-col gap-2">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-primary/60 px-3 mb-2">Workspace</h3>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary font-semibold">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm">Templates</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-primary/5 transition-colors cursor-pointer text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">folder_open</span>
+<p class="text-sm">My Projects</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-primary/5 transition-colors cursor-pointer text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">star</span>
+<p class="text-sm">Favorites</p>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-primary/60 px-3 mb-2">Categories</h3>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-primary/5 transition-colors cursor-pointer text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">business_center</span>
+<p class="text-sm">Business</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-primary/5 transition-colors cursor-pointer text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">school</span>
+<p class="text-sm">Education</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-primary/5 transition-colors cursor-pointer text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">palette</span>
+<p class="text-sm">Creative</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-primary/5 transition-colors cursor-pointer text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">campaign</span>
+<p class="text-sm">Marketing</p>
+</div>
+</div>
+<div class="mt-auto p-4 rounded-2xl bg-gradient-to-br from-primary to-orange-600 text-white">
+<p class="text-sm font-bold mb-1">Upgrade to Pro</p>
+<p class="text-xs opacity-90 mb-3">Get unlimited access to all premium templates.</p>
+<button class="w-full py-2 bg-white text-primary font-bold text-xs rounded-lg">Go Pro</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6 md:p-10">
+<!-- Search and Filter Bar -->
+<div class="flex flex-col md:flex-row gap-4 items-center mb-8">
+<div class="relative w-full md:flex-1">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-12 pr-4 py-3 rounded-xl border-none bg-white dark:bg-primary/5 focus:ring-2 focus:ring-primary text-slate-900 dark:text-slate-100 shadow-sm" placeholder="Search for professional templates..." type="text"/>
+</div>
+<div class="flex gap-2 w-full md:w-auto">
+<div class="relative flex-1 md:w-40">
+<select class="w-full pl-4 pr-10 py-3 rounded-xl border-none bg-white dark:bg-primary/5 focus:ring-2 focus:ring-primary appearance-none text-sm font-medium">
+<option>Newest First</option>
+<option>Popular</option>
+<option>Trending</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+</div>
+<button class="p-3 rounded-xl bg-white dark:bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">tune</span>
+</button>
+</div>
+</div>
+<!-- Chips/Quick Filters -->
+<div class="flex gap-3 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-5 py-2 rounded-full bg-primary text-white text-sm font-semibold whitespace-nowrap">All Templates</button>
+<button class="px-5 py-2 rounded-full bg-white dark:bg-primary/5 hover:bg-slate-100 dark:hover:bg-primary/10 text-slate-600 dark:text-slate-400 text-sm font-medium whitespace-nowrap border border-slate-200 dark:border-primary/10 transition-colors">Business Strategy</button>
+<button class="px-5 py-2 rounded-full bg-white dark:bg-primary/5 hover:bg-slate-100 dark:hover:bg-primary/10 text-slate-600 dark:text-slate-400 text-sm font-medium whitespace-nowrap border border-slate-200 dark:border-primary/10 transition-colors">Pitch Decks</button>
+<button class="px-5 py-2 rounded-full bg-white dark:bg-primary/5 hover:bg-slate-100 dark:hover:bg-primary/10 text-slate-600 dark:text-slate-400 text-sm font-medium whitespace-nowrap border border-slate-200 dark:border-primary/10 transition-colors">Academic Portfolio</button>
+<button class="px-5 py-2 rounded-full bg-white dark:bg-primary/5 hover:bg-slate-100 dark:hover:bg-primary/10 text-slate-600 dark:text-slate-400 text-sm font-medium whitespace-nowrap border border-slate-200 dark:border-primary/10 transition-colors">Modern UI/UX</button>
+<button class="px-5 py-2 rounded-full bg-white dark:bg-primary/5 hover:bg-slate-100 dark:hover:bg-primary/10 text-slate-600 dark:text-slate-400 text-sm font-medium whitespace-nowrap border border-slate-200 dark:border-primary/10 transition-colors">Social Media</button>
+</div>
+<!-- Templates Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Template Card 1 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-200 dark:bg-primary/10 shadow-sm transition-all group-hover:shadow-lg group-hover:-translate-y-1">
+<img class="w-full h-full object-cover" data-alt="Dark professional business presentation template slide" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-n-DeAxFnyjqd14CLdlyIAzRgHw-Wxpd5uwccrxSDs7HLz6yXOve8tu224y21T-bpWQOkIWCx0hdwJOKLytNSgmb9Y7Q72E8_oTQpV05nLwN4hswIzJkMjF2MDQcbnWCxjTcZODIqwNNWC9nMqBHBfQfR8PsjYJ94fIbDO6EqVc3Hx7eQGmpXk9prqg6NLvvraMuoqIinc_WFwqmuTMQblbpalMqxoz2eoOQg1udgQd9Kf19iR7XzG-rfiLyk5OfktYZgN-MdJQ"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="p-2 rounded-lg bg-white text-primary font-bold text-xs">Preview</button>
+<button class="p-2 rounded-lg bg-primary text-white font-bold text-xs">Use Template</button>
+</div>
+<div class="absolute top-3 right-3 px-2 py-1 bg-primary text-white text-[10px] font-bold rounded uppercase">Pro</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">Corporate Strategy 2024</h4>
+<div class="flex items-center gap-2">
+<div class="size-5 rounded-full bg-slate-300" data-alt="Author profile avatar"></div>
+<span class="text-xs text-slate-500 dark:text-slate-400">Sarah Jenkins</span>
+</div>
+</div>
+</div>
+<!-- Template Card 2 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-200 dark:bg-primary/10 shadow-sm transition-all group-hover:shadow-lg group-hover:-translate-y-1">
+<img class="w-full h-full object-cover" data-alt="Clean marketing data visualization presentation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6VO6HGLbOaH2p2v3v6C6Pog59VatToCYM0U6V97sqNUc1R-O9CC2ud61BaKWegWxzpIpGmFWmck44bo1xyynIaPqzEIKPai9L6DYvXkFPvSDrSVtP4FiIVNhcMYrTw90y4LqpOMvEbVFjOLXxIfeOpfRVK-txXoZPIGhFl2gkdBm9xtci_mIsY9bMtYQ97LFwzHIKaAYPfWOnrQNC9Ty33tf1ebt7ToNDBpMmHytbzCACpADljyo1iY8DIqzZK_fUTdcWX8n6SA"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="p-2 rounded-lg bg-white text-primary font-bold text-xs">Preview</button>
+<button class="p-2 rounded-lg bg-primary text-white font-bold text-xs">Use Template</button>
+</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">Marketing Analytics Hub</h4>
+<div class="flex items-center gap-2">
+<div class="size-5 rounded-full bg-slate-300" data-alt="Author profile avatar"></div>
+<span class="text-xs text-slate-500 dark:text-slate-400">David Chen</span>
+</div>
+</div>
+</div>
+<!-- Template Card 3 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-200 dark:bg-primary/10 shadow-sm transition-all group-hover:shadow-lg group-hover:-translate-y-1">
+<img class="w-full h-full object-cover" data-alt="Creative studio portfolio with bright colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkVqe_hlCUFN66n0uoIEFpwR8ljx8mvvvzjYsatxbDqUFUZj2gy1j85-x-tyx--HSbrFc3Q7Q476n2WUewQSw-_C8NM81WJ9T2-hcOSomEdg773p6uqid7IpjPzEXblOWjJMKANS-IFr2orZuWZ-FICgY9DSdzJmfEV9dLnCYwS9Hn5Bf-IJQwDH0DJGhVXRrqBLeqeH3QAW4Cc8COYWUlVtSJtcAPbpqNDiXFY8fNFV0263Y_eleLaYbdKTSBglqMmLq9_KVqIQ"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="p-2 rounded-lg bg-white text-primary font-bold text-xs">Preview</button>
+<button class="p-2 rounded-lg bg-primary text-white font-bold text-xs">Use Template</button>
+</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">Creative Studio Showcase</h4>
+<div class="flex items-center gap-2">
+<div class="size-5 rounded-full bg-slate-300" data-alt="Author profile avatar"></div>
+<span class="text-xs text-slate-500 dark:text-slate-400">Elena Rossi</span>
+</div>
+</div>
+</div>
+<!-- Template Card 4 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-200 dark:bg-primary/10 shadow-sm transition-all group-hover:shadow-lg group-hover:-translate-y-1">
+<img class="w-full h-full object-cover" data-alt="Education focused online course template" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJbuiF8mp354ZkkiitVMdjsCVhmVSdMczyTFJOHxdOwJ80JSsebZz0Tcw1jY5H4ADSmDSVa7FJC9pV2Nud9AzaC6pCBhRUzHJuXLUXG3Ld5rkre6SWyRpcGPh0yZ0KGb-u2_YKzsB_49Bsx2vXfEQlmS9Ze81huEHWPBMZ90CKKZebs_2LcqsRZuX5vaOGJYpJnqWLS6bN_cpm5zYSGs0B9SZIGkBILmaNuqzrhYmNALANqU8YaQarbzb-KgStlyJSPaaCeFmq4A"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="p-2 rounded-lg bg-white text-primary font-bold text-xs">Preview</button>
+<button class="p-2 rounded-lg bg-primary text-white font-bold text-xs">Use Template</button>
+</div>
+<div class="absolute top-3 right-3 px-2 py-1 bg-primary text-white text-[10px] font-bold rounded uppercase">Pro</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">E-Learning Framework</h4>
+<div class="flex items-center gap-2">
+<div class="size-5 rounded-full bg-slate-300" data-alt="Author profile avatar"></div>
+<span class="text-xs text-slate-500 dark:text-slate-400">Prof. Miller</span>
+</div>
+</div>
+</div>
+<!-- Template Card 5 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-200 dark:bg-primary/10 shadow-sm transition-all group-hover:shadow-lg group-hover:-translate-y-1">
+<img class="w-full h-full object-cover" data-alt="Tech startup pitch deck template" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7cTcsElVX08XbtkmIkygxO77sw6YG0T0UMnQIm7641zaK5URu8R8UbKdXVwR9dV5ik8594nZ8esg7NktsRPc-oJHrKOiSpE9BT-VFmrfad3P8ty4tFKgMkTneMWZ2oyZXYylh31M62KFQ7J8n9QUurh54idej_uB-hKiQjb6iZ5TET6Axo2HjLljMo-AyoTmpkHOtlUelR2gmdz1V-WYSleI7NcVOg-Oie92bq6j47kan1liKF1SMFCq7GJP7z6L5C0w65sSmsA"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="p-2 rounded-lg bg-white text-primary font-bold text-xs">Preview</button>
+<button class="p-2 rounded-lg bg-primary text-white font-bold text-xs">Use Template</button>
+</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">Fintech Pitch Deck</h4>
+<div class="flex items-center gap-2">
+<div class="size-5 rounded-full bg-slate-300" data-alt="Author profile avatar"></div>
+<span class="text-xs text-slate-500 dark:text-slate-400">Alex Wright</span>
+</div>
+</div>
+</div>
+<!-- Template Card 6 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-200 dark:bg-primary/10 shadow-sm transition-all group-hover:shadow-lg group-hover:-translate-y-1">
+<img class="w-full h-full object-cover" data-alt="Minimalist design portfolio presentation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLTpH6MOb-3tYCftSoT9RB4HKU3TUMsWt3e6GXHfNjIcHRBhBi2ZapyTvpox7qed7064NFjbTqE13jRPHr2lHk3dwW20D7WDfOwv1cE0jS8QdNO6DIbcGof5zl2_Hp5PZxC-3afVK8ABX_DpUqjQ44wEAWlmwz8fw9Fs1wmutfPlPWyWlsbwjYHqWx4DTDb3HFYrkdtCsZ8iogBdTJPLQaNfuvFmzK_ySzCILWdLa7NxLYS7VwiRY0LOkyN6isnSWw3Zfd7BZPGQ"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="p-2 rounded-lg bg-white text-primary font-bold text-xs">Preview</button>
+<button class="p-2 rounded-lg bg-primary text-white font-bold text-xs">Use Template</button>
+</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">Minimalist Folio v2</h4>
+<div class="flex items-center gap-2">
+<div class="size-5 rounded-full bg-slate-300" data-alt="Author profile avatar"></div>
+<span class="text-xs text-slate-500 dark:text-slate-400">Kim Min-jae</span>
+</div>
+</div>
+</div>
+<!-- Template Card 7 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-200 dark:bg-primary/10 shadow-sm transition-all group-hover:shadow-lg group-hover:-translate-y-1">
+<img class="w-full h-full object-cover" data-alt="Corporate training and HR presentation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzCIK0vH-Vh5-pb296VABqwXpGQfFXCuNiYqWSjevoFQsbs_EPN-9Pt6y3h_enWjFwy6TvSWtsT60Yj0GMlfXlQJYKqA5_5ljkw9YUU0-2lYJzkhuKSz78HmhYfFV-WBEtAlnWAumlwwsyGTCBOhE64w2VRCRvuhFwB5ggqsKWAZKnrAiwZleVvcNwL7g_XmqcA-on8a3kkM6Pp5ElI1yVeO2-hDGg5oBhR4o-3oLUxFvm4vhp1mESgV8axI79PI_H5yO4I8LFlw"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="p-2 rounded-lg bg-white text-primary font-bold text-xs">Preview</button>
+<button class="p-2 rounded-lg bg-primary text-white font-bold text-xs">Use Template</button>
+</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">HR Onboarding Kit</h4>
+<div class="flex items-center gap-2">
+<div class="size-5 rounded-full bg-slate-300" data-alt="Author profile avatar"></div>
+<span class="text-xs text-slate-500 dark:text-slate-400">Team Flow</span>
+</div>
+</div>
+</div>
+<!-- Template Card 8 -->
+<div class="group flex flex-col gap-3 cursor-pointer">
+<div class="relative aspect-[16/10] rounded-xl overflow-hidden bg-slate-200 dark:bg-primary/10 shadow-sm transition-all group-hover:shadow-lg group-hover:-translate-y-1">
+<img class="w-full h-full object-cover" data-alt="Future technology and AI concept presentation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyjvgfEmWW48LCj0-p-9eIMwuVCBQhSi1s7rmYU5kI1L3z-GwGhiYCPfni9fgJIFNIJpgZHKq8tKDwo2FCSNtfjJOBDZ8tFuZQPJRb4IlgGVi_axIpkLEMdnB3g6hHJS2WwUSaFIEFRX-moRKWWAQoOoZUx1YGctMrJdoOz32B8c2Tyjaq_fRhRrYw3EE3g3_xsH_uQFh45MIaQc_p3be1SzqaeHNWXZBwlrXoG8eu6V5amy1gT9iAT3vlenIYaI_yNxEAyk0NLQ"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+<button class="p-2 rounded-lg bg-white text-primary font-bold text-xs">Preview</button>
+<button class="p-2 rounded-lg bg-primary text-white font-bold text-xs">Use Template</button>
+</div>
+<div class="absolute top-3 right-3 px-2 py-1 bg-primary text-white text-[10px] font-bold rounded uppercase">Pro</div>
+</div>
+<div class="px-1">
+<h4 class="font-bold text-sm mb-1 group-hover:text-primary transition-colors">AI &amp; Future Tech</h4>
+<div class="flex items-center gap-2">
+<div class="size-5 rounded-full bg-slate-300" data-alt="Author profile avatar"></div>
+<span class="text-xs text-slate-500 dark:text-slate-400">Nova Lab</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination/Load More -->
+<div class="mt-12 flex justify-center">
+<button class="px-8 py-3 rounded-xl border border-primary/30 text-primary font-bold hover:bg-primary hover:text-white transition-all">
+                    Load More Templates
+                </button>
+</div>
+</main>
+</div>
+</div>
+</body></html>

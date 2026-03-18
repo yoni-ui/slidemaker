@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Team &amp; Workspace Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full">
+<!-- Sidebar -->
+<aside class="w-64 border-r border-slate-200 dark:border-primary/20 bg-white dark:bg-background-dark flex flex-col shrink-0">
+<div class="p-6 flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl">grid_view</span>
+<span class="font-bold text-xl tracking-tight text-slate-900 dark:text-slate-100">Nexus UI</span>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<div class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 py-2">Menu</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">folder</span>
+<span class="text-sm font-medium">Projects</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm font-medium">Team &amp; Workspace</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-primary/20">
+<div class="flex items-center gap-3 px-2 py-3 bg-slate-100 dark:bg-primary/5 rounded-xl">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">JD</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold truncate">John Doe</p>
+<p class="text-xs text-slate-500 truncate">Owner</p>
+</div>
+<span class="material-symbols-outlined text-slate-400">unfold_more</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- Top Nav -->
+<header class="h-16 border-b border-slate-200 dark:border-primary/20 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md flex items-center justify-between px-8 sticky top-0 z-10">
+<div class="flex items-center gap-2">
+<h1 class="text-lg font-bold">Workspace Settings</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined p-2 text-slate-500 cursor-pointer hover:bg-slate-100 dark:hover:bg-primary/10 rounded-full transition-colors">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white dark:border-background-dark"></span>
+</div>
+<span class="material-symbols-outlined p-2 text-slate-500 cursor-pointer hover:bg-slate-100 dark:hover:bg-primary/10 rounded-full transition-colors">help</span>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-8 space-y-8">
+<!-- Hero Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="space-y-1">
+<h2 class="text-3xl font-black tracking-tight">Team &amp; Workspace</h2>
+<p class="text-slate-500 dark:text-slate-400">Manage your team members, roles, and collaborative environment.</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">person_add</span>
+                    Invite Member
+                </button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Column: Settings & Projects -->
+<div class="lg:col-span-2 space-y-8">
+<!-- Team List Section -->
+<section class="bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10 overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-primary/10 flex justify-between items-center">
+<h3 class="font-bold text-lg">Team Members</h3>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">12 Members</span>
+</div>
+<div class="divide-y divide-slate-100 dark:divide-primary/10">
+<!-- Member Row 1 -->
+<div class="p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Profile picture of an male administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWs4N-SZTCrv-U-cimJ7_uQdcYGK99WTL6qBN6BmE7muJdhxCLLu6PzDteAkaUe-UWmOnfOdfjI_C-ADlc5tstVTuJfF-uGOyMnoTLxtFtbT6sKOFo5ZBX3a9HfRFI1Qh-e0h3gQCIWZkw1VJHotY-6G51KvSeR7tNkEkkw_yOWA2WipagI667rBMdc4siUPVaRDF3zBgmVV0vOqDQW1tN4mCuShz0vLcMS7evuJ1MNVGqP47OhAgd7CqsBApkHY5YCxi4tZynXQ"/>
+<div class="flex-1">
+<p class="font-semibold text-sm">Alex Rivera</p>
+<p class="text-xs text-slate-500">alex.rivera@company.com</p>
+</div>
+<div class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-wider">Admin</div>
+<button class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Member Row 2 -->
+<div class="p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Profile picture of a female editor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHBpt-Nt_vxp67Qkk23_63SjBMwBezFFMPv2Nfz1WWQ3gRY2J4VKuQ2ZVO7Vm9QdBCtcS-Gr7EXB5EludvMFNyzo2-d18lqMw0i3wOxxRmkSkY8Aq-YMlusWhXAX6RSA7SUQHSf1qRs8hPEoF6cyw3eApNwDAaHIN0_Fn2KDxCGNZBfNBdcC33Xwkc9Xo-SJx_9zRKaxjsjxH3wOcz_AFdhZEDo9QQObdKX2w5m8lW4AFlCjpbCvoGog5ad6PP2HxQkHqyTmsrdw"/>
+<div class="flex-1">
+<p class="font-semibold text-sm">Sarah Jenkins</p>
+<p class="text-xs text-slate-500">sarah.j@company.com</p>
+</div>
+<div class="px-3 py-1 bg-slate-100 dark:bg-primary/10 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold uppercase tracking-wider">Editor</div>
+<button class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Member Row 3 -->
+<div class="p-4 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-primary/5 transition-colors">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Profile picture of a male viewer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH8FOxHTC4Vo-dgmFOdumDuQcAAITaCzzJb9CpCZZSsup0Q3kyYqZdQhS86Mqfk1-4dAef1GwBldPM7i1hQSeZpGpgRNdOAxXiiKtJ7Zy02Wk9is6U4ZULpxSLz5E5-7t_6UVbB9JTporjf18O6f0vaoYDzoR_enr7n6t-SiMjKfGbhrIWPu5B5fRUgTtU9f6ctNuFCeONgY_QdpqWeKV_gJHTbY8zRiTFVoRBSRW1Gfp-eIJZzo9po4p86iMOf6HpalInNiRaCQ"/>
+<div class="flex-1">
+<p class="font-semibold text-sm">Marcus Chen</p>
+<p class="text-xs text-slate-500">m.chen@company.com</p>
+</div>
+<div class="px-3 py-1 bg-slate-100 dark:bg-primary/10 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold uppercase tracking-wider">Viewer</div>
+<button class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<button class="w-full py-4 text-sm font-bold text-primary hover:bg-primary/5 transition-colors">
+                            View All Members
+                        </button>
+</section>
+<!-- Active Projects Section -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-bold text-lg">Active Projects</h3>
+<button class="text-primary text-sm font-bold flex items-center gap-1 hover:underline">
+                                View all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Project Card 1 -->
+<div class="p-5 bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10 space-y-4">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg">
+<span class="material-symbols-outlined">language</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded">Design Phase</span>
+</div>
+<div>
+<h4 class="font-bold">E-commerce Redesign</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Updating the main store UX for mobile users.</p>
+</div>
+<div class="flex items-center -space-x-2">
+<img class="w-6 h-6 rounded-full border-2 border-white dark:border-background-dark" data-alt="Team member small avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaH1sbEdtuNtnl6PXgQLaGMHZk6rluKSxnaB4krNN1XeFyUZ59_3KVlRrQJMYYaEmWxfKPzjfi_4Cg8D6r_LAUz2N_ae3E52WeBQ1EKt0Ev-_sCA-QMr5jTzcuM476pzjvkMPoXDh190X8K59jrVosiX3kmQ4nJgHVF2NtwC2QqeLzxxeB2Bv2LVbLbQIYMPjliUHNsn5Z0rmQKjT_Ieqi19W_eYzQT2k1YQJwJwixNQ3zyL4u-jmONOMaQRDnrmXjqaJS6Uq6dw"/>
+<img class="w-6 h-6 rounded-full border-2 border-white dark:border-background-dark" data-alt="Team member small avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWH0EAEI7H9aRwvFcPtEtY5gMFIKU_PAkCykgxE7nDmUA7y-h7oG82wjhJA5rq-gzt6JqaS7hP1N1ADhrWy-xbKiUcYVChl7SGZJGqX8FtmAJiBN9i7Wp_7AsnvFCIRMG368Tb_fxuhTrkl-olg_IDAOQ1FFlhmTwNKxGhFO1oKnAe3jzDT8ZO2X8OKonWtq5RrTDXrcVSrvdRS9VCE5ocBEPgOQ9cXlH-Y9YVt7J1R5BpQJ0QH_fNuVyCo71Srw8HqTWi0cz1rQ"/>
+<div class="w-6 h-6 rounded-full border-2 border-white dark:border-background-dark bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold">+3</div>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="p-5 bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10 space-y-4">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-lg">
+<span class="material-symbols-outlined">rocket_launch</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-2 py-0.5 rounded">Development</span>
+</div>
+<div>
+<h4 class="font-bold">API Integration</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Refactoring the core payment processing engine.</p>
+</div>
+<div class="flex items-center -space-x-2">
+<img class="w-6 h-6 rounded-full border-2 border-white dark:border-background-dark" data-alt="Team member small avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbvriVK_qkfQpvpA52BhabWBZW75hVjuaiX-n18FBeVNEhN6E4Ya4ym5HyI_S-GSRdrfkTvhkd4X7THGau0px6S2LaJDvXPsNEuelMSyqN_KloP_HvMk2tdh38ZnYDHeSACrDfCWJLaYjPh4YnFuDF2vQYBqDoWv31cFrSArIi7liIXR4-3cLVXAkFs4wrEyAswMP5glO7h0m-VU8vULek63n8jM2Nwj7lFLPF8A0ODs4jtoZVuPUHkf_vVXhRH0lIm7PEPjh43A"/>
+<div class="w-6 h-6 rounded-full border-2 border-white dark:border-background-dark bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-[10px] font-bold">+1</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Sidebar Settings -->
+<div class="space-y-6">
+<section class="bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10 p-6 space-y-6">
+<h3 class="font-bold text-lg border-b border-slate-100 dark:border-primary/10 pb-4">Workspace Info</h3>
+<div class="space-y-4">
+<label class="block space-y-2">
+<span class="text-sm font-semibold text-slate-600 dark:text-slate-400">Workspace Name</span>
+<input class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary transition-all" type="text" value="Design Team Alpha"/>
+</label>
+<label class="block space-y-2">
+<span class="text-sm font-semibold text-slate-600 dark:text-slate-400">Privacy Setting</span>
+<select class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-xl px-4 py-3 text-sm focus:ring-primary focus:border-primary transition-all">
+<option value="private">Private (Invite only)</option>
+<option value="internal">Internal (Anyone with domain)</option>
+<option value="public">Public (Open access)</option>
+</select>
+</label>
+<div class="pt-4 space-y-3">
+<div class="flex items-center justify-between">
+<div class="space-y-0.5">
+<p class="text-sm font-semibold">Activity Notifications</p>
+<p class="text-xs text-slate-500">Email digest of weekly updates</p>
+</div>
+<div class="relative inline-flex h-6 w-11 items-center rounded-full bg-primary cursor-pointer">
+<span class="inline-block h-4 w-4 translate-x-6 rounded-full bg-white transition"></span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="space-y-0.5">
+<p class="text-sm font-semibold">Auto-Archive Projects</p>
+<p class="text-xs text-slate-500">Archive after 30 days inactivity</p>
+</div>
+<div class="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-300 dark:bg-slate-700 cursor-pointer">
+<span class="inline-block h-4 w-4 translate-x-1 rounded-full bg-white transition"></span>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-slate-100 dark:border-primary/10 space-y-3">
+<button class="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-primary/90 transition-all">
+                                Save Changes
+                            </button>
+<button class="w-full text-red-500 dark:text-red-400 text-sm font-bold py-2 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all">
+                                Delete Workspace
+                            </button>
+</div>
+</section>
+<!-- Plan Overview -->
+<section class="bg-primary/10 rounded-xl p-6 border border-primary/20 relative overflow-hidden group">
+<div class="relative z-10 space-y-3">
+<span class="text-[10px] font-black uppercase text-primary tracking-widest bg-white dark:bg-background-dark px-2 py-0.5 rounded">Pro Plan</span>
+<h4 class="font-bold">Next Billing Date</h4>
+<p class="text-sm text-slate-600 dark:text-slate-300">Your subscription will renew on <span class="font-bold">Dec 15, 2023</span> for $24.00.</p>
+<button class="text-primary font-bold text-sm underline mt-2 inline-block">Manage Billing</button>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-8xl text-primary/10 group-hover:scale-110 transition-transform">credit_card</span>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

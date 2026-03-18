@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Profile &amp; Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-primary/20 px-6 py-4 lg:px-40">
+<div class="flex items-center gap-4">
+<div class="size-8 flex items-center justify-center rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined">settings</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight tracking-tight">Account Settings</h2>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-200 dark:bg-primary/10 text-slate-700 dark:text-primary transition-colors hover:bg-primary hover:text-white dark:hover:bg-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-200 dark:bg-primary/10 text-slate-700 dark:text-primary transition-colors hover:bg-primary hover:text-white dark:hover:bg-primary">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<main class="px-6 lg:px-40 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<!-- Profile Hero Section -->
+<div class="flex flex-col gap-6 items-center mb-8">
+<div class="relative group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full border-4 border-primary/20 min-h-32 w-32 shadow-xl" data-alt="Modern portrait of a professional male user" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCClslx7agG0Ju2z1UKsVp1cV4e_TgD3v9I0FsZZsJFwJxKguIt5HHIBV-prXJa5gkCi3fGSOvJlfbeb4unbMHKhpc8ctIi8t6Ba2rGPfvCV6DpYzMAsV1bBF7ezkKOIU7iFhNyZsLUIWtRaYv6mwVnmoz0x7xUMPRxM03Uui-3oukFgwgSeyoPMYa9NsHoKz6qVI8aegmodrJDcqyXNuJhm3ps9zSpYsKcSBxz_YNTNPopg9RrLZCJvASUNTnKfHVrMHHLmIPDVA");'>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div class="flex flex-col items-center justify-center">
+<h1 class="text-slate-900 dark:text-slate-100 text-3xl font-bold leading-tight tracking-tight text-center">Marcus Henderson</h1>
+<p class="text-primary text-base font-medium text-center">marcus.h@enterprise-design.com</p>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<div class="mb-8 overflow-x-auto">
+<div class="flex border-b border-slate-200 dark:border-primary/20 gap-8 min-w-max">
+<a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary pb-3 px-2" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">person</span>
+<span class="text-sm font-bold">Personal</span>
+</div>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-primary pb-3 px-2 transition-colors" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">shield</span>
+<span class="text-sm font-bold">Security</span>
+</div>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-primary pb-3 px-2 transition-colors" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">payments</span>
+<span class="text-sm font-bold">Billing</span>
+</div>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-primary pb-3 px-2 transition-colors" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">notifications_active</span>
+<span class="text-sm font-bold">Notifications</span>
+</div>
+</a>
+</div>
+</div>
+<!-- Section: Personal Information -->
+<section class="mb-12">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">badge</span>
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight">Personal Information</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white dark:bg-primary/5 p-6 rounded-xl border border-slate-200 dark:border-primary/10">
+<label class="flex flex-col gap-2">
+<span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Full Name</span>
+<input class="w-full rounded-xl bg-slate-100 dark:bg-primary/10 border-transparent focus:border-primary focus:ring-0 text-slate-900 dark:text-slate-100 p-4" type="text" value="Marcus Henderson"/>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Email Address</span>
+<input class="w-full rounded-xl bg-slate-100 dark:bg-primary/10 border-transparent focus:border-primary focus:ring-0 text-slate-900 dark:text-slate-100 p-4" type="email" value="marcus.h@enterprise-design.com"/>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Phone Number</span>
+<input class="w-full rounded-xl bg-slate-100 dark:bg-primary/10 border-transparent focus:border-primary focus:ring-0 text-slate-900 dark:text-slate-100 p-4" type="tel" value="+1 (555) 000-1234"/>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Location</span>
+<input class="w-full rounded-xl bg-slate-100 dark:bg-primary/10 border-transparent focus:border-primary focus:ring-0 text-slate-900 dark:text-slate-100 p-4" type="text" value="San Francisco, CA"/>
+</label>
+</div>
+<div class="mt-4 flex justify-end">
+<button class="bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-xl transition-all">Save Changes</button>
+</div>
+</section>
+<!-- Section: Account Security -->
+<section class="mb-12">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">lock</span>
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight">Account Security</h3>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-6 bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-primary/10 rounded-full text-primary">
+<span class="material-symbols-outlined">key</span>
+</div>
+<div>
+<p class="font-bold">Password</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Last changed 3 months ago</p>
+</div>
+</div>
+<button class="text-primary font-bold text-sm border border-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition-all">Update</button>
+</div>
+<div class="flex items-center justify-between p-6 bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-green-500/10 rounded-full text-green-500">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<p class="font-bold">Two-Factor Authentication</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Currently enabled via SMS</p>
+</div>
+</div>
+<button class="text-slate-600 dark:text-slate-300 font-bold text-sm border border-slate-300 dark:border-primary/30 px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-primary/10 transition-all">Manage</button>
+</div>
+</div>
+</section>
+<!-- Section: Billing & Subscription -->
+<section class="mb-12">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">credit_card</span>
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight">Subscription &amp; Billing</h3>
+</div>
+<div class="bg-primary/5 dark:bg-primary/10 p-8 rounded-xl border-2 border-primary/20 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<span class="inline-block px-3 py-1 bg-primary text-white text-[10px] font-bold uppercase tracking-widest rounded-full mb-3">Premium Plan</span>
+<h4 class="text-2xl font-bold mb-1">$29.00 <span class="text-sm font-normal text-slate-500">/month</span></h4>
+<p class="text-slate-600 dark:text-slate-300">Next billing date: Oct 12, 2023</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-primary text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">Upgrade Plan</button>
+<button class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold px-6 py-3 rounded-xl border border-slate-200 dark:border-primary/20">Cancel</button>
+</div>
+</div>
+<div class="mt-6">
+<h5 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Payment Method</h5>
+<div class="flex items-center justify-between p-4 bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10">
+<div class="flex items-center gap-4">
+<div class="w-12 h-8 bg-slate-100 dark:bg-primary/20 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500">credit_card</span>
+</div>
+<p class="font-medium">Visa ending in •••• 4242</p>
+</div>
+<button class="text-primary text-sm font-bold">Edit</button>
+</div>
+</div>
+</section>
+<!-- Section: Notifications -->
+<section class="mb-12">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">mail</span>
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight">Notification Preferences</h3>
+</div>
+<div class="bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10 overflow-hidden">
+<div class="divide-y divide-slate-100 dark:divide-primary/10">
+<div class="flex items-center justify-between p-6">
+<div>
+<p class="font-bold">Email Notifications</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Receive weekly summaries and updates</p>
+</div>
+<div class="relative inline-block w-12 h-6 rounded-full bg-primary transition-colors cursor-pointer">
+<div class="absolute left-7 top-1 bg-white w-4 h-4 rounded-full transition-all"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-6">
+<div>
+<p class="font-bold">Push Notifications</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Get instant alerts on your mobile device</p>
+</div>
+<div class="relative inline-block w-12 h-6 rounded-full bg-slate-300 dark:bg-primary/20 transition-colors cursor-pointer">
+<div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-6">
+<div>
+<p class="font-bold">Marketing &amp; Promotions</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Special offers and new feature announcements</p>
+</div>
+<div class="relative inline-block w-12 h-6 rounded-full bg-primary transition-colors cursor-pointer">
+<div class="absolute left-7 top-1 bg-white w-4 h-4 rounded-full transition-all"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Danger Zone -->
+<section class="mt-12 pt-8 border-t border-slate-200 dark:border-primary/20">
+<div class="bg-red-50 dark:bg-red-500/5 p-6 rounded-xl border border-red-200 dark:border-red-500/20">
+<h3 class="text-red-600 dark:text-red-500 text-lg font-bold mb-2">Danger Zone</h3>
+<p class="text-sm text-red-700 dark:text-red-400/80 mb-4">Deleting your account is permanent and cannot be undone. All your data will be wiped from our servers.</p>
+<button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors text-sm">Delete Account</button>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer info -->
+<footer class="px-6 lg:px-40 py-8 text-center text-slate-400 dark:text-slate-500 text-xs border-t border-slate-200 dark:border-primary/10">
+<p>© 2023 Enterprise UI Design. All rights reserved.</p>
+<div class="mt-2 flex justify-center gap-4">
+<a class="hover:text-primary" href="#">Privacy Policy</a>
+<a class="hover:text-primary" href="#">Terms of Service</a>
+</div>
+</footer>
+</div>
+</div>
+</body></html>
