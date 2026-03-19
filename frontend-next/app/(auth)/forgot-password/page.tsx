@@ -37,8 +37,8 @@ function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#f6f6f8] px-4">
-        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background-light px-4">
+        <div className="w-full max-w-md rounded-xl border border-border-default bg-surface-card p-8 shadow-card-hover text-center">
           <span className="material-symbols-outlined text-5xl text-primary mb-4">
             mark_email_read
           </span>
@@ -58,8 +58,8 @@ function ForgotPasswordForm() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f6f6f8] px-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background-light px-4">
+      <div className="w-full max-w-md rounded-xl border border-border-default bg-surface-card p-8 shadow-card-hover">
         <div className="mb-8 flex items-center gap-2">
           <span className="material-symbols-outlined text-3xl text-primary">
             layers
@@ -118,7 +118,7 @@ export default function ForgotPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[#f6f6f8]">
+        <div className="flex min-h-screen items-center justify-center bg-background-light">
           <span className="material-symbols-outlined animate-spin text-4xl text-primary">
             progress_activity
           </span>

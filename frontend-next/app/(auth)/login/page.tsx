@@ -79,17 +79,15 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f6f6f8] px-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background-light px-4">
+      <div className="w-full max-w-md rounded-2xl border border-border-default bg-white p-8 shadow-card-hover">
         <div className="mb-8 flex items-center gap-2">
-          <span className="material-symbols-outlined text-3xl text-primary">
+          <span className="material-symbols-outlined text-2xl text-primary">
             layers
           </span>
-          <h1 className="text-xl font-extrabold tracking-tight text-slate-900">
-            DeckShare
-          </h1>
+          <span className="text-lg font-semibold text-slate-900">SlideMaker</span>
         </div>
-        <h2 className="mb-6 text-2xl font-bold text-slate-900">Log in</h2>
+        <h2 className="mb-6 text-xl font-semibold text-slate-900">Log in</h2>
         {process.env.NEXT_PUBLIC_DISABLE_AUTH !== "true" && (
           <p className="mb-4 -mt-2">
             <Link
@@ -115,7 +113,7 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border border-border-default bg-slate-50 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               placeholder="you@example.com"
             />
           </div>
@@ -133,7 +131,7 @@ function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-lg border border-border-default bg-slate-50 px-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               placeholder="••••••••"
             />
           </div>
@@ -145,7 +143,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 rounded-xl bg-primary px-6 py-3 font-bold text-white shadow-lg shadow-primary/25 transition-all hover:brightness-110 disabled:opacity-60"
+            className="mt-2 rounded-lg bg-primary px-6 py-3 font-semibold text-white shadow-soft transition-colors hover:bg-primary-700 disabled:opacity-60"
           >
             {loading ? "Signing in…" : "Log in"}
           </button>
@@ -163,7 +161,7 @@ function LoginForm() {
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={loading}
-                className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3 font-semibold text-slate-700 transition-all hover:bg-slate-50 disabled:opacity-60"
+                className="flex items-center justify-center gap-2 rounded-lg border border-border-default bg-white px-6 py-3 font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-60"
               >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
@@ -206,7 +204,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[#f6f6f8]">
+        <div className="flex min-h-screen items-center justify-center bg-background-light">
           <span className="material-symbols-outlined animate-spin text-4xl text-primary">
             progress_activity
           </span>

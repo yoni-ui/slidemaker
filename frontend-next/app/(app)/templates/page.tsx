@@ -34,7 +34,7 @@ export default function TemplatesPage() {
 
   return (
     <div className="flex flex-1 flex-col lg:flex-row">
-      <aside className="flex w-full flex-col gap-8 border-r border-slate-200 p-6 lg:w-64">
+      <aside className="flex w-full flex-col gap-8 border-r border-border-default p-6 lg:w-64">
         <div className="flex flex-col gap-2">
           <h3 className="mb-2 px-3 text-xs font-bold uppercase tracking-wider text-slate-500">
             Workspace
@@ -127,7 +127,7 @@ function HtmlTemplateCard({ template }: { template: StitchTemplate }) {
   return (
     <Link
       href={`/editor?htmlTemplate=${template.id}`}
-      className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all hover:shadow-xl"
+      className="group overflow-hidden rounded-2xl border border-border-default bg-white transition-all hover:shadow-card-hover"
     >
       <div className="aspect-video overflow-hidden bg-slate-100">
         <SlideThumbnail slide={slide} width={300} />
@@ -148,7 +148,7 @@ function TemplateCard({ template }: { template: DeckTemplate }) {
   return (
     <Link
       href={`/editor?template=${template.id}`}
-      className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all hover:shadow-xl"
+      className="group overflow-hidden rounded-2xl border border-border-default bg-white transition-all hover:shadow-card-hover"
     >
       <div className="aspect-video overflow-hidden bg-slate-100">
         {firstSlide ? (

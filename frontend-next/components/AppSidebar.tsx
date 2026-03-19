@@ -15,29 +15,29 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-64 flex-shrink-0 flex-col justify-between border-r border-slate-200 bg-white">
+    <aside className="flex w-64 flex-shrink-0 flex-col justify-between border-r border-border-default bg-surface-card">
       <div className="flex flex-col gap-8 p-6">
         <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-white shadow-soft">
             <span className="material-symbols-outlined">layers</span>
           </div>
           <div>
-            <h1 className="text-lg font-bold leading-none">DeckShare</h1>
-            <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-              Presentation Platform
+            <h1 className="text-lg font-semibold leading-none text-slate-900">SlideMaker</h1>
+            <p className="mt-1 text-xs font-medium text-slate-500">
+              Presentations
             </p>
           </div>
         </div>
-        <nav className="flex flex-col gap-1.5">
+        <nav className="flex flex-col gap-1">
           {navItems.map(({ href, label, icon }) => {
             const isActive = pathname === href;
             return (
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-all ${
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-primary font-semibold text-white shadow-md shadow-primary/10"
+                    ? "bg-primary/10 text-primary"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`}
               >
@@ -50,37 +50,29 @@ export function AppSidebar() {
           })}
         </nav>
       </div>
-      <div className="flex flex-col gap-6 p-6">
-        <div className="flex flex-col gap-2.5">
-          <div className="flex items-center justify-between text-xs font-semibold">
-            <div className="flex items-center gap-1.5 text-slate-500">
+      <div className="flex flex-col gap-6 border-t border-border-default p-6">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between text-xs font-medium text-slate-500">
+            <span className="flex items-center gap-1.5">
               <span className="material-symbols-outlined text-sm">cloud</span>
               Storage
-            </div>
+            </span>
             <span className="text-slate-900">6.5GB / 10GB</span>
           </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
-            <div
-              className="h-full bg-primary"
-              style={{ width: "65%" }}
-            />
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
+            <div className="h-full rounded-full bg-primary" style={{ width: "65%" }} />
           </div>
-          <p className="text-center text-[10px] font-medium text-slate-500">
-            65% of your storage used
-          </p>
         </div>
-        <div className="flex flex-col gap-3 rounded-2xl border border-primary/20 bg-primary/10 p-5">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-primary">
-            Upgrade to Pro
-          </p>
-          <p className="text-xs leading-relaxed text-slate-600">
-            Get unlimited storage and premium templates.
+        <div className="rounded-2xl border border-border-default bg-slate-50 p-4">
+          <p className="text-xs font-semibold text-slate-900">Upgrade to Pro</p>
+          <p className="mt-1 text-xs text-slate-600">
+            Unlimited storage and premium templates.
           </p>
           <Link
             href="/settings"
-            className="w-full rounded-xl bg-primary py-2.5 text-center text-xs font-bold text-white shadow-lg shadow-primary/20 transition-all hover:brightness-110 active:scale-[0.98]"
+            className="mt-3 block w-full rounded-lg bg-primary py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-primary-700"
           >
-            Upgrade Now
+            Upgrade
           </Link>
         </div>
       </div>

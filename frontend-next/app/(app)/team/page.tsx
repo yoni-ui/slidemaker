@@ -9,7 +9,7 @@ export default function TeamPage() {
           Manage your team and workspaces
         </p>
       </div>
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 dark:border-white/5 dark:bg-card-dark">
+      <div className="rounded-2xl border border-border-default bg-surface-card p-8 dark:border-white/5 dark:bg-card-dark">
         <div className="flex items-center gap-4">
           <div className="flex size-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <span className="material-symbols-outlined text-2xl">groups</span>

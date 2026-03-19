@@ -91,10 +91,10 @@ export function AppHeader() {
   }
 
   return (
-    <header className="z-10 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-8 backdrop-blur-xl">
-      <div className="max-w-xl flex-1" ref={searchRef}>
+    <header className="z-10 flex h-14 items-center justify-between border-b border-border-default bg-surface-card/95 px-6 backdrop-blur-sm lg:px-8">
+      <div className="max-w-md flex-1" ref={searchRef}>
         <div className="group relative">
-          <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[20px] text-slate-400 transition-colors group-focus-within:text-primary">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-slate-400 transition-colors group-focus-within:text-primary">
             search
           </span>
           <input
@@ -102,12 +102,12 @@ export function AppHeader() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => searchQuery && setShowSearchDropdown(true)}
-            placeholder="Search your decks..."
-            className="w-full rounded-xl border-none bg-slate-100 py-2.5 pl-11 pr-4 text-sm text-slate-900 placeholder:text-slate-500 focus:ring-2 focus:ring-primary/20"
+            placeholder="Search decks..."
+            className="w-full rounded-lg border border-border-default bg-slate-50 py-2 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             aria-label="Search decks"
           />
           {showSearchDropdown && (
-            <div className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+            <div className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-border-default bg-white py-2 shadow-card-hover">
               {searchResults.length === 0 ? (
                 <p className="px-4 py-2 text-sm text-slate-500">
                   No decks found
@@ -138,12 +138,12 @@ export function AppHeader() {
       <div className="flex items-center gap-6">
         <Link
           href="/editor"
-          className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all hover:brightness-110 active:scale-[0.98]"
+          className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-primary-700"
         >
-          <span className="material-symbols-outlined text-[20px]">add</span>
-          Create New Deck
+          <span className="material-symbols-outlined text-[18px]">add</span>
+          Create deck
         </Link>
-        <div className="ml-2 flex items-center gap-3 border-l border-slate-200 pl-6">
+        <div className="ml-2 flex items-center gap-2 border-l border-border-default pl-6">
           <div className="relative" ref={notifRef}>
             <button
               type="button"
@@ -178,7 +178,7 @@ export function AppHeader() {
               </div>
             </button>
             {showProfile && (
-              <div className="absolute right-0 top-full z-20 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-2 shadow-lg">
+              <div className="absolute right-0 top-full z-20 mt-1 w-48 rounded-xl border border-border-default bg-white py-2 shadow-card-hover">
                 <Link
                   href="/settings"
                   onClick={() => setShowProfile(false)}

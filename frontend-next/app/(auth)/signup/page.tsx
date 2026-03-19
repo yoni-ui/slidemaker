@@ -64,18 +64,18 @@ function SignupForm() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#f6f6f8] px-4">
-        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl text-center">
-          <span className="material-symbols-outlined text-5xl text-primary mb-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background-light px-4">
+        <div className="w-full max-w-md rounded-2xl border border-border-default bg-white p-8 shadow-card-hover text-center">
+          <span className="material-symbols-outlined mb-4 text-5xl text-primary">
             mark_email_read
           </span>
-          <h2 className="text-xl font-bold text-slate-900">Check your email</h2>
+          <h2 className="text-xl font-semibold text-slate-900">Check your email</h2>
           <p className="mt-2 text-slate-600">
             We sent a confirmation link to {email}. Click it to activate your account.
           </p>
           <Link
             href="/login"
-            className="mt-6 inline-block rounded-xl bg-primary px-6 py-3 font-bold text-white"
+            className="mt-6 inline-block rounded-lg bg-primary px-6 py-3 font-semibold text-white shadow-soft transition-colors hover:bg-primary-700"
           >
             Back to Log in
           </Link>
@@ -85,17 +85,15 @@ function SignupForm() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f6f6f8] px-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-xl">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background-light px-4">
+      <div className="w-full max-w-md rounded-2xl border border-border-default bg-white p-8 shadow-card-hover">
         <div className="mb-8 flex items-center gap-2">
-          <span className="material-symbols-outlined text-3xl text-primary">
+          <span className="material-symbols-outlined text-2xl text-primary">
             layers
           </span>
-          <h1 className="text-xl font-extrabold tracking-tight text-slate-900">
-            DeckShare
-          </h1>
+          <span className="text-lg font-semibold text-slate-900">SlideMaker</span>
         </div>
-        <h2 className="mb-6 text-2xl font-bold text-slate-900">Create account</h2>
+        <h2 className="mb-6 text-xl font-semibold text-slate-900">Create account</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label
@@ -199,7 +197,7 @@ export default function SignupPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[#f6f6f8]">
+        <div className="flex min-h-screen items-center justify-center bg-background-light">
           <span className="material-symbols-outlined animate-spin text-4xl text-primary">
             progress_activity
           </span>

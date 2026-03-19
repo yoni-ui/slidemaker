@@ -1,4 +1,3 @@
-import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
 const PROTECTED_PATHS = [
@@ -29,6 +28,18 @@ export async function middleware(request: NextRequest) {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!url || !anonKey) {
+    return NextResponse.next()
+  }
+
+  let createServerClient: (
+    url: string,
+    key: string,
+    options: object
+  ) => { auth: { getUser: () => Promise<{ data: { user: unknown } }> } }
+  try {
+    // Avoid bundler resolution errors when @supabase/ssr is not installed.
+    ;({ createServerClient } = await import(/* webpackIgnore: true */ "@supabase/ssr"))
+  } catch {
     return NextResponse.next()
   }
 

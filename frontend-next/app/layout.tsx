@@ -30,7 +30,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-[#f6f6f8] text-slate-900 font-sans antialiased">
+      <body className="min-h-screen bg-background-light text-slate-900 font-sans antialiased">
         <SupabaseProvider url={supabaseUrl} anonKey={supabaseAnonKey}>
           {children}
         </SupabaseProvider>

@@ -152,25 +152,27 @@ export async function POST(req: NextRequest) {
   let userId: string | null = null
   try {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      userId = user.id
-      const today = new Date().toISOString().slice(0, 10)
-      const { data: row } = await supabase
-        .from("user_usage")
-        .select("generations_count")
-        .eq("user_id", user.id)
-        .eq("usage_date", today)
-        .single()
+    if (supabase) {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        userId = user.id
+        const today = new Date().toISOString().slice(0, 10)
+        const { data: row } = await supabase
+          .from("user_usage")
+          .select("generations_count")
+          .eq("user_id", user.id)
+          .eq("usage_date", today)
+          .single()
 
-      const used = row?.generations_count ?? 0
-      if (used >= FREE_DAILY_LIMIT) {
-        return NextResponse.json(
-          {
-            detail: `Daily limit reached (${FREE_DAILY_LIMIT} AI generations). Resets at midnight.`,
-          },
-          { status: 429 }
-        )
+        const used = row?.generations_count ?? 0
+        if (used >= FREE_DAILY_LIMIT) {
+          return NextResponse.json(
+            {
+              detail: `Daily limit reached (${FREE_DAILY_LIMIT} AI generations). Resets at midnight.`,
+            },
+            { status: 429 }
+          )
+        }
       }
     }
   } catch {
@@ -191,26 +193,28 @@ export async function POST(req: NextRequest) {
     if (userId) {
       try {
         const supabase = await createClient()
-        const today = new Date().toISOString().slice(0, 10)
-        const { data: row } = await supabase
+        if (supabase) {
+          const today = new Date().toISOString().slice(0, 10)
+          const { data: row } = await supabase
           .from("user_usage")
           .select("generations_count")
           .eq("user_id", userId)
           .eq("usage_date", today)
           .single()
 
-        if (row) {
-          await supabase
-            .from("user_usage")
-            .update({ generations_count: row.generations_count + 1 })
-            .eq("user_id", userId)
-            .eq("usage_date", today)
-        } else {
-          await supabase.from("user_usage").insert({
-            user_id: userId,
-            usage_date: today,
-            generations_count: 1,
-          })
+          if (row) {
+            await supabase
+              .from("user_usage")
+              .update({ generations_count: row.generations_count + 1 })
+              .eq("user_id", userId)
+              .eq("usage_date", today)
+          } else {
+            await supabase.from("user_usage").insert({
+              user_id: userId,
+              usage_date: today,
+              generations_count: 1,
+            })
+          }
         }
       } catch {
         // Ignore usage update errors

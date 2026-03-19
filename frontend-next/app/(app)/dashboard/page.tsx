@@ -75,7 +75,7 @@ export default function DashboardPage() {
             <p className="text-sm font-medium text-slate-600">No presentations yet</p>
             <Link
               href="/editor"
-              className="mt-4 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:brightness-110"
+              className="mt-4 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-primary-700"
             >
               Create your first deck
             </Link>
@@ -84,13 +84,13 @@ export default function DashboardPage() {
           decks.map((deck) => (
             <div
               key={deck.id}
-              className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all hover:shadow-2xl hover:shadow-primary/10"
+              className="group overflow-hidden rounded-2xl border border-border-default bg-white shadow-card transition-shadow hover:shadow-card-hover"
             >
               <Link href={`/editor?deck=${deck.id}`} className="block">
                 <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
                   <div className="h-full w-full bg-gradient-to-br from-primary/20 to-primary/5 transition-transform duration-700 group-hover:scale-110" />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
-                    <span className="translate-y-4 rounded-xl bg-primary px-5 py-2 text-xs font-bold text-white shadow-lg transition-transform duration-300 group-hover:translate-y-0">
+                    <span className="translate-y-4 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-white transition-transform duration-300 group-hover:translate-y-0">
                       Edit Presentation
                     </span>
                   </div>
@@ -126,7 +126,7 @@ export default function DashboardPage() {
                           onClick={() => setOpenMenuId(null)}
                           aria-hidden="true"
                         />
-                        <div className="absolute right-0 top-full z-20 mt-1 w-36 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+                        <div className="absolute right-0 top-full z-20 mt-1 w-36 rounded-xl border border-border-default bg-white py-1 shadow-card-hover">
                           <button
                             type="button"
                             onClick={(e) => {

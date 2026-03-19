@@ -9,7 +9,7 @@ export default function SharedPage() {
           Decks and folders others have shared with you
         </p>
       </div>
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 dark:border-white/5 dark:bg-card-dark">
+      <div className="rounded-2xl border border-border-default bg-surface-card p-8 dark:border-white/5 dark:bg-card-dark">
         <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
           <div className="flex size-16 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <span className="material-symbols-outlined text-3xl">share</span>

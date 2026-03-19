@@ -1,13 +1,14 @@
 export const DS = {
   colors: {
-    primary: "#FF0000",
-    secondary: "#000000",
-    tertiary: "#424242",
+    // UserJot-inspired palette (teal accent + clean neutral surfaces)
+    primary: "#0d9488",
+    secondary: "#0f172a",
+    tertiary: "#475569",
     backgroundDark: "#f6f6f8",
-    backgroundLight: "#f8f6f6",
+    backgroundLight: "#f8fafc",
     canvas: "#e2e8f0",
     sidebarDark: "#ffffff",
-    scrollThumb: "#FF0000",
+    scrollThumb: "#0d9488",
     cardDark: "#ffffff",
   },
   font: "'Public Sans', sans-serif",

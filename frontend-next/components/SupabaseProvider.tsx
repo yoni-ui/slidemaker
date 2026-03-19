@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useMemo } from "react"
-import { createBrowserClient } from "@supabase/ssr"
+import { createBrowserClient } from "@/lib/supabase/browser-client"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 type SupabaseContextValue = {

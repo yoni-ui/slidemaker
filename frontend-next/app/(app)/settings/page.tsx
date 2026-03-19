@@ -57,7 +57,7 @@ export default function SettingsPage() {
           ))}
         </div>
       </div>
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-white/5 dark:bg-card-dark">
+      <div className="rounded-2xl border border-border-default bg-surface-card p-6 dark:border-white/5 dark:bg-card-dark">
         {activeTab === "personal" && (
           <>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">

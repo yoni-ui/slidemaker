@@ -2,8 +2,8 @@ import Link from "next/link"
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#f6f6f8]">
-      <header className="border-b border-slate-200 bg-white px-6 py-4">
+    <div className="min-h-screen bg-background-light">
+      <header className="border-b border-border-default bg-white px-6 py-4">
         <div className="mx-auto flex max-w-4xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <span className="material-symbols-outlined text-2xl text-primary">
