@@ -430,11 +430,18 @@ function EditorContent() {
               </div>
             )}
             {slides.map((slide, n) => (
-              <button
+              <div
                 key={n}
-                type="button"
+                role="button"
+                tabIndex={0}
                 onClick={() => setCurrentIndex(n)}
-                className="group w-full text-left"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    setCurrentIndex(n)
+                  }
+                }}
+                className="group w-full cursor-pointer text-left"
                 aria-label={`Slide ${n + 1}: ${slide.title}`}
               >
                 <div className="mb-2 flex items-center gap-2">
@@ -461,7 +468,7 @@ function EditorContent() {
                 <p className="mt-2 truncate px-0.5 text-[11px] font-medium text-slate-600">
                   {slide.title}
                 </p>
-              </button>
+              </div>
             ))}
           </div>
         </aside>
