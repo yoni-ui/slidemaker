@@ -40,6 +40,15 @@ With both running, open the **Editor**, type a prompt (e.g. “5 slides about AI
 - **design-system/** — Layout and theme JSON (for future canvas/export).
 - **IMPLEMENTATION_PLAN_AND_RATIONALE.md** — Plan and tech choices.
 
+## Vercel deployment
+
+Set **Root Directory** to `frontend-next` in your Vercel project settings:
+
+1. Project Settings → Build & Deployment → Root Directory
+2. Enter `frontend-next` and save
+
+This ensures Vercel builds the Next.js app correctly. Add `GROQ_API_KEY` in Vercel environment variables for AI generation.
+
 ## Env
 
 - **Backend**: optional `backend/.env` (see `backend/.env.example`), e.g. `OPENAI_API_KEY` for future AI.
