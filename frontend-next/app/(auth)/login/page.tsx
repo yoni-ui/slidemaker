@@ -13,8 +13,8 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const { client: supabase, isConfigured } = useSupabase()
   const redirect = searchParams.get("redirect") ?? "/dashboard"
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("demo@example.com")
+  const [password, setPassword] = useState("demo123")
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
