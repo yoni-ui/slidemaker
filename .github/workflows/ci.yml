@@ -9,9 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend-next
 
     steps:
       - uses: actions/checkout@v4
@@ -25,9 +22,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+        working-directory: frontend-next
 
       - name: Lint
         run: npm run lint
+        working-directory: frontend-next
 
       - name: Build
         run: npm run build
+        working-directory: frontend-next
