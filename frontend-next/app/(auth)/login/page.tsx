@@ -38,11 +38,18 @@ function LoginForm() {
       router.refresh()
       return
     }
+
+    // Guest/local mode: allow sign-in even when Supabase isn't configured.
     if (!isConfigured || !supabase) {
-      setError(NOT_CONFIGURED_MSG)
+      if (typeof window !== "undefined") {
+        localStorage.setItem("bypass-auth-email", email)
+      }
       setLoading(false)
+      router.push(redirect)
+      router.refresh()
       return
     }
+
     const { error: err } = await supabase.auth.signInWithPassword({ email, password })
     setLoading(false)
     if (err) {
@@ -61,8 +68,13 @@ function LoginForm() {
       return
     }
     if (!isConfigured || !supabase) {
-      setError(NOT_CONFIGURED_MSG)
+      // Fall back to local guest mode for users without Supabase OAuth configured.
+      if (typeof window !== "undefined") {
+        localStorage.setItem("bypass-auth-email", email)
+      }
       setLoading(false)
+      router.push(redirect)
+      router.refresh()
       return
     }
     const { error: err } = await supabase.auth.signInWithOAuth({

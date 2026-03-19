@@ -27,6 +27,15 @@ export function AppHeader() {
       setUserEmail(typeof window !== "undefined" ? localStorage.getItem("bypass-auth-email") : null)
       return
     }
+
+    // Supabase missing: show guest/local identity if available.
+    if (!supabase) {
+      setUserEmail(
+        typeof window !== "undefined" ? localStorage.getItem("bypass-auth-email") : null
+      )
+      return
+    }
+
     if (supabase) {
       supabase.auth.getUser().then(({ data }) => {
         setUserEmail(data?.user?.email ?? null)
@@ -79,12 +88,14 @@ export function AppHeader() {
 
   const handleLogout = async () => {
     setShowProfile(false)
-    if (process.env.NEXT_PUBLIC_DISABLE_AUTH === "true") {
-      if (typeof window !== "undefined") localStorage.removeItem("bypass-auth-email")
+    const isGuest = process.env.NEXT_PUBLIC_DISABLE_AUTH === "true" || !supabase
+    if (typeof window !== "undefined") localStorage.removeItem("bypass-auth-email")
+    if (isGuest) {
       router.push("/login")
       router.refresh()
       return
     }
+
     if (supabase) await supabase.auth.signOut()
     router.push("/")
     router.refresh()

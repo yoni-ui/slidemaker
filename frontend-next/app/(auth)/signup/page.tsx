@@ -23,11 +23,18 @@ function SignupForm() {
     e.preventDefault()
     setError(null)
     setLoading(true)
-    if (!isConfigured || !supabase) {
-      setError(NOT_CONFIGURED_MSG)
+
+    // Guest/local mode: allow anyone to register even when Supabase isn't configured.
+    if (!isConfigured || !supabase || process.env.NEXT_PUBLIC_DISABLE_AUTH === "true") {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("bypass-auth-email", email)
+      }
       setLoading(false)
+      router.push(redirect)
+      router.refresh()
       return
     }
+
     const { data, error: err } = await supabase.auth.signUp({ email, password })
     setLoading(false)
     if (err) {
@@ -44,9 +51,13 @@ function SignupForm() {
   const handleGoogleSignIn = async () => {
     setError(null)
     setLoading(true)
-    if (!isConfigured || !supabase) {
-      setError(NOT_CONFIGURED_MSG)
+    if (!isConfigured || !supabase || process.env.NEXT_PUBLIC_DISABLE_AUTH === "true") {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("bypass-auth-email", email)
+      }
       setLoading(false)
+      router.push(redirect)
+      router.refresh()
       return
     }
     const { error: err } = await supabase.auth.signInWithOAuth({
