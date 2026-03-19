@@ -389,10 +389,18 @@ function EditorContent() {
     if (slides.length === 0 || !deckId) return
     setSaveStatus("saving")
     const saveTimer = setTimeout(() => {
-      saveDeck(deckId, deckTitle, slides, isDraft).then(() => {
-        setSaveStatus("saved")
-        setTimeout(() => setSaveStatus("idle"), 2000)
-      })
+      ;(async () => {
+        try {
+          await saveDeck(deckId, deckTitle, slides, isDraft)
+          setSaveStatus("saved")
+          setTimeout(() => setSaveStatus("idle"), 2000)
+        } catch (e) {
+          // Avoid unhandledRejection when Supabase isn't set up (e.g. missing `public.decks`).
+          setToast(e instanceof Error ? e.message : "Save failed")
+          setTimeout(() => setToast(null), 2500)
+          setSaveStatus("idle")
+        }
+      })()
     }, 1200)
     return () => clearTimeout(saveTimer)
   }, [deckId, deckTitle, slides, isDraft])

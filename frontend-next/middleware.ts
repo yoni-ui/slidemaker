@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 const PROTECTED_PATHS = [
   "/dashboard",
@@ -31,29 +32,32 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  let createServerClient: (
-    url: string,
-    key: string,
-    options: object
-  ) => { auth: { getUser: () => Promise<{ data: { user: unknown } }> } }
+  let createServerClient:
+    | ((url: string, key: string, options: any) => SupabaseClient)
+    | null
   try {
     // Avoid bundler resolution errors when @supabase/ssr is not installed.
-    ;({ createServerClient } = await import(/* webpackIgnore: true */ "@supabase/ssr"))
+    const mod = await import(/* webpackIgnore: true */ "@supabase/ssr")
+    createServerClient = mod.createServerClient as (
+      url: string,
+      key: string,
+      options: any
+    ) => SupabaseClient
   } catch {
     return NextResponse.next()
   }
 
   let response = NextResponse.next({ request })
 
-  const supabase = createServerClient(url, anonKey, {
+  const supabase = createServerClient!(url, anonKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll()
       },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) =>
+      setAll(cookiesToSet: Array<{ name: string; value: string }>) {
+        cookiesToSet.forEach(({ name, value }) => {
           response.cookies.set(name, value)
-        )
+        })
       },
     },
   })

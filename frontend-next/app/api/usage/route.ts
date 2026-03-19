@@ -6,6 +6,15 @@ const FREE_DAILY_LIMIT = 5
 export async function GET() {
   try {
     const supabase = await createClient()
+    if (!supabase) {
+      return NextResponse.json({
+        remaining: FREE_DAILY_LIMIT,
+        limit: FREE_DAILY_LIMIT,
+        used: 0,
+        authenticated: false,
+      })
+    }
+
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({

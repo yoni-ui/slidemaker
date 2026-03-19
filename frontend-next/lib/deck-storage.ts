@@ -116,6 +116,18 @@ export const getDeckStorage = async (
     try {
       const { data } = await supabase.auth.getUser()
       if (data?.user) {
+        // If the user is authenticated but the `decks` table isn't present
+        // (common when migrations haven't been applied), fall back gracefully.
+        try {
+          const { error } = await supabase
+            .from("decks")
+            .select("id")
+            .limit(1)
+          if (error) return localStorageAdapter
+        } catch {
+          return localStorageAdapter
+        }
+
         return createSupabaseDeckStorage(supabase) as unknown as DeckStorage
       }
     } catch {

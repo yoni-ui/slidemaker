@@ -17,6 +17,7 @@ export async function GET(request: Request) {
   if (code) {
     try {
       const supabase = await createClient()
+      if (!supabase) return NextResponse.redirect(`${origin}/login?error=auth_callback`)
       const { error } = await supabase.auth.exchangeCodeForSession(code)
       if (!error) {
         const path = next.startsWith("/") ? next : `/${next}`

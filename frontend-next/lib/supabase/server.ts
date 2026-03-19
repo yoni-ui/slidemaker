@@ -1,4 +1,5 @@
 import { cookies } from "next/headers"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 const isValid =
   process.env.NEXT_PUBLIC_SUPABASE_URL &&
@@ -6,16 +7,22 @@ const isValid =
   process.env.NEXT_PUBLIC_SUPABASE_URL !== "https://your-project.supabase.co" &&
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== "your-anon-key-here"
 
-export const createClient = async () => {
+export const createClient = async (): Promise<SupabaseClient | null> => {
   if (!isValid) return null
-  let createServerClient: (
+
+  // `@supabase/ssr` is dynamically imported so the app can still build/run
+  // when the package isn't fully available in a given environment.
+  type CreateServerClientFn = (
     url: string,
     key: string,
-    options: object
-  ) => unknown
+    options: any
+  ) => SupabaseClient
+
+  let createServerClient: CreateServerClientFn
   try {
     // Avoid bundler resolution errors when @supabase/ssr is not installed.
-    ;({ createServerClient } = await import(/* webpackIgnore: true */ "@supabase/ssr"))
+    const mod = await import(/* webpackIgnore: true */ "@supabase/ssr")
+    createServerClient = mod.createServerClient as CreateServerClientFn
   } catch {
     return null
   }
@@ -27,11 +34,13 @@ export const createClient = async () => {
       getAll() {
         return cookieStore.getAll()
       },
-      setAll(cookiesToSet) {
+      setAll(
+        cookiesToSet: Array<{ name: string; value: string; options?: any }>
+      ) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          )
+          cookiesToSet.forEach(({ name, value, options }) => {
+            ;(cookieStore as any).set(name, value, options)
+          })
         } catch {
           // Server Component — ignore
         }
