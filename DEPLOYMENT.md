@@ -1,5 +1,20 @@
 # Deployment
 
+## Quick Fix: "Supabase is not configured" on Vercel
+
+1. Go to [vercel.com](https://vercel.com) → your project → **Settings** → **Environment Variables**
+2. Add these (use your Supabase project values):
+
+   | Name | Value |
+   |------|-------|
+   | `NEXT_PUBLIC_SUPABASE_URL` | `https://YOUR_PROJECT.supabase.co` |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your anon/public key from Supabase |
+   | `GROQ_API_KEY` | Your Groq API key |
+
+3. Redeploy: **Deployments** → latest → **⋯** → **Redeploy**
+
+---
+
 ## Important: Where to Put API Keys
 
 **DO NOT put API keys or secrets in GitHub.** They must never be committed. Use:
