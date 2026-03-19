@@ -88,6 +88,10 @@ const renderLayout = (slide: EditableSlide) => {
 export const SlideRenderer = ({ slide }: Props) => {
   const content = renderLayout(slide)
 
+  const wrapped = (
+    <div className="font-slide h-full w-full">{content}</div>
+  )
+
   if (slide.backgroundPrompt) {
     const bgUrl = pollinationsUrl(slide.backgroundPrompt, 960, 540)
     return (
@@ -96,10 +100,10 @@ export const SlideRenderer = ({ slide }: Props) => {
           className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{ backgroundImage: `url(${bgUrl})` }}
         />
-        <div className="relative z-10 h-full w-full">{content}</div>
+        <div className="relative z-10 h-full w-full">{wrapped}</div>
       </div>
     )
   }
 
-  return content
+  return wrapped
 }

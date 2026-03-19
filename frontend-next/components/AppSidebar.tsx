@@ -8,8 +8,8 @@ const navItems = [
   { href: "/editor", label: "My Presentations", icon: "present_to_all" },
   { href: "/shared", label: "Shared with Me", icon: "group" },
   { href: "/templates", label: "Templates", icon: "description" },
-  { href: "#", label: "Trash", icon: "delete" },
-];
+  { href: "/trash", label: "Trash", icon: "delete" },
+]
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -76,12 +76,12 @@ export function AppSidebar() {
           <p className="text-xs leading-relaxed text-slate-600">
             Get unlimited storage and premium templates.
           </p>
-          <button
-            type="button"
-            className="w-full rounded-xl bg-primary py-2.5 text-xs font-bold text-white shadow-lg shadow-primary/20 transition-all hover:brightness-110 active:scale-[0.98]"
+          <Link
+            href="/settings"
+            className="w-full rounded-xl bg-primary py-2.5 text-center text-xs font-bold text-white shadow-lg shadow-primary/20 transition-all hover:brightness-110 active:scale-[0.98]"
           >
             Upgrade Now
-          </button>
+          </Link>
         </div>
       </div>
     </aside>

@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routers_generate import router as generate_router
+from .routers_export import router as export_router
 
 app = FastAPI(title="Slide Generator API")
 
@@ -19,6 +20,7 @@ app.add_middleware(
 )
 
 app.include_router(generate_router)
+app.include_router(export_router)
 
 
 @app.get("/health")

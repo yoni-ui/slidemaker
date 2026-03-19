@@ -20,6 +20,8 @@ export default {
       },
       fontFamily: {
         display: ["var(--font-public-sans)", "Public Sans", "sans-serif"],
+        sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        slide: ["var(--font-public-sans)", "Public Sans", "sans-serif"],
       },
       borderRadius: {
         DEFAULT: "0.375rem",

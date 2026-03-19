@@ -88,12 +88,12 @@ export default function LandingPage() {
                     arrow_forward
                   </span>
                 </Link>
-                <button
-                  type="button"
+                <Link
+                  href="/editor?template=pitch-deck"
                   className="rounded-xl border border-slate-200 bg-white px-8 py-4 text-lg font-bold text-slate-900 transition-all hover:bg-slate-50"
                 >
                   View Demo
-                </button>
+                </Link>
               </div>
             </div>
             <div className="relative">
@@ -134,12 +134,12 @@ export default function LandingPage() {
           <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-[13px] font-medium text-slate-500 md:flex-row">
             <p>© 2024 DeckShare. All rights reserved.</p>
             <div className="flex gap-8">
-              <a href="#" className="transition-colors hover:text-primary">
+              <Link href="/terms" className="transition-colors hover:text-primary">
                 Terms of Service
-              </a>
-              <a href="#" className="transition-colors hover:text-primary">
+              </Link>
+              <Link href="/privacy" className="transition-colors hover:text-primary">
                 Privacy Policy
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -53,3 +53,33 @@ export async function healthCheck(): Promise<{ status: string }> {
   if (!res.ok) throw new Error("Health check failed")
   return res.json() as Promise<{ status: string }>
 }
+
+export type ExportSlideInput = {
+  title: string
+  subtitle?: string | null
+  bullets: string[]
+}
+
+export async function exportPPTX(
+  deckTitle: string,
+  slides: ExportSlideInput[]
+): Promise<Blob> {
+  const url = API_BASE ? `${API_BASE}/api/export/pptx` : "/api/export/pptx"
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      deckTitle,
+      slides: slides.map((s) => ({
+        title: s.title,
+        subtitle: s.subtitle ?? null,
+        bullets: s.bullets ?? [],
+      })),
+    }),
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(text || "Export failed")
+  }
+  return res.blob()
+}

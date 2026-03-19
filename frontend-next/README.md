@@ -16,10 +16,10 @@ Next.js App Router frontend based on the Stitch designs in `../stitch/`. Dark-fi
 
 ## Run
 
-1. **Backend** (required for Generate in editor): from project root, `cd backend` then `uvicorn app.main:app --reload --port 8000`.
-2. **Frontend**: `npm install` then `npm run dev`. Copy `.env.local.example` to `.env.local` and set `NEXT_PUBLIC_API_URL=http://localhost:8000` if the API runs elsewhere.
+1. **Backend** (optional – for external API): from project root, `cd backend` then `uvicorn app.main:app --reload --reload-dir app --port 8001`. Set `NEXT_PUBLIC_API_URL=http://localhost:8001` in `.env.local` to use it.
+2. **Frontend**: `npm install` then `npm run dev`. Copy `.env.local.example` to `.env.local` and add `GROQ_API_KEY` for AI generation.
 
-Open [http://localhost:3000](http://localhost:3000). Use **Editor** (`/editor`) to enter a prompt and generate slides from the API.
+Open [http://localhost:3000](http://localhost:3000). Use **Editor** (`/editor`) to enter a prompt and generate slides. Export PPTX works via Next.js API or the Python backend.
 
 ## Stack
 
@@ -30,4 +30,4 @@ Open [http://localhost:3000](http://localhost:3000). Use **Editor** (`/editor`) 
 
 ## Design source
 
-UI is derived from the HTML in `frontend/stitch/*/code.html`. The editor page is the placeholder for wiring the existing slide generator (prompt → API → Fabric canvas) and export (PDF/PPTX).
+UI is derived from the HTML in `frontend/stitch/*/code.html`. The editor supports AI generation, deck persistence (localStorage), export to PPTX, present mode, share, and undo/redo.

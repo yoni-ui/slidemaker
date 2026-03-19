@@ -2,13 +2,18 @@
 
 import { Suspense, useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
-import { generateSlides, type SlideContent } from "@/lib/api"
+import { useSearchParams, useRouter } from "next/navigation"
+import { generateSlides, exportPPTX, type SlideContent } from "@/lib/api"
 import { LAYOUTS, LAYOUT_MAP, SLIDE_W, SLIDE_H, type LayoutKey } from "@/lib/design-system"
 import { SlideRenderer } from "@/components/slides/SlideRenderer"
 import { SlideThumbnail } from "@/components/slides/SlideThumbnail"
 import type { EditableSlide } from "@/components/slides/types"
 import { getTemplateById } from "@/lib/templates"
+import {
+  saveDeck,
+  loadDeck,
+  generateDeckId,
+} from "@/lib/deck-storage"
 
 const toEditable = (s: SlideContent): EditableSlide => ({
   title: s.title,
@@ -28,24 +33,70 @@ const BLANK_SLIDE: EditableSlide = {
   theme: "default",
 }
 
+const MAX_HISTORY = 50
+
 function EditorContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const [deckId, setDeckId] = useState<string | null>(null)
   const [deckTitle, setDeckTitle] = useState("Untitled Deck")
   const [slides, setSlides] = useState<EditableSlide[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [past, setPast] = useState<EditableSlide[][]>([])
+  const [future, setFuture] = useState<EditableSlide[][]>([])
   const [prompt, setPrompt] = useState("")
   const [loading, setLoading] = useState(false)
+  const [exporting, setExporting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle")
   const [promptOpen, setPromptOpen] = useState(true)
   const [rightTab, setRightTab] = useState<"layout" | "content">("layout")
   const promptRef = useRef<HTMLTextAreaElement>(null)
+  const isUndoRedoRef = useRef(false)
 
   const current = slides[currentIndex] ?? null
+  const canUndo = past.length > 0
+  const canRedo = future.length > 0
 
-  const updateSlide = (patch: Partial<EditableSlide>) => {
-    setSlides((prev) =>
-      prev.map((s, i) => (i === currentIndex ? { ...s, ...patch } : s))
-    )
+  const pushToPast = useCallback((state: EditableSlide[]) => {
+    setPast((p) => [...p.slice(-(MAX_HISTORY - 1)), JSON.parse(JSON.stringify(state))])
+  }, [])
+
+  const updateSlide = useCallback(
+    (patch: Partial<EditableSlide>) => {
+      setSlides((prev) => {
+        const next = prev.map((s, i) =>
+          i === currentIndex ? { ...s, ...patch } : s
+        )
+        if (!isUndoRedoRef.current) {
+          pushToPast(prev)
+          setFuture([])
+        }
+        return next
+      })
+    },
+    [currentIndex, pushToPast]
+  )
+
+  const handleUndo = () => {
+    if (!canUndo) return
+    isUndoRedoRef.current = true
+    const prevState = past[past.length - 1]
+    setPast((p) => p.slice(0, -1))
+    setFuture((f) => [JSON.parse(JSON.stringify(slides)), ...f])
+    setSlides(JSON.parse(JSON.stringify(prevState)))
+    setTimeout(() => { isUndoRedoRef.current = false }, 0)
+  }
+
+  const handleRedo = () => {
+    if (!canRedo) return
+    isUndoRedoRef.current = true
+    const nextState = future[0]
+    setPast((p) => [...p, JSON.parse(JSON.stringify(slides))])
+    setFuture((f) => f.slice(1))
+    setSlides(JSON.parse(JSON.stringify(nextState)))
+    setTimeout(() => { isUndoRedoRef.current = false }, 0)
   }
 
   const handleGenerate = async () => {
@@ -55,6 +106,9 @@ function EditorContent() {
     try {
       const res = await generateSlides(prompt.trim())
       const editable = res.slides.map(toEditable)
+      if (!deckId) setDeckId(generateDeckId())
+      if (slides.length > 0) pushToPast(slides)
+      setFuture([])
       setSlides(editable)
       setCurrentIndex(0)
       setPromptOpen(false)
@@ -70,6 +124,9 @@ function EditorContent() {
   }
 
   const addSlide = () => {
+    if (!deckId) setDeckId(generateDeckId())
+    pushToPast(slides)
+    setFuture([])
     const newSlides = [...slides, { ...BLANK_SLIDE }]
     setSlides(newSlides)
     setCurrentIndex(newSlides.length - 1)
@@ -77,6 +134,8 @@ function EditorContent() {
 
   const deleteSlide = (idx: number) => {
     if (slides.length <= 1) return
+    pushToPast(slides)
+    setFuture([])
     const newSlides = slides.filter((_, i) => i !== idx)
     setSlides(newSlides)
     setCurrentIndex(Math.min(idx, newSlides.length - 1))
@@ -112,20 +171,121 @@ function EditorContent() {
     []
   )
 
-  // Pre-load template when ?template=id is present
+  const handleShare = async () => {
+    const id = deckId ?? (slides.length > 0 ? generateDeckId() : null)
+    if (!id) {
+      setToast("Save your deck first to share")
+      setTimeout(() => setToast(null), 2000)
+      return
+    }
+    if (!deckId) setDeckId(id)
+    saveDeck(id, deckTitle, slides)
+    const url = `${typeof window !== "undefined" ? window.location.origin : ""}/editor?deck=${id}`
+    try {
+      await navigator.clipboard.writeText(url)
+      setToast("Link copied to clipboard")
+      setTimeout(() => setToast(null), 2000)
+    } catch {
+      setToast("Could not copy link")
+      setTimeout(() => setToast(null), 2000)
+    }
+  }
+
+  const handlePresent = () => {
+    const id = deckId ?? (slides.length > 0 ? generateDeckId() : null)
+    if (!id && slides.length > 0) {
+      const newId = generateDeckId()
+      setDeckId(newId)
+      saveDeck(newId, deckTitle, slides)
+      router.push(`/editor/present?deck=${newId}`)
+    } else if (id) {
+      saveDeck(id, deckTitle, slides)
+      router.push(`/editor/present?deck=${id}`)
+    } else {
+      setToast("Add slides first to present")
+      setTimeout(() => setToast(null), 2000)
+    }
+  }
+
+  const handleExportPPTX = async () => {
+    if (slides.length === 0) {
+      setToast("Add slides first to export")
+      setTimeout(() => setToast(null), 2000)
+      return
+    }
+    setExporting(true)
+    try {
+      const blob = await exportPPTX(deckTitle, slides)
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `${deckTitle.replace(/\s+/g, "_")}.pptx`
+      a.click()
+      URL.revokeObjectURL(url)
+      setToast("Exported successfully")
+      setTimeout(() => setToast(null), 2000)
+    } catch (e) {
+      setToast(e instanceof Error ? e.message : "Export failed")
+      setTimeout(() => setToast(null), 3000)
+    } finally {
+      setExporting(false)
+    }
+  }
+
   useEffect(() => {
+    const deckParam = searchParams.get("deck")
     const templateId = searchParams.get("template")
+    if (deckParam) {
+      const stored = loadDeck(deckParam)
+      if (stored) {
+        setDeckId(stored.id)
+        setDeckTitle(stored.title)
+        setSlides(stored.slides)
+        setCurrentIndex(0)
+        setPast([])
+        setFuture([])
+        return
+      }
+    }
     if (templateId) {
       const t = getTemplateById(templateId)
       if (t) {
         setSlides(t.slides)
         setDeckTitle(t.name)
         setCurrentIndex(0)
+        setDeckId(generateDeckId())
       }
     }
   }, [searchParams])
 
-  // Auto-focus prompt on mount
+  useEffect(() => {
+    if (slides.length === 0 || !deckId) return
+    setSaveStatus("saving")
+    const saveTimer = setTimeout(() => {
+      saveDeck(deckId, deckTitle, slides)
+      setSaveStatus("saved")
+      setTimeout(() => setSaveStatus("idle"), 2000)
+    }, 1200)
+    return () => clearTimeout(saveTimer)
+  }, [deckId, deckTitle, slides])
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === "z") {
+          e.preventDefault()
+          if (e.shiftKey) handleRedo()
+          else handleUndo()
+        } else if (e.key === "y") {
+          e.preventDefault()
+          handleRedo()
+        }
+      }
+    }
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [canUndo, canRedo])
+
   useEffect(() => {
     promptRef.current?.focus()
   }, [])
@@ -133,36 +293,56 @@ function EditorContent() {
   const currentMeta = current ? LAYOUT_MAP[current.layout] : null
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-background-dark font-display">
-      {/* ── HEADER ── */}
-      <header className="flex h-12 flex-shrink-0 items-center justify-between border-b border-primary/20 bg-background-dark px-4">
-        {/* Left: logo + title */}
-        <div className="flex items-center gap-3">
+    <div className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-[#fafbfc] font-sans">
+      {/* ── HEADER ── Figma-style toolbar */}
+      <header className="flex h-14 flex-shrink-0 items-center justify-between border-b border-[#e5e7eb] bg-white px-5 shadow-sm">
+        {/* Left: logo + title + save status */}
+        <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 rounded-lg p-1.5 text-slate-600 transition-colors hover:bg-primary/10 hover:text-primary"
+            className="flex items-center gap-2 rounded-lg p-2 -ml-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/20"
             title="Back to dashboard"
           >
             <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
               arrow_back
             </span>
           </Link>
-          <div className="h-5 w-px bg-primary/20" />
-          <span className="material-symbols-outlined text-primary" style={{ fontSize: 22 }}>
-            gallery_thumbnail
-          </span>
-          <input
-            value={deckTitle}
-            onChange={(e) => setDeckTitle(e.target.value)}
-            className="min-w-0 max-w-[200px] bg-transparent text-sm font-semibold text-slate-900 focus:outline-none focus:ring-0"
-            aria-label="Deck title"
-          />
-          <div className="h-5 w-px bg-primary/20" />
+          <div className="h-6 w-px bg-slate-200" />
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>
+              gallery_thumbnail
+            </span>
+            <input
+              value={deckTitle}
+              onChange={(e) => setDeckTitle(e.target.value)}
+              className="min-w-0 max-w-[220px] bg-transparent text-[15px] font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0"
+              placeholder="Untitled deck"
+              aria-label="Deck title"
+            />
+          </div>
+          {saveStatus !== "idle" && (
+            <span className="flex items-center gap-1.5 text-xs text-slate-500">
+              {saveStatus === "saving" ? (
+                <>
+                  <span className="material-symbols-outlined animate-spin" style={{ fontSize: 14 }}>progress_activity</span>
+                  Saving…
+                </>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined text-emerald-500" style={{ fontSize: 14 }}>check_circle</span>
+                  Saved to local
+                </>
+              )}
+            </span>
+          )}
+          <div className="h-6 w-px bg-slate-200" />
           {/* Undo/Redo */}
-          <div className="flex gap-0.5">
+          <div className="flex gap-0.5 rounded-lg bg-slate-50 p-0.5">
             <button
               type="button"
-              className="rounded-lg p-1.5 text-slate-600 transition-colors hover:bg-primary/10 hover:text-slate-900"
+              onClick={handleUndo}
+              disabled={!canUndo}
+              className="rounded-md p-1.5 text-slate-600 transition-colors hover:bg-white hover:text-slate-900 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40"
               title="Undo (Ctrl+Z)"
               aria-label="Undo"
             >
@@ -170,7 +350,9 @@ function EditorContent() {
             </button>
             <button
               type="button"
-              className="rounded-lg p-1.5 text-slate-600 transition-colors hover:bg-primary/10 hover:text-slate-900"
+              onClick={handleRedo}
+              disabled={!canRedo}
+              className="rounded-md p-1.5 text-slate-600 transition-colors hover:bg-white hover:text-slate-900 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-40"
               title="Redo (Ctrl+Y)"
               aria-label="Redo"
             >
@@ -184,23 +366,36 @@ function EditorContent() {
           <button
             type="button"
             onClick={() => setPromptOpen((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-primary/10 hover:text-primary"
+            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
           >
-            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>auto_awesome</span>
+            <span className="material-symbols-outlined" style={{ fontSize: 18 }}>auto_awesome</span>
             {promptOpen ? "Hide prompt" : "AI Generate"}
           </button>
           <button
             type="button"
-            className="flex items-center gap-1.5 rounded-lg border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary transition-all hover:bg-primary/20"
+            onClick={handleShare}
+            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
           >
-            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>share</span>
+            <span className="material-symbols-outlined" style={{ fontSize: 18 }}>share</span>
             Share
           </button>
           <button
             type="button"
-            className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-1.5 text-xs font-bold text-white shadow-lg shadow-primary/25 transition-all hover:brightness-110 active:scale-[0.98]"
+            onClick={handleExportPPTX}
+            disabled={exporting || slides.length === 0}
+            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>play_arrow</span>
+            <span className={`material-symbols-outlined ${exporting ? "animate-spin" : ""}`} style={{ fontSize: 18 }}>
+              download
+            </span>
+            Export PPTX
+          </button>
+          <button
+            type="button"
+            onClick={handlePresent}
+            className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2 text-xs font-bold text-white shadow-md shadow-primary/20 transition-all hover:brightness-105 active:scale-[0.98]"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 18 }}>play_arrow</span>
             Present
           </button>
         </div>
@@ -209,30 +404,30 @@ function EditorContent() {
       {/* ── MAIN 3-PANEL ── */}
       <div className="flex flex-1 overflow-hidden">
 
-        {/* ── LEFT: Slide thumbnails ── */}
-        <aside className="flex w-48 flex-shrink-0 flex-col border-r border-primary/15 bg-background-dark">
-          {/* Thumbnails header */}
-          <div className="flex items-center justify-between border-b border-primary/15 px-3 py-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+        {/* ── LEFT: Slide thumbnails ── Figma layers panel */}
+        <aside className="flex w-52 flex-shrink-0 flex-col border-r border-[#e5e7eb] bg-white">
+          <div className="flex items-center justify-between border-b border-[#e5e7eb] px-4 py-3">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
               Slides
             </span>
             <button
               type="button"
               onClick={addSlide}
-              className="rounded-lg p-1 text-primary transition-colors hover:bg-primary/10"
+              className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-primary"
               title="Add slide"
               aria-label="Add slide"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>add_box</span>
+              <span className="material-symbols-outlined" style={{ fontSize: 20 }}>add</span>
             </button>
           </div>
-
-          {/* Thumbnails list */}
-          <div className="editor-scroll flex-1 space-y-3 overflow-y-auto p-3">
+          <div className="editor-scroll flex-1 space-y-4 overflow-y-auto p-4">
             {slides.length === 0 && (
-              <p className="py-4 text-center text-[10px] leading-relaxed text-slate-600">
-                Generate slides from a prompt or add a blank slide.
-              </p>
+              <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-slate-200 bg-slate-50/50 py-8 text-center">
+                <span className="material-symbols-outlined text-slate-300" style={{ fontSize: 32 }}>add_photo_alternate</span>
+                <p className="text-xs text-slate-500">
+                  Generate from AI or add a blank slide
+                </p>
+              </div>
             )}
             {slides.map((slide, n) => (
               <button
@@ -242,28 +437,28 @@ function EditorContent() {
                 className="group w-full text-left"
                 aria-label={`Slide ${n + 1}: ${slide.title}`}
               >
-                <div className="mb-1 flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-slate-600">{n + 1}</span>
-                  <div className={`h-px flex-1 ${n === currentIndex ? "bg-primary/40" : "bg-slate-300"}`} />
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="text-[11px] font-medium text-slate-500">{n + 1}</span>
+                  <div className={`h-px flex-1 ${n === currentIndex ? "bg-primary" : "bg-slate-200"}`} />
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); deleteSlide(n) }}
-                    className="hidden rounded p-0.5 text-slate-600 hover:text-red-400 group-hover:flex"
+                    className="hidden rounded-md p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500 group-hover:block"
                     aria-label={`Delete slide ${n + 1}`}
                   >
-                    <span className="material-symbols-outlined" style={{ fontSize: 12 }}>close</span>
+                    <span className="material-symbols-outlined" style={{ fontSize: 14 }}>delete</span>
                   </button>
                 </div>
                 <div
-                  className={`overflow-hidden rounded-lg transition-all ${
+                  className={`overflow-hidden rounded-lg border-2 shadow-sm transition-all ${
                     n === currentIndex
-                      ? "border-2 border-primary ring-2 ring-primary/20"
-                      : "border border-primary/10 opacity-60 hover:border-primary/30 hover:opacity-80"
+                      ? "border-primary ring-2 ring-primary/20"
+                      : "border-slate-200 opacity-70 hover:border-slate-300 hover:opacity-100"
                   }`}
                 >
-                  <SlideThumbnail slide={slide} width={168} />
+                  <SlideThumbnail slide={slide} width={184} />
                 </div>
-                <p className="mt-1 truncate px-0.5 text-[10px] text-slate-500">
+                <p className="mt-2 truncate px-0.5 text-[11px] font-medium text-slate-600">
                   {slide.title}
                 </p>
               </button>
@@ -271,11 +466,17 @@ function EditorContent() {
           </div>
         </aside>
 
-        {/* ── CENTER: Canvas ── */}
-        <main className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-canvas">
-          {/* Canvas stage */}
+        {/* ── CENTER: Canvas ── Figma-style canvas with grid */}
+        <main
+          className="relative flex flex-1 flex-col items-center justify-center overflow-hidden"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, #cbd5e1 1px, transparent 0)`,
+            backgroundSize: "24px 24px",
+            backgroundColor: "#f1f5f9",
+          }}
+        >
           <div
-            className="relative overflow-hidden rounded-xl border border-slate-200 shadow-[0_24px_60px_rgba(0,0,0,0.15)]"
+            className="relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_10px_20px_-2px_rgba(0,0,0,0.08)]"
             style={{
               width: "min(calc(100% - 96px), 960px)",
               aspectRatio: `${SLIDE_W} / ${SLIDE_H}`,
@@ -284,27 +485,32 @@ function EditorContent() {
             {current ? (
               <SlideRenderer slide={current} />
             ) : (
-              <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-slate-50">
-                <span className="material-symbols-outlined text-primary/30" style={{ fontSize: 64 }}>
-                  auto_awesome
-                </span>
-                <p className="text-sm text-slate-500">
+              <div className="flex h-full w-full flex-col items-center justify-center gap-6 bg-white">
+                <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-12">
+                  <span className="material-symbols-outlined text-slate-300" style={{ fontSize: 56 }}>
+                    auto_awesome
+                  </span>
+                </div>
+                <p className="text-sm font-medium text-slate-500">
                   Use the AI prompt below or add a blank slide
+                </p>
+                <p className="text-xs text-slate-400">
+                  ⌘ Enter to generate
                 </p>
               </div>
             )}
           </div>
 
-          {/* Slide count badge */}
+          {/* Slide pagination dots */}
           {slides.length > 0 && (
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-4 flex items-center gap-2">
               {slides.map((_, n) => (
                 <button
                   key={n}
                   type="button"
                   onClick={() => setCurrentIndex(n)}
-                  className={`h-1.5 rounded-full transition-all ${
-                    n === currentIndex ? "w-5 bg-primary" : "w-1.5 bg-slate-400 hover:bg-slate-600"
+                  className={`rounded-full transition-all ${
+                    n === currentIndex ? "h-2 w-6 bg-primary" : "h-2 w-2 bg-slate-300 hover:bg-slate-500"
                   }`}
                   aria-label={`Go to slide ${n + 1}`}
                 />
@@ -314,12 +520,12 @@ function EditorContent() {
 
           {/* ── Floating prompt toolbar ── */}
           <div
-            className={`absolute bottom-6 left-1/2 -translate-x-1/2 transition-all duration-300 ${
-              promptOpen ? "w-[560px]" : "w-auto"
+            className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-300 ${
+              promptOpen ? "w-[580px]" : "w-auto"
             }`}
           >
             {promptOpen ? (
-              <div className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-xl shadow-slate-800/10 backdrop-blur-md">
+              <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl">
                 <textarea
                   ref={promptRef}
                   value={prompt}
@@ -328,15 +534,15 @@ function EditorContent() {
                   placeholder='Describe your deck… e.g. "5 slides on AI in healthcare for investors"'
                   rows={2}
                   disabled={loading}
-                  className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20 disabled:opacity-50"
+                  className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
                 />
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-[11px] text-slate-600">⌘ Enter to generate</p>
+                <div className="flex items-center justify-between gap-4">
+                  <p className="text-xs text-slate-500">⌘ Enter to generate</p>
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => setPromptOpen(false)}
-                      className="rounded-xl px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      className="rounded-lg px-4 py-2 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
                     >
                       Dismiss
                     </button>
@@ -344,18 +550,18 @@ function EditorContent() {
                       type="button"
                       onClick={handleGenerate}
                       disabled={loading || !prompt.trim()}
-                      className="flex items-center gap-1.5 rounded-xl bg-primary px-4 py-1.5 text-xs font-bold text-white shadow-md shadow-primary/30 transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex items-center gap-2 rounded-lg bg-primary px-5 py-2 text-xs font-bold text-white shadow-md transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {loading ? (
                         <>
-                          <span className="material-symbols-outlined animate-spin" style={{ fontSize: 14 }}>
+                          <span className="material-symbols-outlined animate-spin" style={{ fontSize: 16 }}>
                             progress_activity
                           </span>
                           Generating…
                         </>
                       ) : (
                         <>
-                          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>auto_awesome</span>
+                          <span className="material-symbols-outlined" style={{ fontSize: 16 }}>auto_awesome</span>
                           Generate
                         </>
                       )}
@@ -363,35 +569,34 @@ function EditorContent() {
                   </div>
                 </div>
                 {error && (
-                  <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">{error}</p>
+                  <p className="rounded-lg bg-red-50 px-4 py-2.5 text-xs text-red-600">{error}</p>
                 )}
               </div>
             ) : (
               <button
                 type="button"
                 onClick={() => setPromptOpen(true)}
-                className="flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-xs font-semibold text-primary shadow-lg shadow-slate-800/10 backdrop-blur-md transition-all hover:border-primary/40 hover:bg-primary/10"
+                className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-xs font-semibold text-primary shadow-lg transition-all hover:border-primary/40 hover:bg-primary/5"
               >
-                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>auto_awesome</span>
+                <span className="material-symbols-outlined" style={{ fontSize: 18 }}>auto_awesome</span>
                 AI Generate
               </button>
             )}
           </div>
         </main>
 
-        {/* ── RIGHT: Design panel ── */}
-        <aside className="flex w-72 flex-shrink-0 flex-col border-l border-primary/15 bg-background-dark">
-          {/* Tabs */}
-          <div className="flex border-b border-primary/15">
+        {/* ── RIGHT: Design panel ── Figma properties panel */}
+        <aside className="flex w-80 flex-shrink-0 flex-col border-l border-[#e5e7eb] bg-white">
+          <div className="flex border-b border-[#e5e7eb]">
             {(["layout", "content"] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setRightTab(tab)}
-                className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-colors ${
+                className={`flex-1 py-3.5 text-xs font-semibold uppercase tracking-wider transition-colors ${
                   rightTab === tab
                     ? "border-b-2 border-primary text-primary"
-                    : "text-slate-600 hover:text-slate-900"
+                    : "text-slate-500 hover:text-slate-700"
                 }`}
               >
                 {tab}
@@ -401,18 +606,20 @@ function EditorContent() {
 
           <div className="editor-scroll flex-1 overflow-y-auto">
             {!current ? (
-              <div className="flex flex-col items-center justify-center gap-3 p-8 text-center">
-                <span className="material-symbols-outlined text-slate-700" style={{ fontSize: 40 }}>
-                  layers
-                </span>
-                <p className="text-xs text-slate-600">
-                  Select or generate a slide to edit it here.
+              <div className="flex flex-col items-center justify-center gap-4 p-10 text-center">
+                <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-8">
+                  <span className="material-symbols-outlined text-slate-300" style={{ fontSize: 40 }}>
+                    layers
+                  </span>
+                </div>
+                <p className="text-sm font-medium text-slate-500">
+                  Select or generate a slide to edit
                 </p>
               </div>
             ) : rightTab === "layout" ? (
               /* ── Layout picker ── */
               <div className="p-4">
-                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                   Slide Layout
                 </p>
                 <div className="grid grid-cols-2 gap-2">
@@ -422,15 +629,15 @@ function EditorContent() {
                       type="button"
                       onClick={() => updateSlide({ layout: layout.key })}
                       title={layout.description}
-                      className={`flex flex-col items-center gap-2 rounded-xl border p-3 text-center transition-all ${
+                      className={`flex flex-col items-center gap-2 rounded-xl border-2 p-3.5 text-center transition-all ${
                         current.layout === layout.key
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-slate-200 text-slate-600 hover:border-primary/30 hover:bg-primary/5 hover:text-slate-900"
+                          ? "border-primary bg-primary/5 text-primary"
+                          : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
                       }`}
                     >
                       <span
                         className="material-symbols-outlined"
-                        style={{ fontSize: 22 }}
+                        style={{ fontSize: 24 }}
                       >
                         {layout.icon}
                       </span>
@@ -442,7 +649,7 @@ function EditorContent() {
                 </div>
 
                 {currentMeta && (
-                  <div className="mt-4 rounded-xl border border-primary/10 bg-primary/5 p-3">
+                  <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50/80 p-3.5">
                     <p className="text-[11px] leading-relaxed text-slate-600">
                       {currentMeta.description}
                     </p>
@@ -454,21 +661,21 @@ function EditorContent() {
               <div className="flex flex-col gap-5 p-4">
                 {/* Title */}
                 <div>
-                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                  <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                     Title
                   </label>
                   <textarea
                     value={current.title}
                     onChange={(e) => updateSlide({ title: e.target.value })}
                     rows={2}
-                    className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                    className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-sm text-slate-900 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
 
-                {/* Subtitle (shown when layout supports it) */}
+                {/* Subtitle */}
                 {(currentMeta?.hasSubtitle ?? true) && (
                   <div>
-                    <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                       Subtitle
                     </label>
                     <textarea
@@ -478,7 +685,7 @@ function EditorContent() {
                       }
                       placeholder="Optional subtitle…"
                       rows={2}
-                      className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                      className="w-full resize-none rounded-lg border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                     />
                   </div>
                 )}
@@ -486,52 +693,52 @@ function EditorContent() {
                 {/* Bullets */}
                 {(currentMeta?.hasBullets ?? false) && (
                   <div>
-                    <div className="mb-1.5 flex items-center justify-between">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <div className="mb-2 flex items-center justify-between">
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                         Bullets
                       </label>
                       <button
                         type="button"
                         onClick={addBullet}
-                        className="flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-bold text-primary hover:bg-primary/10"
+                        className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/10"
                       >
-                        <span className="material-symbols-outlined" style={{ fontSize: 12 }}>add</span>
+                        <span className="material-symbols-outlined" style={{ fontSize: 14 }}>add</span>
                         Add
                       </button>
                     </div>
                     <div className="flex flex-col gap-2">
                       {current.bullets.map((b, i) => (
                         <div key={i} className="flex items-start gap-2">
-                          <div className="mt-2.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                          <div className="mt-3 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                           <textarea
                             value={b}
                             onChange={(e) => updateBullet(i, e.target.value)}
                             rows={1}
-                            className="flex-1 resize-none rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs text-slate-900 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                            className="flex-1 resize-none rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-2 text-xs text-slate-900 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                           />
                           <button
                             type="button"
                             onClick={() => removeBullet(i)}
-                            className="mt-1.5 rounded p-0.5 text-slate-600 transition-colors hover:text-red-400"
+                            className="mt-2 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500"
                             aria-label="Remove bullet"
                           >
-                            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>close</span>
+                            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
                           </button>
                         </div>
                       ))}
                     </div>
                     {current.layout === "stats" && (
-                      <p className="mt-2 text-[10px] text-slate-600">
-                        Format: <code className="text-primary/80">VALUE | Label</code> e.g. <code className="text-primary/80">94% | Satisfaction</code>
+                      <p className="mt-2 text-[11px] text-slate-600">
+                        Format: <code className="rounded bg-slate-100 px-1 py-0.5 text-primary">VALUE | Label</code>
                       </p>
                     )}
                   </div>
                 )}
 
-                {/* Image prompt (image-text, case-study) */}
+                {/* Image prompt */}
                 {showImagePrompt && (
                   <div>
-                    <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                       Image prompt
                     </label>
                     <input
@@ -540,18 +747,18 @@ function EditorContent() {
                       defaultValue={current.imagePrompt ?? ""}
                       onChange={(e) => handleDebouncedPrompt("imagePrompt", e.target.value)}
                       placeholder="e.g. modern office team collaborating"
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                      className="w-full rounded-lg border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                     />
-                    <p className="mt-1 text-[10px] text-slate-600">
-                      AI-generated image via Pollinations (updates after typing)
+                    <p className="mt-1.5 text-[11px] text-slate-500">
+                      AI-generated via Pollinations
                     </p>
                   </div>
                 )}
 
-                {/* Background prompt (any layout) */}
+                {/* Background prompt */}
                 <div>
-                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                    Background image prompt
+                  <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                    Background image
                   </label>
                   <input
                     key={`${currentIndex}-bg`}
@@ -559,11 +766,8 @@ function EditorContent() {
                     defaultValue={current.backgroundPrompt ?? ""}
                     onChange={(e) => handleDebouncedPrompt("backgroundPrompt", e.target.value)}
                     placeholder="e.g. abstract blue gradient"
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/20"
+                    className="w-full rounded-lg border border-slate-200 bg-slate-50/80 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
-                  <p className="mt-1 text-[10px] text-slate-600">
-                    Full-slide background at low opacity (debounced)
-                  </p>
                 </div>
               </div>
             )}
@@ -571,23 +775,34 @@ function EditorContent() {
         </aside>
       </div>
 
+      {/* Toast */}
+      {toast && (
+        <div
+          className="fixed bottom-20 left-1/2 z-[100] -translate-x-1/2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-900 shadow-xl"
+          role="status"
+          aria-live="polite"
+        >
+          {toast}
+        </div>
+      )}
+
       {/* ── FOOTER ── */}
-      <footer className="flex h-7 flex-shrink-0 items-center justify-between border-t border-primary/15 bg-background-dark px-4 text-[10px] text-slate-600">
-        <span>
+      <footer className="flex h-9 flex-shrink-0 items-center justify-between border-t border-[#e5e7eb] bg-white px-5 text-xs text-slate-500">
+        <span className="font-medium">
           {slides.length > 0
             ? `Slide ${currentIndex + 1} of ${slides.length}`
             : "No slides"}
         </span>
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-3">
           {current && (
-            <span className="flex items-center gap-1 rounded-full border border-primary/15 px-2 py-0.5 text-[10px] text-primary/70">
-              <span className="material-symbols-outlined" style={{ fontSize: 10 }}>
+            <span className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600">
+              <span className="material-symbols-outlined" style={{ fontSize: 12 }}>
                 {LAYOUT_MAP[current.layout]?.icon ?? "layers"}
               </span>
               {LAYOUT_MAP[current.layout]?.label ?? current.layout}
             </span>
           )}
-          <span>DeckShare</span>
+          <span className="text-slate-400">DeckShare</span>
         </span>
       </footer>
     </div>
