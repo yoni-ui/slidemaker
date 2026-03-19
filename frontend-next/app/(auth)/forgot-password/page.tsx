@@ -16,7 +16,7 @@ function ForgotPasswordForm() {
     setLoading(true)
     const supabase = createClient()
     if (!supabase) {
-      setError("Supabase is not configured")
+      setError("Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local, then restart the dev server.")
       setLoading(false)
       return
     }

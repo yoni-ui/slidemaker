@@ -17,7 +17,9 @@ Next.js App Router frontend based on the Stitch designs in `../stitch/`. Dark-fi
 ## Run
 
 1. **Backend** (optional – for external API): from project root, `cd backend` then `uvicorn app.main:app --reload --reload-dir app --port 8001`. Set `NEXT_PUBLIC_API_URL=http://localhost:8001` in `.env.local` to use it.
-2. **Frontend**: `npm install` then `npm run dev`. Copy `.env.local.example` to `.env.local` and add `GROQ_API_KEY` for AI generation.
+2. **Frontend**: `npm install` then `npm run dev`. Copy `.env.local.example` to `.env.local` and add:
+   - `GROQ_API_KEY` — for AI generation
+   - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` — for auth (required for login)
 
 Open [http://localhost:3000](http://localhost:3000). Use **Editor** (`/editor`) to enter a prompt and generate slides. Export PPTX works via Next.js API or the Python backend.
 
@@ -29,6 +31,10 @@ Open [http://localhost:3000](http://localhost:3000). Use **Editor** (`/editor`) 
 | Password | 123456 |
 
 Create this user in [Supabase Dashboard](https://supabase.com/dashboard) → Authentication → Users → Add user, or sign up via the app.
+
+### Deploy to Vercel
+
+See [DEPLOYMENT.md](../DEPLOYMENT.md) in the repo root. **Add `GROQ_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel Environment Variables** — never commit secrets to GitHub.
 
 ## Stack
 

@@ -1,32 +1,79 @@
 # Deployment
 
+## Important: Where to Put API Keys
+
+**DO NOT put API keys or secrets in GitHub.** They must never be committed. Use:
+
+- **Local dev:** `frontend-next/.env.local` (gitignored)
+- **Vercel:** Project Settings → Environment Variables
+
+---
+
 ## Vercel (Frontend)
 
-### Setup
+### 1. Import the Repo
 
-1. **Import the repo** at [vercel.com/new](https://vercel.com/new) and select this GitHub repository.
+Import at [vercel.com/new](https://vercel.com/new) and select this GitHub repository.
 
-2. **Set Root Directory** to `frontend-next` (required):
-   - Project Settings → General → Root Directory → Edit → `frontend-next`
-   - Your Next.js app lives in this subfolder; Vercel must build from here.
+### 2. Set Root Directory
 
-3. **Build & Development Settings**:
-   - Framework Preset: **Next.js**
-   - Output Directory: leave default (Next.js uses `.next`, not `public`)
-   - Build Command: `npm run build` (default)
-   - Install Command: `npm install` or `npm ci` (default)
+- Project Settings → General → Root Directory → Edit → `frontend-next`
+- Your Next.js app lives in this subfolder; Vercel must build from here.
 
-4. **Environment variables** (optional): Add `NEXT_PUBLIC_API_URL` if using an external API.
+### 3. Add Environment Variables (Required for Auth and AI)
 
-5. **Deploy** — Vercel auto-deploys on every push to `main`.
+Go to **Project Settings → Environment Variables** and add:
 
-### Troubleshooting
+| Variable | Required | Where to get it |
+|----------|----------|-----------------|
+| `GROQ_API_KEY` | Yes | [console.groq.com/keys](https://console.groq.com/keys) |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase Dashboard → Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase Dashboard → Project Settings → API (anon/public key) |
+
+Add these for **Production**, **Preview**, and **Development** (or at least Production).
+
+**Without these, you will see "Supabase is not configured" on login and AI generation will fail.**
+
+### 4. Optional Variables
+
+| Variable | Purpose |
+|----------|---------|
+| `NEXT_PUBLIC_API_URL` | Point at standalone Python backend (e.g. `http://localhost:8001`) |
+
+### 5. Build Settings
+
+- Framework Preset: **Next.js**
+- Build Command: `npm run build` (default)
+- Install Command: `npm install` (default)
+
+### 6. Deploy
+
+Vercel auto-deploys on every push to `main`. After adding env vars, trigger a redeploy (Deployments → … → Redeploy).
+
+---
+
+## Supabase Setup (Required for Auth)
+
+1. Create a project at [supabase.com/dashboard](https://supabase.com/dashboard)
+2. Run `frontend-next/supabase/migrations/001_create_decks.sql` in SQL Editor
+3. Run `frontend-next/supabase/migrations/002_draft_and_usage.sql` in SQL Editor
+4. In Authentication → URL Configuration, add your Vercel URL to **Redirect URLs**:
+   - `https://your-app.vercel.app/auth/callback`
+   - `https://your-app.vercel.app/**` (or your custom domain)
+5. Enable Email and Google providers in Authentication → Providers
+
+---
+
+## Troubleshooting
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| No Output Directory named "public" found | Vercel thinks this is a static site | Set Framework Preset to **Next.js** |
-| Multiple lockfiles | Root Directory not set | Set Root Directory to `frontend-next` |
-| Build fails / wrong folder | Building from repo root | Set Root Directory to `frontend-next` |
+| Supabase is not configured | Env vars missing on Vercel | Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel, then redeploy |
+| AI generation fails | `GROQ_API_KEY` missing | Add `GROQ_API_KEY` in Vercel |
+| No Output Directory named "public" | Wrong framework | Set Framework Preset to **Next.js** |
+| Multiple lockfiles | Wrong root | Set Root Directory to `frontend-next` |
+
+---
 
 ## CI/CD
 
