@@ -7,9 +7,11 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/95 px-6 py-4 backdrop-blur-sm lg:px-12">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-2xl text-primary">
-              layers
-            </span>
+            <img
+              src="/logo.png"
+              alt="SlideMaker logo"
+              className="h-6 w-6 object-contain"
+            />
             <span className="text-lg font-semibold tracking-tight text-slate-900">
               SlideMaker
             </span>
@@ -232,9 +234,11 @@ export default function LandingPage() {
           <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-xl text-primary">
-                  layers
-                </span>
+                <img
+                  src="/logo.png"
+                  alt="SlideMaker logo"
+                  className="h-5 w-5 object-contain"
+                />
                 <span className="font-semibold text-slate-900">SlideMaker</span>
               </div>
               <p className="mt-3 text-sm text-slate-600">

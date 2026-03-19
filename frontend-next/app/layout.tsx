@@ -29,6 +29,13 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
+        {/* App favicon */}
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="any"
+          href="/favicon.png"
+        />
       </head>
       <body className="min-h-screen bg-background-light text-slate-900 font-sans antialiased">
         <SupabaseProvider url={supabaseUrl} anonKey={supabaseAnonKey}>

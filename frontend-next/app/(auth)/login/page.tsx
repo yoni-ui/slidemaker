@@ -94,9 +94,11 @@ function LoginForm() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background-light px-4">
       <div className="w-full max-w-md rounded-2xl border border-border-default bg-white p-8 shadow-card-hover">
         <div className="mb-8 flex items-center gap-2">
-          <span className="material-symbols-outlined text-2xl text-primary">
-            layers
-          </span>
+          <img
+            src="/logo.png"
+            alt="SlideMaker logo"
+            className="h-8 w-8 object-contain"
+          />
           <span className="text-lg font-semibold text-slate-900">SlideMaker</span>
         </div>
         <h2 className="mb-6 text-xl font-semibold text-slate-900">Log in</h2>

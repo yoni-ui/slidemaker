@@ -73,12 +73,14 @@ function ResetPasswordForm() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background-light px-4">
       <div className="w-full max-w-md rounded-xl border border-border-default bg-surface-card p-8 shadow-card-hover">
         <div className="mb-8 flex items-center gap-2">
-          <span className="material-symbols-outlined text-3xl text-primary">
-            layers
+          <img
+            src="/logo.png"
+            alt="SlideMaker logo"
+            className="h-9 w-9 object-contain"
+          />
+          <span className="text-xl font-semibold tracking-tight text-slate-900">
+            SlideMaker
           </span>
-          <h1 className="text-xl font-extrabold tracking-tight text-slate-900">
-            DeckShare
-          </h1>
         </div>
         <h2 className="mb-6 text-2xl font-bold text-slate-900">Set new password</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
