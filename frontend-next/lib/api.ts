@@ -60,6 +60,31 @@ export async function generateSlides(
   return res.json() as Promise<GenerateResponse>
 }
 
+export type ImportResponse = {
+  text: string
+  source: "pdf" | "txt" | "docx" | "pptx"
+}
+
+export async function importFile(file: File): Promise<ImportResponse> {
+  const formData = new FormData()
+  formData.append("file", file)
+  const res = await fetch("/api/import", {
+    method: "POST",
+    body: formData,
+  })
+  if (!res.ok) {
+    let detail = "Failed to import file"
+    try {
+      const body = (await res.json()) as { detail?: string }
+      if (body.detail) detail = body.detail
+    } catch {
+      detail = (await res.text()) || detail
+    }
+    throw new Error(detail)
+  }
+  return res.json() as Promise<ImportResponse>
+}
+
 export async function healthCheck(): Promise<{ status: string }> {
   const url = API_BASE ? `${API_BASE}/health` : "/api/health"
   const res = await fetch(url)

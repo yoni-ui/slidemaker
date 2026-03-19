@@ -23,7 +23,7 @@ export const MilestonesSlide = ({ slide }: SlideProps) => {
     <div className="relative flex h-full w-full flex-col overflow-hidden bg-white">
       <div
         className="pointer-events-none absolute top-0 right-0 h-full w-1/3 opacity-5"
-        style={{ background: "radial-gradient(circle, #1152d4 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, #FF0000 0%, transparent 70%)" }}
       />
 
       <header className="flex items-end justify-between px-16 pb-12 pt-16">

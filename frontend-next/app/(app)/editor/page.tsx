@@ -3,7 +3,7 @@
 import { Suspense, useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
-import { generateSlides, exportPPTX, exportPDF, getUsage, type SlideContent } from "@/lib/api"
+import { generateSlides, exportPPTX, exportPDF, getUsage, importFile, type SlideContent } from "@/lib/api"
 import { LAYOUTS, LAYOUT_MAP, SLIDE_W, SLIDE_H, type LayoutKey } from "@/lib/design-system"
 import { SlideRenderer } from "@/components/slides/SlideRenderer"
 import { SlideThumbnail } from "@/components/slides/SlideThumbnail"
@@ -54,6 +54,8 @@ function EditorContent() {
   const [usage, setUsage] = useState<{ remaining: number; limit: number } | null>(null)
   const [addSlideOpen, setAddSlideOpen] = useState(false)
   const [promptOpen, setPromptOpen] = useState(true)
+  const [importing, setImporting] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [rightTab, setRightTab] = useState<"layout" | "content">("layout")
   const promptRef = useRef<HTMLTextAreaElement>(null)
   const isUndoRedoRef = useRef(false)
@@ -130,6 +132,46 @@ function EditorContent() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate()
+  }
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || importing) return
+    const ext = file.name.toLowerCase().split(".").pop()
+    if (!["pdf", "txt", "docx", "pptx"].includes(ext ?? "")) {
+      setError("Unsupported file. Use PDF, TXT, DOCX, or PPTX.")
+      setTimeout(() => setError(null), 4000)
+      e.target.value = ""
+      return
+    }
+    if (usage && usage.remaining <= 0) {
+      setError(`Daily limit reached (${usage.limit} AI generations). Resets at midnight.`)
+      return
+    }
+    setImporting(true)
+    setError(null)
+    try {
+      const { text } = await importFile(file)
+      const prompt = `Create a slide deck from this content. Preserve the structure and key points:\n\n${text}`
+      const res = await generateSlides(prompt)
+      const editable = res.slides.map(toEditable)
+      if (!deckId) setDeckId(generateDeckId())
+      if (slides.length > 0) pushToPast(slides)
+      setFuture([])
+      setSlides(editable)
+      setCurrentIndex(0)
+      setPromptOpen(false)
+      setDeckTitle(file.name.replace(/\.[^.]+$/, ""))
+      if (usage) setUsage({ ...usage, remaining: usage.remaining - 1 })
+      getUsage().then((u) => setUsage({ remaining: u.remaining, limit: u.limit }))
+      setToast(`Imported from ${file.name}`)
+      setTimeout(() => setToast(null), 2000)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Import failed")
+    } finally {
+      setImporting(false)
+      e.target.value = ""
+    }
   }
 
   const addSlide = (layout: "hero" | "freeform" = "hero") => {
@@ -466,6 +508,26 @@ function EditorContent() {
               {usage.remaining}/{usage.limit} left
             </span>
           )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.txt,.docx,.pptx,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            onChange={handleImport}
+            className="hidden"
+            aria-label="Import file"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={importing || (usage !== null && usage.remaining <= 0)}
+            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+            title="Import PDF, TXT, Word, or PowerPoint"
+          >
+            <span className={`material-symbols-outlined ${importing ? "animate-spin" : ""}`} style={{ fontSize: 18 }}>
+              upload_file
+            </span>
+            {importing ? "Importing…" : "Import"}
+          </button>
           <button
             type="button"
             onClick={() => setPromptOpen((v) => !v)}
@@ -581,7 +643,7 @@ function EditorContent() {
               <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-slate-200 bg-slate-50/50 py-8 text-center">
                 <span className="material-symbols-outlined text-slate-300" style={{ fontSize: 32 }}>add_photo_alternate</span>
                 <p className="text-xs text-slate-500">
-                  Generate from AI or add a blank slide
+                  Generate from AI, import PDF/Word/PPT, or add a blank slide
                 </p>
               </div>
             )}

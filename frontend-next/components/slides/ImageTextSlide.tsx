@@ -26,7 +26,7 @@ export const ImageTextSlide = ({ slide }: SlideProps) => {
               className="absolute inset-0 opacity-10"
               style={{
                 backgroundImage:
-                  "linear-gradient(#1152d4 1px, transparent 1px), linear-gradient(90deg, #1152d4 1px, transparent 1px)",
+                  "linear-gradient(#FF0000 1px, transparent 1px), linear-gradient(90deg, #FF0000 1px, transparent 1px)",
                 backgroundSize: "40px 40px",
               }}
             />
