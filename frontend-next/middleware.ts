@@ -9,13 +9,16 @@ const PROTECTED_PATHS = [
   "/team",
   "/settings",
   "/templates",
+  "/reset-password",
 ]
 
 const isProtectedPath = (pathname: string) =>
   PROTECTED_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`))
 
 const isAuthPath = (pathname: string) =>
-  pathname === "/login" || pathname === "/signup"
+  pathname === "/login" ||
+  pathname === "/signup" ||
+  pathname === "/forgot-password"
 
 export async function middleware(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL

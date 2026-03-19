@@ -75,6 +75,14 @@ function LoginForm() {
           </h1>
         </div>
         <h2 className="mb-6 text-2xl font-bold text-slate-900">Log in</h2>
+        <p className="mb-4 -mt-2">
+          <Link
+            href="/forgot-password"
+            className="text-sm font-semibold text-primary hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </p>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label
