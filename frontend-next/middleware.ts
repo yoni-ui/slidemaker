@@ -21,6 +21,10 @@ const isAuthPath = (pathname: string) =>
   pathname === "/forgot-password"
 
 export async function middleware(request: NextRequest) {
+  if (process.env.NEXT_PUBLIC_DISABLE_AUTH === "true") {
+    return NextResponse.next()
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 

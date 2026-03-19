@@ -1,6 +1,6 @@
 import type { SlideProps } from "./types"
 
-export const TitleOnlySlide = ({ slide }: SlideProps) => (
+export const TitleOnlySlide = ({ slide, editMode, onUpdate }: SlideProps) => (
   <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-white text-center">
     {/* Decorative ring */}
     <div className="pointer-events-none absolute h-[420px] w-[420px] rounded-full border border-primary/10" />
@@ -20,11 +20,34 @@ export const TitleOnlySlide = ({ slide }: SlideProps) => (
     </div>
 
     <div className="relative z-10 flex flex-col items-center gap-5 px-20">
-      <h1 className="text-[58px] font-black leading-[1.1] tracking-tight text-slate-900">
-        {slide.title}
-      </h1>
-      {slide.subtitle && (
-        <p className="text-xl font-light text-slate-500">{slide.subtitle}</p>
+      {editMode && onUpdate ? (
+        <>
+          <h1
+            contentEditable
+            suppressContentEditableWarning
+            className="text-[58px] font-black leading-[1.1] tracking-tight text-slate-900 outline-none focus:ring-0"
+            onBlur={(e) => onUpdate({ title: e.currentTarget.textContent ?? "" })}
+          >
+            {slide.title}
+          </h1>
+          <p
+            contentEditable
+            suppressContentEditableWarning
+            className="text-xl font-light text-slate-500 outline-none focus:ring-0"
+            onBlur={(e) => onUpdate({ subtitle: e.currentTarget.textContent?.trim() || null })}
+          >
+            {slide.subtitle ?? ""}
+          </p>
+        </>
+      ) : (
+        <>
+          <h1 className="text-[58px] font-black leading-[1.1] tracking-tight text-slate-900">
+            {slide.title}
+          </h1>
+          {slide.subtitle && (
+            <p className="text-xl font-light text-slate-500">{slide.subtitle}</p>
+          )}
+        </>
       )}
     </div>
 

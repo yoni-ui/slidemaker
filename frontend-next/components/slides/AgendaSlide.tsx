@@ -10,7 +10,7 @@ const parseItem = (bullet: string) => {
   }
 }
 
-export const AgendaSlide = ({ slide }: SlideProps) => {
+export const AgendaSlide = ({ slide, editMode, onUpdate, onUpdateBullet }: SlideProps) => {
   const items = slide.bullets.map(parseItem)
 
   return (
@@ -20,9 +20,20 @@ export const AgendaSlide = ({ slide }: SlideProps) => {
           <span className="text-primary">
             <span className="material-symbols-outlined text-3xl">category</span>
           </span>
-          <h2 className="text-xl font-bold leading-tight tracking-tight text-slate-900">
-            {slide.title}
-          </h2>
+          {editMode && onUpdate ? (
+            <h2
+              contentEditable
+              suppressContentEditableWarning
+              className="text-xl font-bold leading-tight tracking-tight text-slate-900 outline-none focus:ring-0"
+              onBlur={(e) => onUpdate({ title: e.currentTarget.textContent ?? "" })}
+            >
+              {slide.title}
+            </h2>
+          ) : (
+            <h2 className="text-xl font-bold leading-tight tracking-tight text-slate-900">
+              {slide.title}
+            </h2>
+          )}
         </div>
       </header>
 
@@ -51,9 +62,24 @@ export const AgendaSlide = ({ slide }: SlideProps) => {
                 <span className="text-2xl font-bold">{item.num}</span>
               </div>
               <div className="flex flex-col justify-center">
-                <p className="text-xl font-bold leading-normal text-slate-900">
-                  {item.title}
-                </p>
+                {editMode && onUpdateBullet ? (
+                  <p
+                    contentEditable
+                    suppressContentEditableWarning
+                    className="text-xl font-bold leading-normal text-slate-900 outline-none focus:ring-0"
+                    onBlur={(e) => {
+                      const text = e.currentTarget.textContent ?? ""
+                      const parts = slide.bullets[i]?.split("|").map((s) => s.trim()) ?? ["01", "", ""]
+                      onUpdateBullet(i, `${parts[0]} | ${text} | ${parts[2] ?? ""}`.trim())
+                    }}
+                  >
+                    {item.title}
+                  </p>
+                ) : (
+                  <p className="text-xl font-bold leading-normal text-slate-900">
+                    {item.title}
+                  </p>
+                )}
                 {item.desc && (
                   <p className="text-base font-normal text-slate-500">
                     {item.desc}

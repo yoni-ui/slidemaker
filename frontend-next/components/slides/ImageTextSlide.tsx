@@ -2,7 +2,7 @@ import { pollinationsUrl } from "@/lib/pollinations"
 import type { SlideProps } from "./types"
 
 /** Image-text layout with Pollinations imagePrompt support (Stitch upgrade) */
-export const ImageTextSlide = ({ slide }: SlideProps) => {
+export const ImageTextSlide = ({ slide, editMode, onUpdate, onUpdateBullet }: SlideProps) => {
   const imageSrc = slide.imagePrompt
     ? pollinationsUrl(slide.imagePrompt, 432, 540)
     : null
@@ -54,15 +54,37 @@ export const ImageTextSlide = ({ slide }: SlideProps) => {
           <span className="text-sm font-semibold uppercase tracking-wider text-primary">
             Section 01 — Strategy
           </span>
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 lg:text-5xl">
-            {slide.title}
-          </h1>
+          {editMode && onUpdate ? (
+            <h1
+              contentEditable
+              suppressContentEditableWarning
+              className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 outline-none focus:ring-0 lg:text-5xl"
+              onBlur={(e) => onUpdate({ title: e.currentTarget.textContent ?? "" })}
+            >
+              {slide.title}
+            </h1>
+          ) : (
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 lg:text-5xl">
+              {slide.title}
+            </h1>
+          )}
         </div>
         <div className="space-y-4">
-          {slide.subtitle && (
-            <p className="text-lg leading-relaxed text-slate-600">
-              {slide.subtitle}
+          {editMode && onUpdate ? (
+            <p
+              contentEditable
+              suppressContentEditableWarning
+              className="text-lg leading-relaxed text-slate-600 outline-none focus:ring-0"
+              onBlur={(e) => onUpdate({ subtitle: e.currentTarget.textContent?.trim() || null })}
+            >
+              {slide.subtitle ?? ""}
             </p>
+          ) : (
+            slide.subtitle && (
+              <p className="text-lg leading-relaxed text-slate-600">
+                {slide.subtitle}
+              </p>
+            )
           )}
           <ul className="space-y-3">
             {slide.bullets.map((bullet, i) => (
@@ -70,7 +92,18 @@ export const ImageTextSlide = ({ slide }: SlideProps) => {
                 <span className="material-symbols-outlined text-primary">
                   check_circle
                 </span>
-                <span>{bullet}</span>
+                {editMode && onUpdateBullet ? (
+                  <span
+                    contentEditable
+                    suppressContentEditableWarning
+                    className="outline-none focus:ring-0"
+                    onBlur={(e) => onUpdateBullet(i, e.currentTarget.textContent ?? "")}
+                  >
+                    {bullet}
+                  </span>
+                ) : (
+                  <span>{bullet}</span>
+                )}
               </li>
             ))}
           </ul>

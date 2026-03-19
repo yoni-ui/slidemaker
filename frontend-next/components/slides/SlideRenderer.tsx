@@ -60,47 +60,47 @@ const renderLayout = (
     case "bullet-list":
       return <BulletListSlide slide={slide} {...passEdit} />
     case "agenda":
-      return <AgendaSlide slide={slide} />
+      return <AgendaSlide slide={slide} {...passEdit} />
     case "two-column":
-      return <TwoColumnSlide slide={slide} />
+      return <TwoColumnSlide slide={slide} {...passEdit} />
     case "process-flow":
-      return <ProcessFlowSlide slide={slide} />
+      return <ProcessFlowSlide slide={slide} {...passEdit} />
     case "image-text":
-      return <ImageTextSlide slide={slide} />
+      return <ImageTextSlide slide={slide} {...passEdit} />
     case "product-features":
-      return <ProductFeaturesSlide slide={slide} />
+      return <ProductFeaturesSlide slide={slide} {...passEdit} />
     case "title-only":
-      return <TitleOnlySlide slide={slide} />
+      return <TitleOnlySlide slide={slide} {...passEdit} />
     case "quote":
-      return <QuoteSlide slide={slide} />
+      return <QuoteSlide slide={slide} {...passEdit} />
     case "stats":
-      return <StatsSlide slide={slide} />
+      return <StatsSlide slide={slide} {...passEdit} />
     case "team-overview":
-      return <TeamOverviewSlide slide={slide} />
+      return <TeamOverviewSlide slide={slide} {...passEdit} />
     case "testimonials":
-      return <TestimonialsSlide slide={slide} />
+      return <TestimonialsSlide slide={slide} {...passEdit} />
     case "case-study":
-      return <CaseStudySlide slide={slide} />
+      return <CaseStudySlide slide={slide} {...passEdit} />
     case "company-values":
-      return <CompanyValuesSlide slide={slide} />
+      return <CompanyValuesSlide slide={slide} {...passEdit} />
     case "pricing":
-      return <PricingSlide slide={slide} />
+      return <PricingSlide slide={slide} {...passEdit} />
     case "data-chart":
-      return <DataChartSlide slide={slide} />
+      return <DataChartSlide slide={slide} {...passEdit} />
     case "timeline":
-      return <TimelineSlide slide={slide} />
+      return <TimelineSlide slide={slide} {...passEdit} />
     case "milestones":
-      return <MilestonesSlide slide={slide} />
+      return <MilestonesSlide slide={slide} {...passEdit} />
     case "swot":
-      return <SwotSlide slide={slide} />
+      return <SwotSlide slide={slide} {...passEdit} />
     case "global-presence":
-      return <GlobalPresenceSlide slide={slide} />
+      return <GlobalPresenceSlide slide={slide} {...passEdit} />
     case "next-steps":
-      return <NextStepsSlide slide={slide} />
+      return <NextStepsSlide slide={slide} {...passEdit} />
     case "partner-logos":
-      return <PartnerLogosSlide slide={slide} />
+      return <PartnerLogosSlide slide={slide} {...passEdit} />
     case "thank-you":
-      return <ThankYouSlide slide={slide} />
+      return <ThankYouSlide slide={slide} {...passEdit} />
     case "freeform":
       return <FreeformSlide slide={slide} {...passEdit} />
     default:

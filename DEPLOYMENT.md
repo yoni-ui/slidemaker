@@ -53,6 +53,7 @@ Add these for **Production**, **Preview**, and **Development** (or at least Prod
 
 | Variable | Purpose |
 |----------|---------|
+| `NEXT_PUBLIC_DISABLE_AUTH` | Set to `true` to bypass auth — login accepts any credentials |
 | `NEXT_PUBLIC_API_URL` | Point at standalone Python backend (e.g. `http://localhost:8001`) |
 
 ### 5. Build Settings

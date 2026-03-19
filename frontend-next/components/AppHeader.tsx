@@ -23,6 +23,10 @@ export function AppHeader() {
   const profileRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (process.env.NEXT_PUBLIC_DISABLE_AUTH === "true") {
+      setUserEmail(typeof window !== "undefined" ? localStorage.getItem("bypass-auth-email") : null)
+      return
+    }
     if (supabase) {
       supabase.auth.getUser().then(({ data }) => {
         setUserEmail(data?.user?.email ?? null)
@@ -75,6 +79,12 @@ export function AppHeader() {
 
   const handleLogout = async () => {
     setShowProfile(false)
+    if (process.env.NEXT_PUBLIC_DISABLE_AUTH === "true") {
+      if (typeof window !== "undefined") localStorage.removeItem("bypass-auth-email")
+      router.push("/login")
+      router.refresh()
+      return
+    }
     if (supabase) await supabase.auth.signOut()
     router.push("/")
     router.refresh()

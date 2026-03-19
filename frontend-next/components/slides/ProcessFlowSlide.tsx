@@ -8,7 +8,7 @@ const parseStep = (bullet: string) => {
   return { title, desc }
 }
 
-export const ProcessFlowSlide = ({ slide }: SlideProps) => {
+export const ProcessFlowSlide = ({ slide, editMode, onUpdate, onUpdateBullet }: SlideProps) => {
   const steps = slide.bullets.map(parseStep)
 
   return (
@@ -18,17 +18,39 @@ export const ProcessFlowSlide = ({ slide }: SlideProps) => {
           <span className="material-symbols-outlined text-3xl font-bold">
             account_tree
           </span>
-          <h2 className="text-xl font-extrabold tracking-tight text-slate-900">
-            {slide.title}
-          </h2>
+          {editMode && onUpdate ? (
+            <h2
+              contentEditable
+              suppressContentEditableWarning
+              className="text-xl font-extrabold tracking-tight text-slate-900 outline-none focus:ring-0"
+              onBlur={(e) => onUpdate({ title: e.currentTarget.textContent ?? "" })}
+            >
+              {slide.title}
+            </h2>
+          ) : (
+            <h2 className="text-xl font-extrabold tracking-tight text-slate-900">
+              {slide.title}
+            </h2>
+          )}
         </div>
       </header>
 
       <main className="flex flex-1 flex-col justify-center px-10 py-8">
-        {slide.subtitle && (
-          <p className="mb-12 max-w-2xl text-lg text-slate-500">
-            {slide.subtitle}
+        {editMode && onUpdate ? (
+          <p
+            contentEditable
+            suppressContentEditableWarning
+            className="mb-12 max-w-2xl text-lg text-slate-500 outline-none focus:ring-0"
+            onBlur={(e) => onUpdate({ subtitle: e.currentTarget.textContent?.trim() || null })}
+          >
+            {slide.subtitle ?? ""}
           </p>
+        ) : (
+          slide.subtitle && (
+            <p className="mb-12 max-w-2xl text-lg text-slate-500">
+              {slide.subtitle}
+            </p>
+          )
         )}
 
         <div className="relative flex items-start justify-between gap-4">
@@ -58,11 +80,36 @@ export const ProcessFlowSlide = ({ slide }: SlideProps) => {
                 >
                   Step {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="text-lg font-bold text-slate-900">{step.title}</h3>
-                {step.desc && (
-                  <p className="text-sm leading-relaxed text-slate-500">
+                {editMode && onUpdateBullet ? (
+                  <h3
+                    contentEditable
+                    suppressContentEditableWarning
+                    className="text-lg font-bold text-slate-900 outline-none focus:ring-0"
+                    onBlur={(e) => {
+                      const title = e.currentTarget.textContent ?? ""
+                      onUpdateBullet(i, `${title} | ${step.desc}`.trim())
+                    }}
+                  >
+                    {step.title}
+                  </h3>
+                ) : (
+                  <h3 className="text-lg font-bold text-slate-900">{step.title}</h3>
+                )}
+                {editMode && onUpdateBullet ? (
+                  <p
+                    contentEditable
+                    suppressContentEditableWarning
+                    className="text-sm leading-relaxed text-slate-500 outline-none focus:ring-0"
+                    onBlur={(e) => onUpdateBullet(i, `${step.title} | ${e.currentTarget.textContent ?? ""}`.trim())}
+                  >
                     {step.desc}
                   </p>
+                ) : (
+                  step.desc && (
+                    <p className="text-sm leading-relaxed text-slate-500">
+                      {step.desc}
+                    </p>
+                  )
                 )}
               </div>
             </div>
