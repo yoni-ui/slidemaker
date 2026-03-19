@@ -4,11 +4,12 @@ import { Suspense, useState, useEffect, useCallback } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { SlideRenderer } from "@/components/slides/SlideRenderer"
-import { loadDeck } from "@/lib/deck-storage"
+import { useDeckStorage } from "@/lib/use-deck-storage"
 import type { EditableSlide } from "@/components/slides/types"
 
 function PresentContent() {
   const searchParams = useSearchParams()
+  const { loadDeck } = useDeckStorage()
   const deckId = searchParams.get("deck")
   const [slides, setSlides] = useState<EditableSlide[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)

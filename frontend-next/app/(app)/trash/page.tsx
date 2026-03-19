@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { getTrashedDecks, restoreDeck, deleteDeck } from "@/lib/deck-storage"
+import { useDeckStorage } from "@/lib/use-deck-storage"
 
 export default function TrashPage() {
+  const { getTrashedDecks, restoreDeck, deleteDeck } = useDeckStorage()
   const [decks, setDecks] = useState<
     Array<{ id: string; title: string; deletedAt?: string }>
   >([])

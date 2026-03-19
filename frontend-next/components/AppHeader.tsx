@@ -3,11 +3,13 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { getAllDecks } from "@/lib/deck-storage"
-import { createClient } from "@/lib/supabase/client"
+import { useSupabase } from "@/components/SupabaseProvider"
+import { useDeckStorage } from "@/lib/use-deck-storage"
 
 export function AppHeader() {
   const router = useRouter()
+  const { client: supabase } = useSupabase()
+  const { getAllDecks } = useDeckStorage()
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<
@@ -21,13 +23,12 @@ export function AppHeader() {
   const profileRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const supabase = createClient()
     if (supabase) {
       supabase.auth.getUser().then(({ data }) => {
         setUserEmail(data?.user?.email ?? null)
       })
     }
-  }, [])
+  }, [supabase])
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -74,8 +75,6 @@ export function AppHeader() {
 
   const handleLogout = async () => {
     setShowProfile(false)
-    const { createClient } = await import("@/lib/supabase/client")
-    const supabase = createClient()
     if (supabase) await supabase.auth.signOut()
     router.push("/")
     router.refresh()

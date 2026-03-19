@@ -23,6 +23,8 @@ export type SlideContent = {
 
 export type GenerateResponse = {
   slides: SlideContent[]
+  deckTitle?: string
+  warnings?: string[]
 }
 
 export type UsageResponse = {

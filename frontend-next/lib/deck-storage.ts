@@ -1,6 +1,6 @@
 import type { EditableSlide } from "@/components/slides/types"
-import { createClient } from "@/lib/supabase/client"
 import { createSupabaseDeckStorage } from "@/lib/deck-storage-supabase"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 const STORAGE_KEY = "slidemaker-decks"
 
@@ -109,8 +109,9 @@ const localStorageAdapter: DeckStorage = {
   },
 }
 
-export const getDeckStorage = async (): Promise<DeckStorage> => {
-  const supabase = createClient()
+export const getDeckStorage = async (
+  supabase: SupabaseClient | null
+): Promise<DeckStorage> => {
   if (supabase) {
     try {
       const { data } = await supabase.auth.getUser()
@@ -124,42 +125,87 @@ export const getDeckStorage = async (): Promise<DeckStorage> => {
   return localStorageAdapter
 }
 
+export const saveDeckWithClient = async (
+  supabase: SupabaseClient | null,
+  deckId: string,
+  title: string,
+  slides: EditableSlide[],
+  isDraft = true
+): Promise<StoredDeck> => {
+  const storage = await getDeckStorage(supabase)
+  return storage.saveDeck(deckId, title, slides, isDraft)
+}
+
+export const loadDeckWithClient = async (
+  supabase: SupabaseClient | null,
+  deckId: string
+): Promise<StoredDeck | null> => {
+  const storage = await getDeckStorage(supabase)
+  return storage.loadDeck(deckId)
+}
+
+export const getAllDecksWithClient = async (
+  supabase: SupabaseClient | null,
+  includeDeleted = false
+): Promise<StoredDeck[]> => {
+  const storage = await getDeckStorage(supabase)
+  return storage.getAllDecks(includeDeleted)
+}
+
+export const deleteDeckWithClient = async (
+  supabase: SupabaseClient | null,
+  deckId: string,
+  soft = true
+): Promise<void> => {
+  const storage = await getDeckStorage(supabase)
+  return storage.deleteDeck(deckId, soft)
+}
+
+export const getTrashedDecksWithClient = async (
+  supabase: SupabaseClient | null
+): Promise<StoredDeck[]> => {
+  const storage = await getDeckStorage(supabase)
+  return storage.getTrashedDecks()
+}
+
+export const restoreDeckWithClient = async (
+  supabase: SupabaseClient | null,
+  deckId: string
+): Promise<void> => {
+  const storage = await getDeckStorage(supabase)
+  return storage.restoreDeck(deckId)
+}
+
 export const saveDeck = async (
   deckId: string,
   title: string,
   slides: EditableSlide[],
   isDraft = true
 ): Promise<StoredDeck> => {
-  const storage = await getDeckStorage()
-  return storage.saveDeck(deckId, title, slides, isDraft)
+  return saveDeckWithClient(null, deckId, title, slides, isDraft)
 }
 
 export const loadDeck = async (deckId: string): Promise<StoredDeck | null> => {
-  const storage = await getDeckStorage()
-  return storage.loadDeck(deckId)
+  return loadDeckWithClient(null, deckId)
 }
 
 export const getAllDecks = async (
   includeDeleted = false
 ): Promise<StoredDeck[]> => {
-  const storage = await getDeckStorage()
-  return storage.getAllDecks(includeDeleted)
+  return getAllDecksWithClient(null, includeDeleted)
 }
 
 export const getTrashedDecks = async (): Promise<StoredDeck[]> => {
-  const storage = await getDeckStorage()
-  return storage.getTrashedDecks()
+  return getTrashedDecksWithClient(null)
 }
 
 export const deleteDeck = async (
   deckId: string,
   soft = true
 ): Promise<void> => {
-  const storage = await getDeckStorage()
-  return storage.deleteDeck(deckId, soft)
+  return deleteDeckWithClient(null, deckId, soft)
 }
 
 export const restoreDeck = async (deckId: string): Promise<void> => {
-  const storage = await getDeckStorage()
-  return storage.restoreDeck(deckId)
+  return restoreDeckWithClient(null, deckId)
 }

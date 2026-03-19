@@ -1,17 +1,21 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from "next"
+import "./globals.css"
+import { SupabaseProvider } from "@/components/SupabaseProvider"
 
 export const metadata: Metadata = {
   title: "DeckShare – Stunning Presentations Instantly",
   description:
     "Build professional, high-converting decks in minutes. Real-time collaboration, beautiful templates, and seamless sharing.",
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ""
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
+
   return (
     <html lang="en">
       <head>
@@ -27,8 +31,10 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-[#f6f6f8] text-slate-900 font-sans antialiased">
-        {children}
+        <SupabaseProvider url={supabaseUrl} anonKey={supabaseAnonKey}>
+          {children}
+        </SupabaseProvider>
       </body>
     </html>
-  );
+  )
 }

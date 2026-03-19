@@ -3,10 +3,14 @@
 import { Suspense, useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { useSupabase } from "@/components/SupabaseProvider"
+
+const NOT_CONFIGURED_MSG =
+  "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local (or Vercel env vars), then restart."
 
 function ResetPasswordForm() {
   const router = useRouter()
+  const { client: supabase, isConfigured } = useSupabase()
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -14,14 +18,13 @@ function ResetPasswordForm() {
   const [success, setSuccess] = useState(false)
 
   useEffect(() => {
-    const supabase = createClient()
     if (!supabase) return
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) {
         router.replace("/login")
       }
     })
-  }, [router])
+  }, [router, supabase])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,9 +38,8 @@ function ResetPasswordForm() {
       return
     }
     setLoading(true)
-    const supabase = createClient()
-    if (!supabase) {
-      setError("Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local, then restart the dev server.")
+    if (!isConfigured || !supabase) {
+      setError(NOT_CONFIGURED_MSG)
       setLoading(false)
       return
     }

@@ -9,11 +9,7 @@ import { SlideRenderer } from "@/components/slides/SlideRenderer"
 import { SlideThumbnail } from "@/components/slides/SlideThumbnail"
 import type { EditableSlide } from "@/components/slides/types"
 import { getTemplateById } from "@/lib/templates"
-import {
-  saveDeck,
-  loadDeck,
-  generateDeckId,
-} from "@/lib/deck-storage"
+import { useDeckStorage } from "@/lib/use-deck-storage"
 
 const toEditable = (s: SlideContent): EditableSlide => ({
   title: s.title,
@@ -38,6 +34,7 @@ const MAX_HISTORY = 50
 function EditorContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { saveDeck, loadDeck, generateDeckId } = useDeckStorage()
   const [deckId, setDeckId] = useState<string | null>(null)
   const [deckTitle, setDeckTitle] = useState("Untitled Deck")
   const [slides, setSlides] = useState<EditableSlide[]>([])
@@ -121,6 +118,7 @@ function EditorContent() {
       setSlides(editable)
       setCurrentIndex(0)
       setPromptOpen(false)
+      if (res.deckTitle) setDeckTitle(res.deckTitle)
       if (usage) setUsage({ ...usage, remaining: usage.remaining - 1 })
       getUsage().then((u) => setUsage({ remaining: u.remaining, limit: u.limit }))
     } catch (e) {
@@ -161,7 +159,7 @@ function EditorContent() {
       setSlides(editable)
       setCurrentIndex(0)
       setPromptOpen(false)
-      setDeckTitle(file.name.replace(/\.[^.]+$/, ""))
+      setDeckTitle(res.deckTitle ?? file.name.replace(/\.[^.]+$/, ""))
       if (usage) setUsage({ ...usage, remaining: usage.remaining - 1 })
       getUsage().then((u) => setUsage({ remaining: u.remaining, limit: u.limit }))
       setToast(`Imported from ${file.name}`)

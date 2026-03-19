@@ -3,11 +3,15 @@
 import { Suspense, useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
+import { useSupabase } from "@/components/SupabaseProvider"
+
+const NOT_CONFIGURED_MSG =
+  "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local (or Vercel env vars), then restart."
 
 function SignupForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { client: supabase, isConfigured } = useSupabase()
   const redirect = searchParams.get("redirect") ?? "/dashboard"
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -19,9 +23,8 @@ function SignupForm() {
     e.preventDefault()
     setError(null)
     setLoading(true)
-    const supabase = createClient()
-    if (!supabase) {
-      setError("Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local, then restart the dev server.")
+    if (!isConfigured || !supabase) {
+      setError(NOT_CONFIGURED_MSG)
       setLoading(false)
       return
     }
@@ -41,9 +44,8 @@ function SignupForm() {
   const handleGoogleSignIn = async () => {
     setError(null)
     setLoading(true)
-    const supabase = createClient()
-    if (!supabase) {
-      setError("Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local, then restart the dev server.")
+    if (!isConfigured || !supabase) {
+      setError(NOT_CONFIGURED_MSG)
       setLoading(false)
       return
     }

@@ -1,86 +1,131 @@
 import { NextRequest, NextResponse } from "next/server"
 import Groq from "groq-sdk"
 import { createClient } from "@/lib/supabase/server"
-import { buildLayoutDescriptions, LAYOUT_KEYS } from "@/lib/design-system"
-import type { LayoutKey } from "@/lib/design-system"
+import { getTemplateRegistryForAgent } from "@/lib/template-registry"
+import {
+  validateDeckSpec,
+  parseDeckSpec,
+  parseRenderSpec,
+  validateRenderSpec,
+  type DeckSpec,
+  type RenderSpec,
+} from "@/lib/generate-validation"
 
 const FREE_DAILY_LIMIT = 5
 
-const SYSTEM_PROMPT = `You are a professional presentation designer. Given a topic or prompt, generate a polished, concise slide deck.
+const CONTENT_AGENT_PROMPT = `You are a presentation strategist. Convert the user's topic or prompt into a structured slide deck outline.
 
-Available layouts (choose the best one for each slide):
-{layout_descriptions}
+Your job: define narrative structure, slide purpose, and content. Do NOT choose layouts — that is done by a separate design agent.
 
 Rules:
-1. The FIRST slide MUST use "hero" or "title-card" (opening title slide).
-2. The LAST slide MUST use "quote", "thank-you", or "title-only" (strong close or call-to-action).
-3. Choose the layout that BEST matches the content: e.g. "agenda" for table of contents, "pricing" for plan comparison, "swot" for strategy analysis, "timeline" for roadmaps, "testimonials" for customer quotes, "team-overview" for team intro, "case-study" for success stories, "next-steps" for action checklists.
-4. Use "two-column" for comparisons, pros/cons, or before/after content.
-5. Use "image-text" for slides with a strong visual, diagram, or product view.
-6. Use "bullet-list" for generic key points when no specialized layout fits.
-7. Use "stats" or "data-chart" when highlighting metrics or KPIs.
-8. Keep bullet points concise: under 12 words each.
-9. Generate between 4 and 8 slides depending on topic complexity.
-10. For "hero", "title-only", "quote", "partner-logos": bullets MUST be [] (unless layout spec says otherwise).
-11. For "quote": put the quote in "title" (wrap in quotes), attribution in "subtitle".
-12. For "stats", "pricing", "data-chart": format bullets per layout spec (e.g. "VALUE | Label").
-13. subtitle is optional — include when it adds context.
+- First slide: hero or intro (deck title + optional subtitle)
+- Last slide: strong close (quote, thank-you, or call-to-action)
+- 4–8 slides depending on topic complexity
+- Keep titles under 10 words, bullets under 12 words each
+- Max 6 bullets per slide
+- Assign purpose per slide: hero, problem, solution, agenda, comparison, timeline, quote, etc.
+- For image-heavy slides, add imagePrompt (Pollinations-style prompt, e.g. "modern AI dashboard")
+- For quote slides: put full quote in title (wrap in quotes), attribution in subtitle
 
-Return a JSON object with a single key "slides" whose value is an array. Each slide element must have exactly:
+Return JSON only:
 {
-  "title": "string",
-  "subtitle": "string or null",
-  "bullets": ["string"],
-  "layout": "one of the layout keys listed above",
-  "theme": "default"
+  "deckTitle": "string",
+  "slides": [
+    {
+      "purpose": "hero | problem | solution | agenda | comparison | timeline | quote | etc",
+      "title": "string",
+      "subtitle": "string or null",
+      "bullets": ["string"],
+      "visualIntent": "text | image | stats | timeline",
+      "imagePrompt": "string or null",
+      "backgroundPrompt": "string or null"
+    }
+  ]
 }`
 
-type SlideRaw = {
-  title?: string
-  subtitle?: string | null
-  bullets?: string[]
-  layout?: string
-  theme?: string
-}
+const DESIGN_AGENT_PROMPT = `You are a presentation design engine. Given a deck outline and template registry, assign the best layout per slide and map content.
 
-type Slide = {
-  title: string
-  subtitle: string | null
-  bullets: string[]
-  layout: LayoutKey
-  theme: string
-}
+Template registry (choose ONLY from these ids):
+{template_registry}
 
-const parseSlides = (raw: string): Slide[] => {
-  let text = raw.trim()
-  // Strip markdown fences if present
-  if (text.startsWith("```")) {
-    const parts = text.split("```")
-    text = parts[1] ?? text
-    if (text.startsWith("json")) text = text.slice(4)
-    text = text.trim()
-  }
+Rules:
+- Match slide purpose to template purpose (e.g. hero→hero, comparison→two-column, timeline→timeline)
+- First slide MUST use "hero" or "title-card"
+- Last slide MUST use "quote", "thank-you", or "title-only"
+- Do NOT rewrite content — only map it to the output format
+- Prefer exportSafe templates (avoid freeform for auto-generation)
+- Use "image-text" or "case-study" when imagePrompt is provided
+- Use "agenda" for table-of-contents style content
+- Use "stats" or "data-chart" for metrics/KPIs
+- Use "pricing" for plan comparisons
+- Use "swot" for strategy analysis
+- Use "timeline" for roadmaps
+- Use "bullet-list" when no specialized layout fits
 
-  const parsed = JSON.parse(text) as Record<string, unknown> | SlideRaw[]
-
-  const arr: SlideRaw[] = Array.isArray(parsed)
-    ? parsed
-    : Array.isArray((parsed as Record<string, unknown>).slides)
-    ? ((parsed as Record<string, unknown>).slides as SlideRaw[])
-    : (Object.values(parsed)[0] as SlideRaw[])
-
-  return arr.map((item) => {
-    const layout = (item.layout ?? "bullet-list") as string
-    return {
-      title: item.title ?? "Slide",
-      subtitle: item.subtitle ?? null,
-      bullets: item.bullets ?? [],
-      layout: (LAYOUT_KEYS.includes(layout as LayoutKey)
-        ? layout
-        : "bullet-list") as LayoutKey,
-      theme: item.theme ?? "default",
+Return JSON only:
+{
+  "slides": [
+    {
+      "title": "string",
+      "subtitle": "string or null",
+      "bullets": ["string"],
+      "layout": "one of the template ids from registry",
+      "theme": "default",
+      "imagePrompt": "string or null",
+      "backgroundPrompt": "string or null"
     }
+  ]
+}`
+
+const callContentAgent = async (client: Groq, prompt: string): Promise<DeckSpec> => {
+  const completion = await client.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      { role: "system", content: CONTENT_AGENT_PROMPT },
+      { role: "user", content: `Topic: ${prompt}` },
+    ],
+    response_format: { type: "json_object" },
+    temperature: 0.7,
   })
+  const raw = completion.choices[0]?.message?.content ?? "{}"
+  return parseDeckSpec(raw)
+}
+
+const callDesignAgent = async (
+  client: Groq,
+  deckSpec: DeckSpec
+): Promise<RenderSpec> => {
+  const registry = getTemplateRegistryForAgent()
+  const system = DESIGN_AGENT_PROMPT.replace("{template_registry}", registry)
+  const userContent = `Deck outline to design:
+${JSON.stringify(
+  {
+    deckTitle: deckSpec.deckTitle,
+    slides: deckSpec.slides.map((s) => ({
+      purpose: s.purpose,
+      title: s.title,
+      subtitle: s.subtitle,
+      bullets: s.bullets,
+      visualIntent: s.visualIntent,
+      imagePrompt: s.imagePrompt,
+      backgroundPrompt: s.backgroundPrompt,
+    })),
+  },
+  null,
+  2
+)}`
+
+  const completion = await client.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: userContent },
+    ],
+    response_format: { type: "json_object" },
+    temperature: 0.5,
+  })
+  const raw = completion.choices[0]?.message?.content ?? "{}"
+  return parseRenderSpec(raw)
 }
 
 export async function POST(req: NextRequest) {
@@ -133,24 +178,15 @@ export async function POST(req: NextRequest) {
   }
 
   const client = new Groq({ apiKey })
-  const system = SYSTEM_PROMPT.replace(
-    "{layout_descriptions}",
-    buildLayoutDescriptions()
-  )
 
   try {
-    const completion = await client.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: `Topic: ${prompt}` },
-      ],
-      response_format: { type: "json_object" },
-      temperature: 0.7,
-    })
+    // Agent 1: Content Architect
+    const deckSpec = await callContentAgent(client, prompt)
+    const validatedDeckSpec = validateDeckSpec(deckSpec)
 
-    const raw = completion.choices[0]?.message?.content ?? "{}"
-    const slides = parseSlides(raw)
+    // Agent 2: Design Agent
+    const renderSpec = await callDesignAgent(client, validatedDeckSpec)
+    const validatedRenderSpec = validateRenderSpec(renderSpec)
 
     if (userId) {
       try {
@@ -181,7 +217,11 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ slides })
+    return NextResponse.json({
+      slides: validatedRenderSpec.slides,
+      deckTitle: validatedDeckSpec.deckTitle,
+      warnings: validatedRenderSpec.warnings,
+    })
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e)
     if (msg.includes("429") || msg.toLowerCase().includes("rate_limit")) {

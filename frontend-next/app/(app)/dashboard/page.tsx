@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { getAllDecks, deleteDeck } from "@/lib/deck-storage"
+import { useDeckStorage } from "@/lib/use-deck-storage"
 
 const formatRelativeTime = (iso: string) => {
   const d = new Date(iso)
@@ -19,6 +19,7 @@ const formatRelativeTime = (iso: string) => {
 }
 
 export default function DashboardPage() {
+  const { getAllDecks, deleteDeck } = useDeckStorage()
   const [decks, setDecks] = useState<Array<{ id: string; title: string; updatedAt: string }>>([])
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
 
