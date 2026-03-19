@@ -23,21 +23,42 @@ import { DataChartSlide } from "./DataChartSlide"
 import { TimelineSlide } from "./TimelineSlide"
 import { MilestonesSlide } from "./MilestonesSlide"
 import { GlobalPresenceSlide } from "./GlobalPresenceSlide"
+import { FreeformSlide } from "./FreeformSlide"
 import type { EditableSlide } from "./types"
 import type { LayoutKey } from "@/lib/design-system"
 
-type Props = { slide: EditableSlide }
+type Props = {
+  slide: EditableSlide
+  editMode?: boolean
+  onUpdate?: (patch: Partial<EditableSlide>) => void
+  onUpdateBullet?: (index: number, value: string) => void
+  onAddBullet?: () => void
+  onRemoveBullet?: (index: number) => void
+}
 
-const renderLayout = (slide: EditableSlide) => {
+const renderLayout = (
+  slide: EditableSlide,
+  editProps?: Omit<Props, "slide">
+) => {
   const layout = slide.layout
+
+  const passEdit = editProps
+    ? {
+        editMode: editProps.editMode,
+        onUpdate: editProps.onUpdate,
+        onUpdateBullet: editProps.onUpdateBullet,
+        onAddBullet: editProps.onAddBullet,
+        onRemoveBullet: editProps.onRemoveBullet,
+      }
+    : {}
 
   switch (layout) {
     case "hero":
-      return <HeroSlide slide={slide} />
+      return <HeroSlide slide={slide} {...passEdit} />
     case "title-card":
-      return <TitleCardSlide slide={slide} />
+      return <TitleCardSlide slide={slide} {...passEdit} />
     case "bullet-list":
-      return <BulletListSlide slide={slide} />
+      return <BulletListSlide slide={slide} {...passEdit} />
     case "agenda":
       return <AgendaSlide slide={slide} />
     case "two-column":
@@ -80,13 +101,16 @@ const renderLayout = (slide: EditableSlide) => {
       return <PartnerLogosSlide slide={slide} />
     case "thank-you":
       return <ThankYouSlide slide={slide} />
+    case "freeform":
+      return <FreeformSlide slide={slide} {...passEdit} />
     default:
       return <BulletListSlide slide={slide} />
   }
 }
 
-export const SlideRenderer = ({ slide }: Props) => {
-  const content = renderLayout(slide)
+export const SlideRenderer = (props: Props) => {
+  const { slide } = props
+  const content = renderLayout(slide, props)
 
   const wrapped = (
     <div className="font-slide h-full w-full">{content}</div>

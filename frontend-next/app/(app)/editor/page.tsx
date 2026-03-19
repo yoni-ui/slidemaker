@@ -3,7 +3,7 @@
 import { Suspense, useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
-import { generateSlides, exportPPTX, type SlideContent } from "@/lib/api"
+import { generateSlides, exportPPTX, exportPDF, getUsage, type SlideContent } from "@/lib/api"
 import { LAYOUTS, LAYOUT_MAP, SLIDE_W, SLIDE_H, type LayoutKey } from "@/lib/design-system"
 import { SlideRenderer } from "@/components/slides/SlideRenderer"
 import { SlideThumbnail } from "@/components/slides/SlideThumbnail"
@@ -50,6 +50,9 @@ function EditorContent() {
   const [error, setError] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle")
+  const [isDraft, setIsDraft] = useState(true)
+  const [usage, setUsage] = useState<{ remaining: number; limit: number } | null>(null)
+  const [addSlideOpen, setAddSlideOpen] = useState(false)
   const [promptOpen, setPromptOpen] = useState(true)
   const [rightTab, setRightTab] = useState<"layout" | "content">("layout")
   const promptRef = useRef<HTMLTextAreaElement>(null)
@@ -101,6 +104,10 @@ function EditorContent() {
 
   const handleGenerate = async () => {
     if (!prompt.trim() || loading) return
+    if (usage && usage.remaining <= 0) {
+      setError(`Daily limit reached (${usage.limit} AI generations). Resets at midnight.`)
+      return
+    }
     setLoading(true)
     setError(null)
     try {
@@ -112,6 +119,8 @@ function EditorContent() {
       setSlides(editable)
       setCurrentIndex(0)
       setPromptOpen(false)
+      if (usage) setUsage({ ...usage, remaining: usage.remaining - 1 })
+      getUsage().then((u) => setUsage({ remaining: u.remaining, limit: u.limit }))
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to generate slides")
     } finally {
@@ -123,11 +132,20 @@ function EditorContent() {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate()
   }
 
-  const addSlide = () => {
+  const addSlide = (layout: "hero" | "freeform" = "hero") => {
     if (!deckId) setDeckId(generateDeckId())
     pushToPast(slides)
     setFuture([])
-    const newSlides = [...slides, { ...BLANK_SLIDE }]
+    const newSlide =
+      layout === "freeform"
+        ? {
+            ...BLANK_SLIDE,
+            layout: "freeform" as const,
+            title: "",
+            elements: [],
+          }
+        : { ...BLANK_SLIDE }
+    const newSlides = [...slides, newSlide]
     setSlides(newSlides)
     setCurrentIndex(newSlides.length - 1)
   }
@@ -179,7 +197,7 @@ function EditorContent() {
       return
     }
     if (!deckId) setDeckId(id)
-    saveDeck(id, deckTitle, slides)
+    await saveDeck(id, deckTitle, slides, isDraft)
     const url = `${typeof window !== "undefined" ? window.location.origin : ""}/editor?deck=${id}`
     try {
       await navigator.clipboard.writeText(url)
@@ -191,15 +209,38 @@ function EditorContent() {
     }
   }
 
-  const handlePresent = () => {
+  const handleSaveDraft = async () => {
+    const id = deckId ?? (slides.length > 0 ? generateDeckId() : null)
+    if (!id) {
+      setToast("Add slides first to save")
+      setTimeout(() => setToast(null), 2000)
+      return
+    }
+    if (!deckId) setDeckId(id)
+    setSaveStatus("saving")
+    try {
+      await saveDeck(id, deckTitle, slides, true)
+      setIsDraft(true)
+      setSaveStatus("saved")
+      setToast("Saved as draft")
+      setTimeout(() => setToast(null), 2000)
+      setTimeout(() => setSaveStatus("idle"), 2000)
+    } catch (e) {
+      setToast(e instanceof Error ? e.message : "Save failed")
+      setTimeout(() => setToast(null), 2000)
+      setSaveStatus("idle")
+    }
+  }
+
+  const handlePresent = async () => {
     const id = deckId ?? (slides.length > 0 ? generateDeckId() : null)
     if (!id && slides.length > 0) {
       const newId = generateDeckId()
       setDeckId(newId)
-      saveDeck(newId, deckTitle, slides)
+      await saveDeck(newId, deckTitle, slides, isDraft)
       router.push(`/editor/present?deck=${newId}`)
     } else if (id) {
-      saveDeck(id, deckTitle, slides)
+      await saveDeck(id, deckTitle, slides, isDraft)
       router.push(`/editor/present?deck=${id}`)
     } else {
       setToast("Add slides first to present")
@@ -232,20 +273,66 @@ function EditorContent() {
     }
   }
 
+  const handleExportPDF = async () => {
+    if (slides.length === 0) {
+      setToast("Add slides first to export")
+      setTimeout(() => setToast(null), 2000)
+      return
+    }
+    setExporting(true)
+    try {
+      const blob = await exportPDF(deckTitle, slides)
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `${deckTitle.replace(/\s+/g, "_")}.pdf`
+      a.click()
+      URL.revokeObjectURL(url)
+      setToast("Exported successfully")
+      setTimeout(() => setToast(null), 2000)
+    } catch (e) {
+      setToast(e instanceof Error ? e.message : "Export failed")
+      setTimeout(() => setToast(null), 3000)
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  useEffect(() => {
+    getUsage().then((u) => setUsage({ remaining: u.remaining, limit: u.limit }))
+  }, [])
+
   useEffect(() => {
     const deckParam = searchParams.get("deck")
     const templateId = searchParams.get("template")
+    const htmlTemplateId = searchParams.get("htmlTemplate")
     if (deckParam) {
-      const stored = loadDeck(deckParam)
-      if (stored) {
-        setDeckId(stored.id)
-        setDeckTitle(stored.title)
-        setSlides(stored.slides)
-        setCurrentIndex(0)
-        setPast([])
-        setFuture([])
-        return
-      }
+      loadDeck(deckParam).then((stored) => {
+        if (stored) {
+          setDeckId(stored.id)
+          setDeckTitle(stored.title)
+          setSlides(stored.slides)
+          setIsDraft(stored.isDraft ?? true)
+          setCurrentIndex(0)
+          setPast([])
+          setFuture([])
+        }
+      })
+      return
+    }
+    if (htmlTemplateId) {
+      fetch(`/api/templates/html/${htmlTemplateId}?format=slide`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.slide) {
+            setSlides([data.slide])
+            setDeckTitle(data.slide.title ?? "New Slide")
+            setCurrentIndex(0)
+            setDeckId(generateDeckId())
+          }
+        })
+        .catch(() => {})
+      return
     }
     if (templateId) {
       const t = getTemplateById(templateId)
@@ -262,12 +349,13 @@ function EditorContent() {
     if (slides.length === 0 || !deckId) return
     setSaveStatus("saving")
     const saveTimer = setTimeout(() => {
-      saveDeck(deckId, deckTitle, slides)
-      setSaveStatus("saved")
-      setTimeout(() => setSaveStatus("idle"), 2000)
+      saveDeck(deckId, deckTitle, slides, isDraft).then(() => {
+        setSaveStatus("saved")
+        setTimeout(() => setSaveStatus("idle"), 2000)
+      })
     }, 1200)
     return () => clearTimeout(saveTimer)
-  }, [deckId, deckTitle, slides])
+  }, [deckId, deckTitle, slides, isDraft])
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -330,11 +418,21 @@ function EditorContent() {
               ) : (
                 <>
                   <span className="material-symbols-outlined text-emerald-500" style={{ fontSize: 14 }}>check_circle</span>
-                  Saved to local
+                  {isDraft ? "Draft saved" : "Saved"}
                 </>
               )}
             </span>
           )}
+          <button
+            type="button"
+            onClick={handleSaveDraft}
+            disabled={saveStatus === "saving" || slides.length === 0}
+            className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+            title="Save as draft"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>save</span>
+            Save as Draft
+          </button>
           <div className="h-6 w-px bg-slate-200" />
           {/* Undo/Redo */}
           <div className="flex gap-0.5 rounded-lg bg-slate-50 p-0.5">
@@ -363,10 +461,16 @@ function EditorContent() {
 
         {/* Right: Share + Present */}
         <div className="flex items-center gap-2">
+          {usage !== null && (
+            <span className="text-xs text-slate-500" title="Free daily AI generations">
+              {usage.remaining}/{usage.limit} left
+            </span>
+          )}
           <button
             type="button"
             onClick={() => setPromptOpen((v) => !v)}
-            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary"
+            disabled={usage !== null && usage.remaining <= 0}
+            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span className="material-symbols-outlined" style={{ fontSize: 18 }}>auto_awesome</span>
             {promptOpen ? "Hide prompt" : "AI Generate"}
@@ -388,7 +492,18 @@ function EditorContent() {
             <span className={`material-symbols-outlined ${exporting ? "animate-spin" : ""}`} style={{ fontSize: 18 }}>
               download
             </span>
-            Export PPTX
+            PPTX
+          </button>
+          <button
+            type="button"
+            onClick={handleExportPDF}
+            disabled={exporting || slides.length === 0}
+            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span className={`material-symbols-outlined ${exporting ? "animate-spin" : ""}`} style={{ fontSize: 18 }}>
+              picture_as_pdf
+            </span>
+            PDF
           </button>
           <button
             type="button"
@@ -406,19 +521,60 @@ function EditorContent() {
 
         {/* ── LEFT: Slide thumbnails ── Figma layers panel */}
         <aside className="flex w-52 flex-shrink-0 flex-col border-r border-[#e5e7eb] bg-white">
-          <div className="flex items-center justify-between border-b border-[#e5e7eb] px-4 py-3">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-              Slides
-            </span>
-            <button
-              type="button"
-              onClick={addSlide}
-              className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-primary"
-              title="Add slide"
-              aria-label="Add slide"
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: 20 }}>add</span>
-            </button>
+          <div className="flex flex-col gap-2 border-b border-[#e5e7eb] px-4 py-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                Slides
+              </span>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setAddSlideOpen((v) => !v)}
+                  className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-primary"
+                  title="Add slide"
+                  aria-label="Add slide"
+                  aria-expanded={addSlideOpen}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: 20 }}>add</span>
+                </button>
+                {addSlideOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-20"
+                      onClick={() => setAddSlideOpen(false)}
+                      aria-hidden
+                    />
+                    <div className="absolute right-0 top-full z-30 mt-1 w-44 rounded-xl border border-slate-200 bg-white py-1 shadow-lg">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          addSlide("hero")
+                          setAddSlideOpen(false)
+                        }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-slate-700 hover:bg-slate-50"
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: 16 }}>crop_landscape</span>
+                        Blank (Title)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          addSlide("freeform")
+                          setAddSlideOpen(false)
+                        }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-slate-700 hover:bg-slate-50"
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: 16 }}>edit_square</span>
+                        Freeform (drag & edit)
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-400">
+              Add manually or generate with AI
+            </p>
           </div>
           <div className="editor-scroll flex-1 space-y-4 overflow-y-auto p-4">
             {slides.length === 0 && (
@@ -477,8 +633,11 @@ function EditorContent() {
         <main
           className="relative flex flex-1 flex-col items-center justify-center overflow-hidden"
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #cbd5e1 1px, transparent 0)`,
-            backgroundSize: "24px 24px",
+            backgroundImage: current?.layout === "freeform"
+              ? `linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+                 linear-gradient(to bottom, #e2e8f0 1px, transparent 1px)`
+              : `radial-gradient(circle at 1px 1px, #cbd5e1 1px, transparent 0)`,
+            backgroundSize: current?.layout === "freeform" ? "24px 24px" : "24px 24px",
             backgroundColor: "#f1f5f9",
           }}
         >
@@ -490,7 +649,14 @@ function EditorContent() {
             }}
           >
             {current ? (
-              <SlideRenderer slide={current} />
+              <SlideRenderer
+                slide={current}
+                editMode
+                onUpdate={updateSlide}
+                onUpdateBullet={updateBullet}
+                onAddBullet={addBullet}
+                onRemoveBullet={removeBullet}
+              />
             ) : (
               <div className="flex h-full w-full flex-col items-center justify-center gap-6 bg-white">
                 <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-12">

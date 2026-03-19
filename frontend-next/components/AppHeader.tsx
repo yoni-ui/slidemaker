@@ -4,9 +4,11 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { getAllDecks } from "@/lib/deck-storage"
+import { createClient } from "@/lib/supabase/client"
 
 export function AppHeader() {
   const router = useRouter()
+  const [userEmail, setUserEmail] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<
     Array<{ id: string; title: string }>
@@ -19,16 +21,26 @@ export function AppHeader() {
   const profileRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const supabase = createClient()
+    if (supabase) {
+      supabase.auth.getUser().then(({ data }) => {
+        setUserEmail(data?.user?.email ?? null)
+      })
+    }
+  }, [])
+
+  useEffect(() => {
     if (searchQuery.trim()) {
-      const decks = getAllDecks()
-      const filtered = decks
-        .filter((d) =>
-          d.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        .slice(0, 5)
-        .map((d) => ({ id: d.id, title: d.title }))
-      setSearchResults(filtered)
-      setShowSearchDropdown(true)
+      getAllDecks().then((decks) => {
+        const filtered = decks
+          .filter((d) =>
+            d.title.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .slice(0, 5)
+          .map((d) => ({ id: d.id, title: d.title }))
+        setSearchResults(filtered)
+        setShowSearchDropdown(true)
+      })
     } else {
       setSearchResults([])
       setShowSearchDropdown(false)
@@ -60,9 +72,13 @@ export function AppHeader() {
     return () => window.removeEventListener("click", handleClickOutside)
   }, [])
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setShowProfile(false)
+    const { createClient } = await import("@/lib/supabase/client")
+    const supabase = createClient()
+    if (supabase) await supabase.auth.signOut()
     router.push("/")
+    router.refresh()
   }
 
   return (
@@ -147,7 +163,9 @@ export function AppHeader() {
               aria-expanded={showProfile}
             >
               <div className="flex h-full w-full items-center justify-center bg-slate-600 text-xs font-bold text-white">
-                JD
+                {userEmail
+                  ? userEmail.slice(0, 2).toUpperCase()
+                  : "?"}
               </div>
             </button>
             {showProfile && (

@@ -42,6 +42,7 @@ export type LayoutKey =
   | "next-steps"
   | "partner-logos"
   | "thank-you"
+  | "freeform"
 
 export type LayoutMeta = {
   key: LayoutKey
@@ -77,6 +78,7 @@ export const LAYOUTS: LayoutMeta[] = [
   { key: "next-steps", label: "Next Steps", icon: "checklist", description: "Action checklist with CTA button", hasBullets: true, hasSubtitle: false },
   { key: "partner-logos", label: "Partner Logos", icon: "handshake", description: "Grid of partner/client logos", hasBullets: false, hasSubtitle: false },
   { key: "thank-you", label: "Thank You", icon: "celebration", description: "Closing slide with contact info and CTAs", hasBullets: true, hasSubtitle: false },
+  { key: "freeform", label: "Freeform", icon: "edit_square", description: "Add text boxes anywhere, drag to position, snap to grid", hasBullets: false, hasSubtitle: false },
 ]
 
 export const LAYOUT_MAP = Object.fromEntries(
@@ -87,6 +89,9 @@ export const LAYOUT_KEYS: LayoutKey[] = LAYOUTS.map((l) => l.key)
 
 export const SLIDE_W = 960
 export const SLIDE_H = 540
+
+/** Grid cell size for snap-to-grid (freeform layout) */
+export const GRID_CELL = 24
 
 /** Rich descriptions for AI (Gemini/Groq) — choose layout based on user content */
 export const LAYOUT_PROMPT_DESCRIPTIONS: Record<LayoutKey, string> = {
@@ -114,6 +119,7 @@ export const LAYOUT_PROMPT_DESCRIPTIONS: Record<LayoutKey, string> = {
   "next-steps": "Action checklist. Format bullets as '✓ Action item' (done) or '○ Action item' (pending). Use for action plans or closing slides. Include 3–5 items.",
   "partner-logos": "Grid of partner/client logos. Title only, no bullets. Use when user mentions partners, clients, or logos.",
   "thank-you": "Closing slide with contact info. Format bullets as 'Email | address', 'Website | url', etc. Use as the LAST slide with contact details and CTAs.",
+  freeform: "Blank canvas for manual editing. Add text boxes and position freely.",
 }
 
 export const buildLayoutDescriptions = (): string =>

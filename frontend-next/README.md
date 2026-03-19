@@ -21,6 +21,15 @@ Next.js App Router frontend based on the Stitch designs in `../stitch/`. Dark-fi
 
 Open [http://localhost:3000](http://localhost:3000). Use **Editor** (`/editor`) to enter a prompt and generate slides. Export PPTX works via Next.js API or the Python backend.
 
+### Test user (development)
+
+| Field | Value |
+|-------|-------|
+| Email | yonas.yishac@gmail.com |
+| Password | 123456 |
+
+Create this user in [Supabase Dashboard](https://supabase.com/dashboard) → Authentication → Users → Add user, or sign up via the app.
+
 ## Stack
 
 - Next.js 15 (App Router)

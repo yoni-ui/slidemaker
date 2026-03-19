@@ -42,13 +42,13 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center gap-6">
             <Link
-              href="/dashboard"
+              href="/login"
               className="hidden text-sm font-bold text-slate-600 hover:text-primary sm:block"
             >
               Log In
             </Link>
             <Link
-              href="/dashboard"
+              href="/signup"
               className="rounded-lg bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:brightness-110"
             >
               Get Started
@@ -80,7 +80,7 @@ export default function LandingPage() {
               </p>
               <div className="mt-4 flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href="/editor"
+                  href="/signup"
                   className="flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-white shadow-xl shadow-primary/30 transition-all hover:scale-[1.02]"
                 >
                   Get Started for Free
@@ -116,7 +116,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-4 flex flex-col items-center gap-6">
               <Link
-                href="/dashboard"
+                href="/signup"
                 className="w-full rounded-2xl bg-primary px-12 py-5 text-xl font-bold text-white shadow-2xl shadow-primary/30 transition-all hover:scale-[1.05] sm:w-auto"
               >
                 Get Started for Free

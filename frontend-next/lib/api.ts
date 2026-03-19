@@ -25,6 +25,19 @@ export type GenerateResponse = {
   slides: SlideContent[]
 }
 
+export type UsageResponse = {
+  remaining: number
+  limit: number
+  used: number
+  authenticated?: boolean
+}
+
+export async function getUsage(): Promise<UsageResponse> {
+  const res = await fetch("/api/usage", { cache: "no-store", credentials: "include" })
+  if (!res.ok) return { remaining: 5, limit: 5, used: 0 }
+  return res.json() as Promise<UsageResponse>
+}
+
 export async function generateSlides(
   prompt: string
 ): Promise<GenerateResponse> {
@@ -83,3 +96,5 @@ export async function exportPPTX(
   }
   return res.blob()
 }
+
+export { exportPDF } from "@/lib/export-pdf"

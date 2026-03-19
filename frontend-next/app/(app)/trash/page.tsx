@@ -10,12 +10,14 @@ export default function TrashPage() {
   >([])
 
   const refresh = () => {
-    setDecks(
-      getTrashedDecks().map((d) => ({
-        id: d.id,
-        title: d.title,
-        deletedAt: d.deletedAt,
-      }))
+    getTrashedDecks().then((list) =>
+      setDecks(
+        list.map((d) => ({
+          id: d.id,
+          title: d.title,
+          deletedAt: d.deletedAt,
+        }))
+      )
     )
   }
 
@@ -26,16 +28,17 @@ export default function TrashPage() {
   const handleRestore = (e: React.MouseEvent, id: string) => {
     e.preventDefault()
     e.stopPropagation()
-    restoreDeck(id)
-    refresh()
+    restoreDeck(id).then(() => refresh())
   }
 
   const handleDeletePermanent = (e: React.MouseEvent, id: string) => {
     e.preventDefault()
     e.stopPropagation()
-    if (typeof window !== "undefined" && window.confirm("Permanently delete this deck? This cannot be undone.")) {
-      deleteDeck(id, false)
-      refresh()
+    if (
+      typeof window !== "undefined" &&
+      window.confirm("Permanently delete this deck? This cannot be undone.")
+    ) {
+      deleteDeck(id, false).then(() => refresh())
     }
   }
 

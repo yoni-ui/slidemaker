@@ -16,11 +16,12 @@ function PresentContent() {
 
   useEffect(() => {
     if (deckId) {
-      const stored = loadDeck(deckId)
-      if (stored) {
-        setSlides(stored.slides)
-        setDeckTitle(stored.title)
-      }
+      loadDeck(deckId).then((stored) => {
+        if (stored) {
+          setSlides(stored.slides)
+          setDeckTitle(stored.title)
+        }
+      })
     }
   }, [deckId])
 

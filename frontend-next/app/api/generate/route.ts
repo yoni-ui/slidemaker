@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 import Groq from "groq-sdk"
+import { createClient } from "@/lib/supabase/server"
 import { buildLayoutDescriptions, LAYOUT_KEYS } from "@/lib/design-system"
 import type { LayoutKey } from "@/lib/design-system"
+
+const FREE_DAILY_LIMIT = 5
 
 const SYSTEM_PROMPT = `You are a professional presentation designer. Given a topic or prompt, generate a polished, concise slide deck.
 
@@ -101,6 +104,34 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ detail: "prompt is required" }, { status: 400 })
   }
 
+  let userId: string | null = null
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      userId = user.id
+      const today = new Date().toISOString().slice(0, 10)
+      const { data: row } = await supabase
+        .from("user_usage")
+        .select("generations_count")
+        .eq("user_id", user.id)
+        .eq("usage_date", today)
+        .single()
+
+      const used = row?.generations_count ?? 0
+      if (used >= FREE_DAILY_LIMIT) {
+        return NextResponse.json(
+          {
+            detail: `Daily limit reached (${FREE_DAILY_LIMIT} AI generations). Resets at midnight.`,
+          },
+          { status: 429 }
+        )
+      }
+    }
+  } catch {
+    // Supabase not configured or table missing — allow generation
+  }
+
   const client = new Groq({ apiKey })
   const system = SYSTEM_PROMPT.replace(
     "{layout_descriptions}",
@@ -120,6 +151,36 @@ export async function POST(req: NextRequest) {
 
     const raw = completion.choices[0]?.message?.content ?? "{}"
     const slides = parseSlides(raw)
+
+    if (userId) {
+      try {
+        const supabase = await createClient()
+        const today = new Date().toISOString().slice(0, 10)
+        const { data: row } = await supabase
+          .from("user_usage")
+          .select("generations_count")
+          .eq("user_id", userId)
+          .eq("usage_date", today)
+          .single()
+
+        if (row) {
+          await supabase
+            .from("user_usage")
+            .update({ generations_count: row.generations_count + 1 })
+            .eq("user_id", userId)
+            .eq("usage_date", today)
+        } else {
+          await supabase.from("user_usage").insert({
+            user_id: userId,
+            usage_date: today,
+            generations_count: 1,
+          })
+        }
+      } catch {
+        // Ignore usage update errors
+      }
+    }
+
     return NextResponse.json({ slides })
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e)

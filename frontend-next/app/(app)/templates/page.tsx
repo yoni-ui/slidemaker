@@ -1,12 +1,28 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import Link from "next/link"
 import { SlideThumbnail } from "@/components/slides/SlideThumbnail"
 import { TEMPLATES, TEMPLATE_CATEGORIES, type DeckTemplate } from "@/lib/templates"
+import { stitchToEditableSlide, getStitchTemplateById } from "@/lib/stitch-mapping"
+
+type StitchTemplate = {
+  id: string
+  name: string
+  path: string
+  layout: string
+}
 
 export default function TemplatesPage() {
   const [category, setCategory] = useState<string | null>(null)
+  const [htmlTemplates, setHtmlTemplates] = useState<StitchTemplate[]>([])
+
+  useEffect(() => {
+    fetch("/api/templates/html")
+      .then((r) => r.json())
+      .then((data) => setHtmlTemplates(data.templates ?? []))
+      .catch(() => setHtmlTemplates([]))
+  }, [])
 
   const filtered = useMemo(
     () =>
@@ -82,8 +98,47 @@ export default function TemplatesPage() {
             <TemplateCard key={t.id} template={t} />
           ))}
         </div>
+
+        {htmlTemplates.length > 0 && (
+          <div className="mt-12">
+            <h3 className="mb-4 text-lg font-bold text-slate-900">
+              Premade HTML Slides
+            </h3>
+            <p className="mb-6 text-sm text-slate-500">
+              Single-slide layouts from our design system
+            </p>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {htmlTemplates.map((t) => (
+                <HtmlTemplateCard key={t.id} template={t} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
+  )
+}
+
+function HtmlTemplateCard({ template }: { template: StitchTemplate }) {
+  const meta = getStitchTemplateById(template.id)
+  const slide = meta ? stitchToEditableSlide(meta) : null
+  if (!slide) return null
+
+  return (
+    <Link
+      href={`/editor?htmlTemplate=${template.id}`}
+      className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all hover:shadow-xl"
+    >
+      <div className="aspect-video overflow-hidden bg-slate-100">
+        <SlideThumbnail slide={slide} width={300} />
+      </div>
+      <div className="p-3">
+        <h3 className="font-bold text-slate-900 group-hover:text-primary">
+          {template.name}
+        </h3>
+        <p className="mt-1 text-xs text-primary">Use HTML Template →</p>
+      </div>
+    </Link>
   )
 }
 

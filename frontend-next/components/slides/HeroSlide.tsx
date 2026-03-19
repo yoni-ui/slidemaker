@@ -1,6 +1,10 @@
 import type { SlideProps } from "./types"
 
-export const HeroSlide = ({ slide }: SlideProps) => (
+export const HeroSlide = ({
+  slide,
+  editMode,
+  onUpdate,
+}: SlideProps) => (
   <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-white px-20 text-center">
     {/* Ambient glow */}
     <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -20,18 +24,46 @@ export const HeroSlide = ({ slide }: SlideProps) => (
       </div>
 
       {/* Title */}
-      <h1 className="max-w-[820px] text-[64px] font-black leading-[1.1] tracking-tight text-slate-900">
-        {slide.title}
-      </h1>
+      {editMode && onUpdate ? (
+        <h1
+          contentEditable
+          suppressContentEditableWarning
+          className="max-w-[820px] cursor-text rounded px-2 py-1 text-[64px] font-black leading-[1.1] tracking-tight text-slate-900 outline-none ring-0 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/30"
+          onBlur={(e) =>
+            onUpdate({ title: e.currentTarget.textContent ?? "" })
+          }
+        >
+          {slide.title}
+        </h1>
+      ) : (
+        <h1 className="max-w-[820px] text-[64px] font-black leading-[1.1] tracking-tight text-slate-900">
+          {slide.title}
+        </h1>
+      )}
 
       {/* Accent line */}
       <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent" />
 
       {/* Subtitle */}
-      {slide.subtitle && (
-        <p className="max-w-xl text-2xl font-light leading-relaxed text-slate-500">
-          {slide.subtitle}
+      {editMode && onUpdate ? (
+        <p
+          contentEditable
+          suppressContentEditableWarning
+          className="max-w-xl cursor-text rounded px-2 py-1 text-2xl font-light leading-relaxed text-slate-500 outline-none ring-0 hover:ring-2 hover:ring-primary/20 focus:ring-2 focus:ring-primary/30"
+          onBlur={(e) =>
+            onUpdate({
+              subtitle: e.currentTarget.textContent?.trim() || null,
+            })
+          }
+        >
+          {slide.subtitle ?? ""}
         </p>
+      ) : (
+        slide.subtitle && (
+          <p className="max-w-xl text-2xl font-light leading-relaxed text-slate-500">
+            {slide.subtitle}
+          </p>
+        )
       )}
     </div>
 

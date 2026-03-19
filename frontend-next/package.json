@@ -6,12 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --max-warnings 10"
+    "lint": "eslint . --max-warnings 10",
+    "create-test-user": "npx tsx scripts/create-test-user.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.9.0",
+    "@supabase/supabase-js": "^2.99.2",
     "groq-sdk": "^1.1.1",
-    "pptxgenjs": "^3.12.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
     "next": "16.1.7",
+    "pptxgenjs": "^3.12.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -19,6 +24,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.3.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.0",
     "postcss": "^8",

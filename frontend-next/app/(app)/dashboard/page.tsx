@@ -23,13 +23,14 @@ export default function DashboardPage() {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
 
   const refresh = () => {
-    const list = getAllDecks()
-    setDecks(
-      list.map((d) => ({
-        id: d.id,
-        title: d.title,
-        updatedAt: d.updatedAt,
-      }))
+    getAllDecks().then((list) =>
+      setDecks(
+        list.map((d) => ({
+          id: d.id,
+          title: d.title,
+          updatedAt: d.updatedAt,
+        }))
+      )
     )
   }
 
@@ -40,8 +41,7 @@ export default function DashboardPage() {
   const handleMoveToTrash = (e: React.MouseEvent, id: string) => {
     e.preventDefault()
     e.stopPropagation()
-    deleteDeck(id, true)
-    refresh()
+    deleteDeck(id, true).then(() => refresh())
   }
 
   return (
