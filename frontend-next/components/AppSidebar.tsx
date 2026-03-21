@@ -20,7 +20,7 @@ export function AppSidebar() {
         <div className="flex items-center gap-3">
           <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-white shadow-soft">
             <img
-              src="/logo.png"
+              src="/logo.svg"
               alt="SlideMaker logo"
               className="h-4 w-4 object-contain"
             />

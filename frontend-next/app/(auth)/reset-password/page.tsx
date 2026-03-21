@@ -74,7 +74,7 @@ function ResetPasswordForm() {
       <div className="w-full max-w-md rounded-xl border border-border-default bg-surface-card p-8 shadow-card-hover">
         <div className="mb-8 flex items-center gap-2">
           <img
-            src="/logo.png"
+            src="/logo.svg"
             alt="SlideMaker logo"
             className="h-9 w-9 object-contain"
           />

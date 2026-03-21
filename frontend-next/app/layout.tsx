@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "DeckShare – Stunning Presentations Instantly",
   description:
     "Build professional, high-converting decks in minutes. Real-time collaboration, beautiful templates, and seamless sharing.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
 }
 
 export default function RootLayout({
@@ -28,13 +31,6 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
-        />
-        {/* App favicon */}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="any"
-          href="/favicon.png"
         />
       </head>
       <body className="min-h-screen bg-background-light text-slate-900 font-sans antialiased">

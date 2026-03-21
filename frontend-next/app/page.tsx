@@ -8,7 +8,7 @@ export default function LandingPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img
-              src="/logo.png"
+              src="/logo.svg"
               alt="SlideMaker logo"
               className="h-6 w-6 object-contain"
             />
@@ -235,7 +235,7 @@ export default function LandingPage() {
             <div>
               <div className="flex items-center gap-2">
                 <img
-                  src="/logo.png"
+                  src="/logo.svg"
                   alt="SlideMaker logo"
                   className="h-5 w-5 object-contain"
                 />

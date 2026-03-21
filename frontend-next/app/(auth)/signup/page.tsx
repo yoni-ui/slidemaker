@@ -100,7 +100,7 @@ function SignupForm() {
       <div className="w-full max-w-md rounded-2xl border border-border-default bg-white p-8 shadow-card-hover">
         <div className="mb-8 flex items-center gap-2">
           <img
-            src="/logo.png"
+            src="/logo.svg"
             alt="SlideMaker logo"
             className="h-8 w-8 object-contain"
           />

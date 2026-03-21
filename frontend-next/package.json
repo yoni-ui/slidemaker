@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
+    "dev:turbo": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "clean": "node scripts/clean-cache.mjs",
     "lint": "eslint . --max-warnings 10",
     "create-test-user": "npx tsx scripts/create-test-user.ts"
   },

@@ -4,34 +4,57 @@ Gamma-style slide generator: prompt → AI content → classy layouts → export
 
 ## Quick start
 
-### 1. Backend (FastAPI)
+### One command (frontend + API)
+
+From the **repo root**:
+
+```bash
+npm install
+cd backend && python -m venv .venv && .venv\Scripts\activate && pip install -r requirements.txt && cd ..
+cd frontend-next && npm install && cd ..
+```
+
+Create `frontend-next/.env.local` (copy from `frontend-next/.env.local.example`) and set:
+
+- **`GROQ_API_KEY`** — required for AI generation ([Groq console](https://console.groq.com/keys))
+- **`NEXT_PUBLIC_DISABLE_AUTH=true`** — use the app locally without Supabase (browser-only decks)
+
+Then from the repo root:
+
+```powershell
+npm run dev:all
+```
+
+This runs **both** in **one** terminal (mixed logs). For two separate windows instead: `npm run dev:all:windows` (PowerShell).
+
+- **Web app:** http://localhost:3000 (or the next free port if 3000 is busy)  
+- **Python API:** http://localhost:8001 — [Swagger docs](http://localhost:8001/docs)  
+- **Health:** http://localhost:8001/health  
+
+By default the Next.js app uses **built-in** `/api/generate` (same machine). To send generate/export traffic to Python instead, add to `.env.local`:
+
+`NEXT_PUBLIC_API_URL=http://localhost:8001`
+
+### Or run separately
+
+**Backend**
 
 ```bash
 cd backend
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --reload-dir app --port 8001
+python -m uvicorn app.main:app --reload --reload-dir app --host 127.0.0.1 --port 8001
 ```
 
-- API: http://localhost:8001  
-- Docs: http://localhost:8001/docs  
-
-### 2. Frontend (Next.js)
+**Frontend**
 
 ```bash
 cd frontend-next
 npm install
-cp .env.local.example .env.local
+copy .env.local.example .env.local
 npm run dev
 ```
-
-- App: http://localhost:3000  
-- Editor: http://localhost:3000/editor — enter a prompt and click **Generate slides** to call the backend and display slides.
-
-### 3. Integrate
-
-With both running, open the **Editor**, type a prompt (e.g. “5 slides about AI in education”), and click **Generate slides**. The backend returns slide content; the editor shows thumbnails and the current slide (title, subtitle, bullets).
 
 ## Repo layout
 
@@ -52,4 +75,4 @@ This ensures Vercel builds the Next.js app correctly. Add `GROQ_API_KEY` in Verc
 ## Env
 
 - **Backend**: optional `backend/.env` (see `backend/.env.example`), e.g. `OPENAI_API_KEY` for future AI.
-- **Frontend**: `frontend-next/.env.local` with `NEXT_PUBLIC_API_URL=http://localhost:8000` if the API is not on that URL.
+- **Frontend**: `frontend-next/.env.local` — see `.env.local.example`. Optional: `NEXT_PUBLIC_API_URL=http://localhost:8001` to use the Python API for generate/export instead of Next.js routes.
