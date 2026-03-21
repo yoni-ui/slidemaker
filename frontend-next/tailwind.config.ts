@@ -1,11 +1,23 @@
 import type { Config } from "tailwindcss";
 
 /**
- * UserJot-inspired design system: clean, modern SaaS.
- * Reference: https://userjot.com/
- * - Light backgrounds, clear hierarchy, generous spacing
- * - Single primary accent (teal), soft shadows, rounded cards
+ * Tailwind theme — primary scale must match `tailwindPrimaryColors` in `lib/design-tokens.ts`
+ * (kept inline here because the bundler cannot resolve TS imports from this file).
  */
+const primary = {
+  DEFAULT: "#000000",
+  50: "#fafafa",
+  100: "#f5f5f5",
+  200: "#e5e5e5",
+  300: "#d4d4d4",
+  400: "#a3a3a3",
+  500: "#737373",
+  600: "#525252",
+  700: "#404040",
+  800: "#262626",
+  900: "#171717",
+} as const;
+
 export default {
   darkMode: "class",
   content: [
@@ -15,19 +27,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: "#0d9488",
-          50: "#f0fdfa",
-          100: "#ccfbf1",
-          200: "#99f6e4",
-          300: "#5eead4",
-          400: "#2dd4bf",
-          500: "#14b8a6",
-          600: "#0d9488",
-          700: "#0f766e",
-          800: "#115e59",
-          900: "#134e4a",
-        },
+        primary,
         secondary: "#1e293b",
         tertiary: "#64748b",
         "background-light": "#f8fafc",
@@ -59,7 +59,7 @@ export default {
       boxShadow: {
         card: "0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06)",
         "card-hover": "0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06)",
-        soft: "0 2px 8px -2px rgb(15 116 110 / 0.15), 0 4px 12px -4px rgb(15 116 110 / 0.1)",
+        soft: "0 2px 8px -2px rgb(0 0 0 / 0.12), 0 4px 12px -4px rgb(0 0 0 / 0.08)",
       },
     },
   },

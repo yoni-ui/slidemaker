@@ -1,6 +1,7 @@
 "use client"
 
 import type { DeckSpec, SlideSpec } from "@/lib/generate-validation"
+import { designTokens } from "@/lib/design-tokens"
 
 const emptySlide = (): SlideSpec => ({
   purpose: "content",
@@ -237,7 +238,7 @@ export function DeckPlanReview({
                     value={
                       slide.accentColor?.startsWith("#")
                         ? slide.accentColor
-                        : "#0d9488"
+                        : designTokens.colors.primary
                     }
                     onChange={(e) =>
                       updateSlide(i, { accentColor: e.target.value })
@@ -251,7 +252,7 @@ export function DeckPlanReview({
                         accentColor: e.target.value.trim() || undefined,
                       })
                     }
-                    placeholder="#0d9488"
+                    placeholder={designTokens.colors.primary}
                     className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-800"
                   />
                 </div>

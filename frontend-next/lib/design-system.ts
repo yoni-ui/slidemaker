@@ -1,24 +1,29 @@
+import { designTokens } from "./design-tokens"
+
+/** Slide / export runtime tokens — aligned with `design-tokens.ts` + Tailwind */
 export const DS = {
   colors: {
-    // UserJot-inspired palette (teal accent + clean neutral surfaces)
-    primary: "#0d9488",
+    primary: designTokens.colors.primary,
     secondary: "#0f172a",
     tertiary: "#475569",
-    backgroundDark: "#f6f6f8",
-    backgroundLight: "#f8fafc",
-    canvas: "#e2e8f0",
+    backgroundDark: designTokens.colors.backgroundDark,
+    backgroundLight: designTokens.colors.backgroundLight,
+    canvas: designTokens.colors.canvas,
     sidebarDark: "#ffffff",
-    scrollThumb: "#0d9488",
+    scrollThumb: designTokens.colors.accentMuted,
     cardDark: "#ffffff",
   },
   font: "'Public Sans', sans-serif",
   radius: {
-    sm: "0.25rem",
-    md: "0.5rem",
-    lg: "0.75rem",
-    full: "9999px",
+    button: designTokens.radius.button,
+    sm: designTokens.radius.sm,
+    md: designTokens.radius.md,
+    lg: designTokens.radius.lg,
+    full: designTokens.radius.full,
   },
 } as const
+
+export { designTokens } from "./design-tokens"
 
 export type LayoutKey =
   | "hero"
