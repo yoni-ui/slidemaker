@@ -14,6 +14,10 @@ export type SlideSpec = {
   visualIntent?: string
   imagePrompt?: string
   backgroundPrompt?: string
+  /** Optional hint for design agent (e.g. default, dark) */
+  theme?: string | null
+  /** Optional CSS color hint for accents */
+  accentColor?: string | null
 }
 
 export type DeckSpec = {
@@ -34,6 +38,8 @@ export const validateDeckSpec = (deck: DeckSpec): DeckSpec => {
     title: (slide.title ?? "Slide").slice(0, MAX_TITLE_LENGTH),
     subtitle: slide.subtitle?.slice(0, MAX_TITLE_LENGTH) ?? null,
     bullets: (slide.bullets ?? []).slice(0, MAX_BULLETS),
+    theme: slide.theme?.trim() || undefined,
+    accentColor: slide.accentColor?.trim() || undefined,
   }))
   return {
     ...deck,
@@ -93,6 +99,8 @@ export const parseDeckSpec = (raw: string): DeckSpec => {
     visualIntent: s.visualIntent as string | undefined,
     imagePrompt: s.imagePrompt as string | undefined,
     backgroundPrompt: s.backgroundPrompt as string | undefined,
+    theme: (s.theme as string) ?? undefined,
+    accentColor: (s.accentColor as string) ?? undefined,
   }))
   return { deckTitle, slides }
 }

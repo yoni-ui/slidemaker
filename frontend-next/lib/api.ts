@@ -7,6 +7,8 @@
  * in .env.local (leave it unset to use the built-in Next.js API routes).
  */
 
+import type { DeckSpec, SlideSpec } from "@/lib/generate-validation"
+
 const externalBase =
   typeof process !== "undefined" ? process.env.NEXT_PUBLIC_API_URL : undefined
 
@@ -40,6 +42,38 @@ export async function getUsage(): Promise<UsageResponse> {
   return res.json() as Promise<UsageResponse>
 }
 
+export type { DeckSpec }
+
+/**
+ * Content-only outline (does not increment usage quota; final generate does).
+ * Always uses the Next.js route (not external Python API).
+ */
+export async function planSlides(prompt: string): Promise<{
+  deckTitle: string
+  slides: SlideSpec[]
+}> {
+  const res = await fetch("/api/plan", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt }),
+    credentials: "include",
+  })
+  if (!res.ok) {
+    let detail = "Failed to build outline"
+    try {
+      const body = (await res.json()) as { detail?: string }
+      if (body.detail) detail = body.detail
+    } catch {
+      detail = (await res.text()) || detail
+    }
+    throw new Error(detail)
+  }
+  return res.json() as Promise<{
+    deckTitle: string
+    slides: SlideSpec[]
+  }>
+}
+
 export async function generateSlides(
   prompt: string
 ): Promise<GenerateResponse> {
@@ -48,6 +82,33 @@ export async function generateSlides(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt }),
+    credentials: "include",
+  })
+  if (!res.ok) {
+    let detail = "Failed to generate slides"
+    try {
+      const body = (await res.json()) as { detail?: string }
+      if (body.detail) detail = body.detail
+    } catch {
+      detail = (await res.text()) || detail
+    }
+    throw new Error(detail)
+  }
+  return res.json() as Promise<GenerateResponse>
+}
+
+/**
+ * Design agent only from an edited outline. Counts as one generation.
+ * Always uses the Next.js route (deckSpec is not supported by the Python stub API).
+ */
+export async function generateSlidesFromDeckSpec(
+  deckSpec: DeckSpec
+): Promise<GenerateResponse> {
+  const res = await fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ deckSpec }),
+    credentials: "include",
   })
   if (!res.ok) {
     let detail = "Failed to generate slides"

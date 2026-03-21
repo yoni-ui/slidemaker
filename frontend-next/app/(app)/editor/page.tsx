@@ -3,7 +3,16 @@
 import { Suspense, useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { useSearchParams, useRouter } from "next/navigation"
-import { generateSlides, exportPPTX, exportPDF, getUsage, importFile, type SlideContent } from "@/lib/api"
+import {
+  generateSlides,
+  exportPPTX,
+  exportPDF,
+  getUsage,
+  importFile,
+  type GenerateResponse,
+  type SlideContent,
+} from "@/lib/api"
+import { CreationWizard } from "@/components/editor/CreationWizard"
 import { LAYOUTS, LAYOUT_MAP, SLIDE_W, SLIDE_H, type LayoutKey } from "@/lib/design-system"
 import { SlideRenderer } from "@/components/slides/SlideRenderer"
 import { SlideThumbnail } from "@/components/slides/SlideThumbnail"
@@ -51,6 +60,8 @@ function EditorContent() {
   const [usage, setUsage] = useState<{ remaining: number; limit: number } | null>(null)
   const [addSlideOpen, setAddSlideOpen] = useState(false)
   const [promptOpen, setPromptOpen] = useState(true)
+  /** Multi-step create flow (source → plan → generate); starts open unless URL preloads a deck/template. */
+  const [creationWizardOpen, setCreationWizardOpen] = useState(true)
   const [importing, setImporting] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [rightTab, setRightTab] = useState<"layout" | "content">("layout")
@@ -130,6 +141,30 @@ function EditorContent() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate()
+  }
+
+  const handleCreationWizardTemplate = (templateId: string) => {
+    const t = getTemplateById(templateId)
+    if (!t) return
+    setDeckId((prev) => prev ?? generateDeckId())
+    setSlides(t.slides)
+    setDeckTitle(t.name)
+    setCurrentIndex(0)
+    setPast([])
+    setFuture([])
+  }
+
+  const handleCreationWizardGenerated = (res: GenerateResponse) => {
+    const editable = res.slides.map(toEditable)
+    if (!deckId) setDeckId(generateDeckId())
+    if (slides.length > 0) pushToPast(slides)
+    setFuture([])
+    setSlides(editable)
+    setCurrentIndex(0)
+    setPromptOpen(false)
+    if (res.deckTitle) setDeckTitle(res.deckTitle)
+    if (usage) setUsage({ ...usage, remaining: Math.max(0, usage.remaining - 1) })
+    getUsage().then((u) => setUsage({ remaining: u.remaining, limit: u.limit }))
   }
 
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -356,6 +391,7 @@ function EditorContent() {
           setCurrentIndex(0)
           setPast([])
           setFuture([])
+          setCreationWizardOpen(false)
         }
       })
       return
@@ -381,6 +417,7 @@ function EditorContent() {
         setDeckTitle(t.name)
         setCurrentIndex(0)
         setDeckId(generateDeckId())
+        setCreationWizardOpen(false)
       }
     }
   }, [searchParams])
@@ -651,6 +688,15 @@ function EditorContent() {
                 <p className="text-xs text-slate-500">
                   Generate from AI, import PDF/Word/PPT, or add a blank slide
                 </p>
+                {!creationWizardOpen && (
+                  <button
+                    type="button"
+                    onClick={() => setCreationWizardOpen(true)}
+                    className="rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-white shadow-sm hover:brightness-105"
+                  >
+                    Open create wizard
+                  </button>
+                )}
               </div>
             )}
             {slides.map((slide, n) => (
@@ -1017,6 +1063,15 @@ function EditorContent() {
       </div>
 
       {/* Toast */}
+      <CreationWizard
+        open={creationWizardOpen}
+        onClose={() => setCreationWizardOpen(false)}
+        onChooseTemplate={handleCreationWizardTemplate}
+        onDeckGenerated={handleCreationWizardGenerated}
+        usageRemaining={usage?.remaining ?? null}
+        usageLimit={usage?.limit ?? null}
+      />
+
       {toast && (
         <div
           className="fixed bottom-20 left-1/2 z-[100] -translate-x-1/2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-900 shadow-xl"
